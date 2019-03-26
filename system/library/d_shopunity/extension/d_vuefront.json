@@ -1,0 +1,48 @@
+{
+    "codename": "d_vuefront",
+    "version": "1.0.0",
+    "name": "Vuefront module",
+    "description": "Vuefront module",
+    "author": {
+        "name": "Shopunity",
+        "email": "info@shopunity.com",
+        "url": "https://shopunity.net/"
+    },
+    "opencart_version": [
+        "3.0.0.0",
+        "3.0.1.1",
+        "3.0.1.2",
+        "3.0.2.0",
+        "3.0.3.1"
+    ],
+    "type": "module",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "support": {
+        "email": "support@shopunity.com",
+        "url": "https://shopunity.net/"
+    },
+    "required": {
+        "d_opencart_patch": ">=1.0.0"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/d_vuefront.json",
+        "catalog/controller/extension/module/d_vuefront.php",
+        "catalog/model/extension/module/d_vuefront.php"
+    ],
+    "dirs": [
+
+        "catalog/controller/extension/d_vuefront",
+        "catalog/controller/extension/d_vuefront_type",
+
+        "system/library/d_graphql"
+    ],
+    "changelog": [
+        {
+            "version": "1.0.0",
+            "change": "First version"
+        }
+    ]
+}
