@@ -6,7 +6,7 @@ use Youshido\GraphQL\Type\Scalar\IntType;
 use Youshido\GraphQL\Type\Scalar\IdType;
 
 
-class ControllerExtensionDVuefrontTypeCategory extends Controller
+class ControllerExtensionDVuefrontTypeBlogCategory extends Controller
 {
     private $codename = "d_vuefront";
 
@@ -15,7 +15,7 @@ class ControllerExtensionDVuefrontTypeCategory extends Controller
         $this->load->model('extension/module/' . $this->codename);
 
         return array(
-            'category'       => array(
+            'categoryBlog'       => array(
                 'type'    => $this->categoryType(),
                 'args'    => array(
                     'id' => array(
@@ -23,10 +23,10 @@ class ControllerExtensionDVuefrontTypeCategory extends Controller
                     )
                 ),
                 'resolve' => function ( $store, $args ) {
-                    return $this->load->controller('extension/'.$this->codename.'/category/category', $args );
+                    return $this->load->controller( 'extension/'.$this->codename.'/blog_category/category', $args );
                 }
             ),
-            'categoriesList' => array(
+            'categoriesBlogList' => array(
                 'type'    => $this->model_extension_module_d_vuefront->getPagination($this->categoryType()),
                 'args'    => array(
                     'page'   => array(
@@ -55,7 +55,7 @@ class ControllerExtensionDVuefrontTypeCategory extends Controller
                     )
                 ),
                 'resolve' => function ( $store, $args ) {
-                    return $this->load->controller('extension/'.$this->codename.'/category/categoryList', $args );
+                    return $this->load->controller( 'extension/'.$this->codename.'/blog_category/categoryList', $args );
                 }
             )
         );
@@ -63,12 +63,10 @@ class ControllerExtensionDVuefrontTypeCategory extends Controller
 
     private function categoryType() {
         return new ObjectType( array(
-            'name'        => 'Category',
-            'description' => 'Category',
+            'name'        => 'categoryBlog',
+            'description' => 'Blog Category',
             'fields'      => array(
                 'id'          => new IdType(),
-                'image'       => new StringType(),
-                'imageLazy'   => new StringType(),
                 'name'        => new StringType(),
                 'description' => new StringType(),
                 'parent_id'   => new StringType()
