@@ -9,7 +9,7 @@ use Youshido\GraphQL\Type\Scalar\IntType;
 use Youshido\GraphQL\Type\Scalar\IdType;
 
 
-class ControllerExtensionDVuefrontTypeProduct extends Controller
+class ControllerExtensionDVuefrontTypeBlog extends Controller
 {
     private $codename = "d_vuefront";
 
@@ -25,7 +25,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
                     )
                 ),
                 'resolve' => function ( $store, $args ) {
-                    return $this->load->controller('extension/' . $this->codename . '/product/product', $args);
+                    return $this->load->controller('extension/' . $this->codename . '/category/product', $args);
                 }
             )
         ];
@@ -64,7 +64,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
                 )
             ],
             'resolve' => function ($store, $args) {
-                return $this->load->controller('extension/' . $this->codename . '/product/products', $args);
+                return $this->load->controller('extension/' . $this->codename . '/category/products', $args);
             }
 
         ];
@@ -74,7 +74,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
         return new ObjectType(
             array(
                 'name'        => 'OptionValue',
-                'description' => 'OptionValue',
+                'description' => 'CartProduct',
                 'fields'      => array(
                     'id'   => new StringType(),
                     'name' => new StringType()
@@ -98,7 +98,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
                         )
                     ),
                     'resolve' => function ( $parent, $args ) {
-                        return $this->load->controller('extension/' . $this->codename . '/product/relatedProducts',array(
+                        return $this->load->controller('extension/' . $this->codename . '/category/relatedProducts',array(
                             'parent' => $parent,
                             'args' => $args
                         ));
@@ -140,7 +140,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
                                 )
                             ),
                             'resolve' => function ( $parent, $args ) {
-                                return $this->load->controller('extension/' . $this->codename . '/product/productAttribute',array(
+                                return $this->load->controller('extension/' . $this->codename . '/category/productAttribute',array(
                                     'parent' => $parent,
                                     'args' => $args
                                 ));
@@ -162,7 +162,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
                                 )
                             ),
                             'resolve' => function ( $parent, $args ) {
-                                return $this->load->controller('extension/' . $this->codename . '/product/productReview',array(
+                                return $this->load->controller('extension/' . $this->codename . '/category/productReview',array(
                                     'parent' => $parent,
                                     'args' => $args
                                 ));
@@ -182,7 +182,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
                                 )
                             ),
                             'resolve' => function ( $parent, $args ) {
-                                return $this->load->controller('extension/' . $this->codename . '/product/productOption',array(
+                                return $this->load->controller('extension/' . $this->codename . '/category/productOption',array(
                                     'parent' => $parent,
                                     'args' => $args
                                 ));
@@ -207,7 +207,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
                                 )
                             ),
                             'resolve' => function ( $parent, $args ) {
-                                return $this->load->controller('extension/' . $this->codename . '/product/productImage',array(
+                                return $this->load->controller('extension/' . $this->codename . '/category/productImage',array(
                                     'parent' => $parent,
                                     'args' => $args
                                 ));
