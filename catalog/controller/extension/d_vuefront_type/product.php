@@ -15,7 +15,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
 
     public function query()
     {
-        return [
+        return array(
             'productsList' => $this->productsType(),
             'product' =>array(
                 'type'    => $this->productType(),
@@ -28,7 +28,25 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
                     return $this->load->controller('extension/' . $this->codename . '/product/product', $args);
                 }
             )
-        ];
+            );
+    }
+
+    public function mutation() 
+    {
+        return array(
+            'addReview'  => array(
+                'type'    => $this->productType(),
+                'args'    => array(
+                    'id'     => new IntType(),
+                    'rating' => new FloatType(),
+                    'author' => new StringType(),
+                    'content' => new StringType()
+                ),
+                'resolve' => function ( $store, $args ) {
+                    return $this->load->controller('extension/'.$this->codename.'/product/addReview', $args);
+                }
+            )
+        );
     }
 
     public function productsType()
@@ -84,7 +102,7 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
     }
 
 
-    private function productType( $simple = false ) {
+    public function productType( $simple = false ) {
         $fields = array();
 
         if ( ! $simple ) {

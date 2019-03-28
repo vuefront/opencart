@@ -9,7 +9,7 @@ class ControllerExtensionDVuefrontProduct extends Controller
 
         if (in_array($args['sort'], array('sort_order', 'model', 'quantity', 'price', 'date_added'))) {
             $args['sort'] = 'p.' . $args['sort'];
-        } else if (in_array($args['sort'], array('name'))) {
+        } elseif (in_array($args['sort'], array('name'))) {
             $args['sort'] = 'pd.' . $args['sort'];
         }
 
@@ -90,8 +90,8 @@ class ControllerExtensionDVuefrontProduct extends Controller
 
         return array(
             'id' => $product_info['product_id'],
-            'name' => $product_info['name'],
-            'description' => $product_info['description'],
+            'name' => html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8'),
+            'description' => html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'),
             'shortDescription' => utf8_substr(trim(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
             'price' => $price,
             'special' => $special,
@@ -219,10 +219,23 @@ class ControllerExtensionDVuefrontProduct extends Controller
                 'image' => $image,
                 'imageLazy' => $imageLazy
             );
-
         }
 
         return $images;
+    }
 
+    public function addReview($args)
+    {
+        $this->load->model('catalog/review');
+
+        $reviewData = array(
+            'name' => $args['author'],
+            'text' => $args['content'],
+            'rating' => $args['rating']
+        );
+
+        $this->model_catalog_review->addReview($args['id'], $reviewData);
+
+        return $this->product($args);
     }
 }

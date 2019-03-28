@@ -19,19 +19,30 @@ class ControllerExtensionModuleDVuefront extends Controller
         $query = $input['query'];
 
         $queries = $this->model_extension_module_d_vuefront->getQueries();
+        $mutations = $this->model_extension_module_d_vuefront->getMutations();
 
         $queryType = new ObjectType(Array(
-            'name' => 'Query',
+            'name' => 'RootQueryType',
             'fields' => $queries
+        ));
+        $mutationType = new ObjectType(Array(
+            'name' => 'RootMutationType',
+            'fields' => $mutations
         ));
 
         $schema = new Schema(Array(
-            'query' => $queryType
+            'query' => $queryType,
+            'mutation' => $mutationType
         ));
 
         $processor = new Processor($schema);
 
-        $processor->processPayload($query);
+        if ( ! empty( $input['variables'] ) ) {
+            $processor->processPayload( $input['query'], $input['variables'] );
+    
+        } else {
+            $processor->processPayload( $input['query'] );
+        }
 
         $result = $processor->getResponseData();
 

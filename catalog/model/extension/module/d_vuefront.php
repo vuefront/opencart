@@ -27,6 +27,21 @@ class ModelExtensionModuleDVuefront extends Model
         return $result;
     }
 
+    public function getMutations()
+    {
+        $result = Array();
+        $files = glob(DIR_APPLICATION . 'controller/extension/' . $this->codename . '_type/*.php', GLOB_BRACE);
+        foreach ($files as $file) {
+            $filename = basename($file, '.php');
+            $output = $this->load->controller('extension/' . $this->codename . '_type/' . $filename . '/mutation');
+            if ($output) {
+                $result = array_merge($result, $output);
+            }
+        }
+
+        return $result;
+    }
+
     public function getPagination($type)
     {
         return new ObjectType([

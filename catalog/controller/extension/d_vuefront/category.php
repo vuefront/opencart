@@ -21,7 +21,7 @@ class ControllerExtensionDVuefrontCategory extends Controller
 
         return array(
             'id'          => $category_info['category_id'],
-            'name'        => $category_info['name'],
+            'name'        => html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8'),
             'description' => html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8'),
             'parent_id'   => $category_info['parent_id'],
             'image'       => $image,
@@ -33,11 +33,14 @@ class ControllerExtensionDVuefrontCategory extends Controller
         $this->load->model('extension/module/'.$this->codename);
 
         $filter_data = array(
-            'start' => ($args['page'] - 1) * $args['size'],
-            'limit' => $args['size'],
             'sort' => $args['sort'],
             'order'   => $args['order']
         );
+
+        if($args['size'] !== -1) {
+            $filter_data['start'] = ($args['page'] - 1) * $args['size'];
+            $filter_data['limit'] = $args['size'];
+        }
 
         if ( $args['parent'] !== 0 ) {
             $filter_data['parent'] = $args['parent'];
