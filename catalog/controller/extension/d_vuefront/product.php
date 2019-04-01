@@ -2,9 +2,12 @@
 
 class ControllerExtensionDVuefrontProduct extends Controller
 {
+    private $codename = "d_vuefront";
+
     public function products($args)
     {
         $this->load->model('catalog/product');
+        $this->load->model('extension/' . $this->codename . '/product');
         $this->load->model('tool/image');
 
         if (in_array($args['sort'], array('sort_order', 'model', 'quantity', 'price', 'date_added'))) {
@@ -25,9 +28,23 @@ class ControllerExtensionDVuefrontProduct extends Controller
             'limit' => $args['size']
         );
 
-        $product_total = $this->model_catalog_product->getTotalProducts($filter_data);
+        if (!empty($args['search'])) {
+            $filter_data['filter_name'] = $args['search'];
+            $filter_data['filter_tag'] = $args['search'];
+            $filter_data['filter_description'] = $args['search'];
+        }
 
-        $results = $this->model_catalog_product->getProducts($filter_data);
+        if (!empty($args['special'])) {
+            $filter_data['filter_special'] = true;
+        }
+
+        if (!empty($args['ids'])) {
+            $filter_data['filter_product_ids'] = $args['ids'];
+        }
+
+        $product_total = $this->model_extension_d_vuefront_product->getTotalProducts($filter_data);
+
+        $results = $this->model_extension_d_vuefront_product->getProducts($filter_data);
 
         foreach ($results as $result) {
             $products[] = $this->product(array('id' => $result['product_id']));
@@ -65,19 +82,19 @@ class ControllerExtensionDVuefrontProduct extends Controller
         if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
             $price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
         } else {
-            $price = false;
+            $price = '';
         }
 
         if ((float)$product_info['special']) {
             $special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
         } else {
-            $special = false;
+            $special = '';
         }
 
         if ($this->config->get('config_review_status')) {
             $rating = (int)$product_info['rating'];
         } else {
-            $rating = false;
+            $rating = '';
         }
 
         if ($product_info['quantity'] <= 0) {

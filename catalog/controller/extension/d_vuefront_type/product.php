@@ -68,6 +68,18 @@ class ControllerExtensionDVuefrontTypeProduct extends Controller
                     'type'         => new StringType(),
                     'defaultValue' => ''
                 ),
+                'special'      => array(
+                    'type'         => new BooleanType(),
+                    'defaultValue' => false
+                ),
+                'search'      => array(
+                    'type'         => new StringType(),
+                    'defaultValue' => ''
+                ),
+                'ids'      => array(
+                    'type'         => new ListType(new IntType()),
+                    'defaultValue' => array()
+                ),
                 'category_id' => array(
                     'type'         => new IntType(),
                     'defaultValue' => 0
