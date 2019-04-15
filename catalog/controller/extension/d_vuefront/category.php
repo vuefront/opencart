@@ -42,10 +42,10 @@ class ControllerExtensionDVuefrontCategory extends Controller
             $filter_data['limit'] = $args['size'];
         }
 
-        if ( $args['parent'] !== 0 ) {
+        if ( $args['parent'] !== -1 ) {
             $filter_data['parent'] = $args['parent'];
         }
-        
+
         $results = $this->model_extension_module_d_vuefront->getCategories($filter_data);
         $category_total = $this->model_extension_module_d_vuefront->getTotalCategories($filter_data);
 
@@ -65,5 +65,19 @@ class ControllerExtensionDVuefrontCategory extends Controller
             'totalPages' => (int)ceil($category_total / $args['size']),
             'totalElements' => (int)$category_total,
         );
+    }
+
+    public function childCategories($data) {
+        $this->load->model('extension/module/'.$this->codename);
+        $category_info = $data['parent'];
+        $results = $this->model_extension_module_d_vuefront->getCategories(array('parent' => $category_info['id']));
+
+        $categories = array();
+
+        foreach ($results as $result) {
+            $categories[] = $this->category(array('id' => $result['category_id']));
+        }
+
+        return $categories;
     }
 }
