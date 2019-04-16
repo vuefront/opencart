@@ -1,10 +1,10 @@
 <?php
 
+use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\Object\ObjectType;
 use Youshido\GraphQL\Type\Scalar\StringType;
 use Youshido\GraphQL\Type\Scalar\IntType;
 use Youshido\GraphQL\Type\Scalar\IdType;
-
 
 class ControllerExtensionDVuefrontTypeBlogCategory extends Controller
 {
@@ -22,8 +22,8 @@ class ControllerExtensionDVuefrontTypeBlogCategory extends Controller
                         'type' => new IntType()
                     )
                 ),
-                'resolve' => function ( $store, $args ) {
-                    return $this->load->controller( 'extension/'.$this->codename.'/blog_category/category', $args );
+                'resolve' => function ($store, $args) {
+                    return $this->load->controller('extension/'.$this->codename.'/blog_category/category', $args);
                 }
             ),
             'categoriesBlogList' => array(
@@ -43,7 +43,7 @@ class ControllerExtensionDVuefrontTypeBlogCategory extends Controller
                     ),
                     'parent' => array(
                         'type'         => new IntType(),
-                        'defaultValue' => 0
+                        'defaultValue' => -1
                     ),
                     'sort'   => array(
                         'type'         => new StringType(),
@@ -54,24 +54,65 @@ class ControllerExtensionDVuefrontTypeBlogCategory extends Controller
                         'defaultValue' => 'ASC'
                     )
                 ),
-                'resolve' => function ( $store, $args ) {
-                    return $this->load->controller( 'extension/'.$this->codename.'/blog_category/categoryList', $args );
+                'resolve' => function ($store, $args) {
+                    return $this->load->controller('extension/'.$this->codename.'/blog_category/categoryList', $args);
                 }
             )
         );
     }
 
-    private function categoryType() {
-        return new ObjectType( array(
+    private function categoryType($simple = false)
+    {
+        $fields = array();
+        if (! $simple) {
+            $fields = array(
+                'categories' => array(
+                    'type'    => new ListType($this->categoryType(true)),
+                    'args'    => array(
+                        'limit' => array(
+                            'type'         => new IntType(),
+                            'defaultValue' => 3
+                        )
+                    ),
+                    'resolve' => function ($parent, $args) {
+                        return $this->load->controller('extension/' . $this->codename . '/blog_category/childCategories', array(
+                            'parent' => $parent,
+                            'args' => $args
+                        ));
+                    }
+                )
+            );
+        }
+        return new ObjectType(array(
             'name'        => 'categoryBlog',
             'description' => 'Blog Category',
-            'fields'      => array(
-                'id'          => new IdType(),
-                'name'        => new StringType(),
-                'description' => new StringType(),
-                'parent_id'   => new StringType()
+            'fields'      => array_merge(
+                $fields,
+                array(
+                    'id'          => new IdType(),
+                    'image'       => new StringType(),
+                    'imageLazy'   => new StringType(),
+                    'name'        => new StringType(),
+                    'description' => new StringType(),
+                    'parent_id'   => new StringType(),
+                    'url' => array(
+                        'type'    => new StringType,
+                        'args'    => array(
+                            'url' => array(
+                                'type'         => new StringType(),
+                                'defaultValue' => '_id'
+                            )
+                        ),
+                        'resolve' => function ($parent, $args) {
+                            return $this->load->controller('extension/' . $this->codename . '/blog_category/categoryUrl', array(
+                                'parent' => $parent,
+                                'args' => $args
+                            ));
+                        }
+                    )
 
+                )
             )
-        ) );
+        ));
     }
 }

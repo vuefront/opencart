@@ -3,21 +3,47 @@
 class ControllerExtensionDVuefrontBlogCategory extends Controller
 {
     private $codename = "d_vuefront";
+    private $sub_versions = array('lite', 'light', 'free');
+    private $config_file = '';
+    private $setting = array();
 
-    public function category($args) {
+    public function __construct($registry)
+    {
+        parent::__construct($registry);
+        $this->load->model('extension/module/d_blog_module');
+        $this->config_file = $this->model_extension_module_d_blog_module->getConfigFile('d_blog_module', $this->sub_versions);
+
+        $this->setting = $this->model_extension_module_d_blog_module->getConfigData('d_blog_module', 'd_blog_module_setting', $this->config->get('config_store_id'), $this->config_file);
+    }
+
+    public function category($args)
+    {
         $this->load->model('extension/d_blog_module/category');
         $this->load->model('tool/image');
         $category_info = $this->model_extension_d_blog_module_category->getCategory($args['id']);
+
+        $width = $this->setting['category']['sub_category_image_width'];
+        $height = $this->setting['category']['sub_category_image_height'];
+        if ($category_info['image']) {
+            $image = $this->model_tool_image->resize($category_info['image'], $width, $height);
+            $imageLazy = $this->model_tool_image->resize($category_info['image'], 10, ceil(10 * $height / $width));
+        } else {
+            $image = $this->model_tool_image->resize('placeholder.png', $width, $height);
+            $imageLazy = $this->model_tool_image->resize('placeholder.png', 10, ceil(10 * $height / $width));
+        }
 
         return array(
             'id'          => $category_info['category_id'],
             'name'        => $category_info['title'],
             'description' => html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8'),
             'parent_id'   => $category_info['parent_id'],
+            'image' => $image,
+            'imageLazy' => $imageLazy
         );
     }
 
-    public function categoryList($args) {
+    public function categoryList($args)
+    {
         $this->load->model('extension/'.$this->codename.'/d_blog_module');
 
         $filter_data = array(
@@ -27,7 +53,7 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
             'order'   => $args['order']
         );
 
-        if ( $args['parent'] !== 0 ) {
+        if ($args['parent'] !== -1) {
             $filter_data['parent'] = $args['parent'];
         }
 
@@ -50,5 +76,30 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
             'totalPages' => (int)ceil($category_total / $args['size']),
             'totalElements' => (int)$category_total,
         );
+    }
+
+    public function childCategories($data)
+    {
+        $this->load->model('extension/'.$this->codename.'/d_blog_module');
+        $category_info = $data['parent'];
+        $results = $this->model_extension_d_vuefront_d_blog_module->getCategories(array('parent' => $category_info['id']));
+
+        $categories = array();
+
+        foreach ($results as $result) {
+            $categories[] = $this->category(array('id' => $result['category_id']));
+        }
+
+        return $categories;
+    }
+
+    public function categoryUrl($data) {
+        $category_info = $data['parent'];
+        $result = $data['args']['url'];
+
+        $result = str_replace("_id", $category_info['id'], $result);
+        $result = str_replace("_name", $category_info['name'], $result);
+
+        return $result;
     }
 }

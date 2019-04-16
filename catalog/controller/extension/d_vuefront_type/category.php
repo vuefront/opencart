@@ -96,6 +96,21 @@ class ControllerExtensionDVuefrontTypeCategory extends Controller
                     'name'        => new StringType(),
                     'description' => new StringType(),
                     'parent_id'   => new StringType(),
+                    'url' => array(
+                        'type'    => new StringType,
+                        'args'    => array(
+                            'url' => array(
+                                'type'         => new StringType(),
+                                'defaultValue' => '_id'
+                            )
+                        ),
+                        'resolve' => function ($parent, $args) {
+                            return $this->load->controller('extension/' . $this->codename . '/category/categoryUrl', array(
+                                'parent' => $parent,
+                                'args' => $args
+                            ));
+                        }
+                    )
                 )
             )
         ));

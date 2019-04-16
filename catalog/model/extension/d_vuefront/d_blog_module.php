@@ -19,6 +19,10 @@ class ModelExtensionDVuefrontDBlogModule extends Model
             $sql .= " AND cd2.title LIKE '" . $this->db->escape($data['filter_name']) . "%'";
         }
 
+        if (isset($data['parent'])) {
+            $sql .= " AND c1.parent_id = '" . (int)$data['parent'] . "'";
+        }
+
         $sql .= " GROUP BY cp.category_id";
 
         $sort_data = array(
@@ -50,7 +54,6 @@ class ModelExtensionDVuefrontDBlogModule extends Model
             $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
 
-
         $query = $this->db->query($sql);
 
         return $query->rows;
@@ -66,6 +69,10 @@ class ModelExtensionDVuefrontDBlogModule extends Model
 
         if (!empty($data['filter_name'])) {
             $sql .= " AND cd.title LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (isset($data['parent'])) {
+            $sql .= " AND c.parent_id = '" . (int)$data['parent'] . "'";
         }
 
         $query = $this->db->query($sql);

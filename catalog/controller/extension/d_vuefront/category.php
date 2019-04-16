@@ -80,4 +80,14 @@ class ControllerExtensionDVuefrontCategory extends Controller
 
         return $categories;
     }
+
+    public function categoryUrl($data) {
+        $category_info = $data['parent'];
+        $result = $data['args']['url'];
+
+        $result = str_replace("_id", $category_info['id'], $result);
+        $result = str_replace("_name", $category_info['name'], $result);
+
+        return $result;
+    }
 }
