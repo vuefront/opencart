@@ -36,6 +36,7 @@
 
         "catalog/controller/extension/d_vuefront",
         "catalog/controller/extension/d_vuefront_type",
+        "catalog/model/extension/d_vuefront",
 
         "system/library/d_graphql"
     ],
