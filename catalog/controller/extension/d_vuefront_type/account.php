@@ -33,6 +33,20 @@ class ControllerExtensionDVuefrontTypeAccount extends Controller
                     return $this->load->controller('extension/'.$this->codename.'/account/login', $args);
                 }
             ),
+            'accountLogout'  => array(
+                'type'    => new ObjectType(
+                    array(
+                        'name' => 'LogoutResult',
+                        'description' => 'LogoutResult',
+                        'fields' => array(
+                            'status' => new BooleanType()
+                        )
+                    )
+                ),
+                'resolve' => function ($store, $args) {
+                    return $this->load->controller('extension/'.$this->codename.'/account/logout', $args);
+                }
+            ),
             'accountRegister' => array(
                 'type'    => $this->customerType(),
                 'args'    => array(

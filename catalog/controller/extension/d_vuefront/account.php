@@ -72,4 +72,15 @@ class ControllerExtensionDVuefrontAccount extends Controller
             'customer' => $customer
         );
     }
+
+    public function logout()
+    {
+        $this->customer->logout();
+
+        $logged = $this->customer->isLogged();
+
+        return array(
+            'status' => !empty($logged)
+        );
+    }
 }
