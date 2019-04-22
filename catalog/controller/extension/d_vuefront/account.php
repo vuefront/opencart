@@ -3,9 +3,6 @@
 class ControllerExtensionDVuefrontAccount extends Controller
 {
     private $codename = "d_vuefront";
-    private $sub_versions = array('lite', 'light', 'free');
-    private $config_file = '';
-    private $setting = array();
 
     public function register($args)
     {
