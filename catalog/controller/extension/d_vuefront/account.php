@@ -50,6 +50,28 @@ class ControllerExtensionDVuefrontAccount extends Controller
         }
     }
 
+    public function edit($args) {
+	    $this->load->model('account/customer');
+	    $customer_info = $args['customer'];
+	    $customerData = array(
+		    'firstname' => $customer_info['firstName'],
+		    'lastname' => $customer_info['lastName'],
+		    'email' => $customer_info['email'],
+		    'telephone' => ''
+	    );
+
+	    $customer_id = $this->model_account_customer->editCustomer($this->customer->getId(), $customerData);
+
+	    $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+
+	    return array(
+		    'id' => $customer_info['customer_id'],
+		    'firstName' => $customer_info['firstname'],
+		    'lastName' => $customer_info['lastname'],
+		    'email' => $customer_info['email'],
+	    );
+    }
+
     public function isLogged()
     {
         $this->load->model('account/customer');

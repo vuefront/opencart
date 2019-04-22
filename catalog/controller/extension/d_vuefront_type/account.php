@@ -58,6 +58,17 @@ class ControllerExtensionDVuefrontTypeAccount extends Controller
                     return $this->load->controller('extension/'.$this->codename.'/account/register', $args);
                 }
             ),
+            'accountEdit' => array(
+	            'type'    => $this->customerType(),
+	            'args'    => array(
+		            'customer'      => array(
+			            'type' =>$this->customerInputType()
+		            )
+	            ),
+	            'resolve' => function ($store, $args) {
+		            return $this->load->controller('extension/'.$this->codename.'/account/edit', $args);
+	            }
+            ),
             'accountCheckLogged' => array(
                 'type' => new ObjectType(
                     array(

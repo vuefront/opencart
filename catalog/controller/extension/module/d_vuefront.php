@@ -16,7 +16,6 @@ class ControllerExtensionModuleDVuefront extends Controller
         $this->load->model($this->route);
         $rawInput = file_get_contents('php://input');
         $input = json_decode($rawInput, true);
-        $query = $input['query'];
 
         $queries = $this->model_extension_module_d_vuefront->getQueries();
         $mutations = $this->model_extension_module_d_vuefront->getMutations();
@@ -37,11 +36,11 @@ class ControllerExtensionModuleDVuefront extends Controller
 
         $processor = new Processor($schema);
 
-        if ( ! empty( $input['variables'] ) ) {
-            $processor->processPayload( $input['query'], $input['variables'] );
-    
+        if (!empty($input['variables'])) {
+            $processor->processPayload($input['query'], $input['variables']);
+
         } else {
-            $processor->processPayload( $input['query'] );
+            $processor->processPayload($input['query']);
         }
 
         $result = $processor->getResponseData();
