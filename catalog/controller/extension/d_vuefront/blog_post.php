@@ -29,8 +29,8 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
             $image = $this->model_tool_image->resize($post_info['image'], $width, $height);
             $imageLazy = $this->model_tool_image->resize($post_info['image'], 10, ceil(10 * $height / $width));
         } else {
-            $image = $this->model_tool_image->resize('placeholder.png', $width, $height);
-            $imageLazy = $this->model_tool_image->resize('placeholder.png', 10, ceil(10 * $height / $width));
+            $image = '';
+            $imageLazy = '';
         }
 
         return array(

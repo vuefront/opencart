@@ -11,7 +11,12 @@ class ModelExtensionDVuefrontWishlist extends Model
         } else {
             if ($this->customer->isLogged()) {
                 $this->load->model('account/wishlist');
-                $result = $this->model_account_wishlist->getWishlist();
+                $wishlist = $this->model_account_wishlist->getWishlist();
+                $result = array();
+
+                foreach($wishlist as $product) {
+                    $result[] = $product['product_id'];
+                }
             } else {
                 if (!empty($this->session->data['wishlist'])) {
                     $result = $this->session->data['wishlist'];

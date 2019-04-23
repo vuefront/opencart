@@ -75,8 +75,8 @@ class ControllerExtensionDVuefrontProduct extends Controller
             $image = $this->model_tool_image->resize($product_info['image'], $width, $height);
             $imageLazy = $this->model_tool_image->resize($product_info['image'], 10, ceil(10 * $height / $width));
         } else {
-            $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
-            $imageLazy = $this->model_tool_image->resize('placeholder.png', 10, 6);
+            $image = '';
+            $imageLazy = '';
         }
 
         if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {

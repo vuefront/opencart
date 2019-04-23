@@ -48,6 +48,18 @@ class ControllerExtensionDVuefrontCart extends Controller
         }
         $this->load->controller('checkout/cart/add');
 
+        $result = json_decode($this->response->getOutput(), true);
+
+        if($result['error']) {
+            if(!empty($result['error']['option'])) {
+                throw new Exception(reset($result['error']['option']));
+            } else if(!empty($result['error']['recurring'])) {
+                throw new Exception($result['error']['recurring']);
+            } else {
+                throw new Exception('error cart');
+            }
+        }
+
         return $this->cart(array());
     }
 
