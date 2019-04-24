@@ -20,7 +20,6 @@ type CartProduct {
 }
 
 type Category {
-  categories(limit: Int = 3): [Category]
   id: ID
   image: String
   imageLazy: String
@@ -28,10 +27,10 @@ type Category {
   description: String
   parent_id: String
   url(url: String): String
+  categories(limit: Int = 3): [Category]
 }
 
 type categoryBlog {
-  categories(limit: Int = 3): [categoryBlog]
   id: ID
   image: String
   imageLazy: String
@@ -39,6 +38,7 @@ type categoryBlog {
   description: String
   parent_id: String
   url(url: String): String
+  categories(limit: Int = 3): [categoryBlog]
 }
 
 type categoryBlogResult {
