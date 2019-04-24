@@ -42,7 +42,7 @@ class ControllerExtensionDVuefrontCategory extends Controller
     }
 
     public function categoryList($args) {
-        $this->load->model('extension/module/'.$this->codename);
+        $this->load->model('extension/'.$this->codename.'/category');
 
         $filter_data = array(
             'sort' => $args['sort'],
@@ -58,8 +58,8 @@ class ControllerExtensionDVuefrontCategory extends Controller
             $filter_data['parent'] = $args['parent'];
         }
 
-        $results = $this->model_extension_module_d_vuefront->getCategories($filter_data);
-        $category_total = $this->model_extension_module_d_vuefront->getTotalCategories($filter_data);
+        $results = $this->model_extension_d_vuefront_category->getCategories($filter_data);
+        $category_total = $this->model_extension_d_vuefront_category->getTotalCategories($filter_data);
 
         $categories = array();
 
@@ -80,9 +80,9 @@ class ControllerExtensionDVuefrontCategory extends Controller
     }
 
     public function childCategories($data) {
-        $this->load->model('extension/module/'.$this->codename);
+        $this->load->model('extension/'.$this->codename.'/category');
         $category_info = $data['parent'];
-        $results = $this->model_extension_module_d_vuefront->getCategories(array('parent' => $category_info['id']));
+        $results = $this->model_extension_d_vuefront_category->getCategories(array('parent' => $category_info['id']));
 
         $categories = array();
 
