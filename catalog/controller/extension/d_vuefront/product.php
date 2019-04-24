@@ -116,7 +116,37 @@ class ControllerExtensionDVuefrontProduct extends Controller
             'image' => $image,
             'imageLazy' => $imageLazy,
             'stock' => $stock,
-            'rating' => (float)$rating
+            'rating' => (float)$rating,
+            'images' => function($root, $args) {
+                return $this->productImage(array(
+                    'parent' => $root,
+                    'args' => $args
+                ));
+            },
+            'products' => function($root, $args) {
+                return $this->relatedProducts(array(
+                    'parent' => $root,
+                    'args' => $args
+                ));
+            },
+            'attributes' => function($root, $args) {
+                return $this->productAttribute(array(
+                    'parent' => $root,
+                    'args' => $args
+                ));
+            },
+            'reviews' => function($root, $args) {
+                return $this->productReview(array(
+                    'parent' => $root,
+                    'args' => $args
+                ));
+            },
+            'options' => function($root, $args) {
+                return $this->productOption(array(
+                    'parent' => $root,
+                    'args' => $args
+                ));
+            }
         );
     }
 

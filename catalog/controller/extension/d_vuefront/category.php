@@ -25,7 +25,19 @@ class ControllerExtensionDVuefrontCategory extends Controller
             'description' => html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8'),
             'parent_id'   => $category_info['parent_id'],
             'image'       => $image,
-            'imageLazy'   => $imageLazy
+            'imageLazy'   => $imageLazy,
+            'url' => function($root, $args) {
+                return $this->categoryUrl(array(
+                    'parent' => $root,
+                    'args' => $args
+                ));
+            },
+            'categories' => function($root, $args) {
+                return $this->childCategories(array(
+                    'parent' => $root,
+                    'args' => $args
+                ));
+            }
         );
     }
 

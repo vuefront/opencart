@@ -6,17 +6,21 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit3984d4e56159d6beade33335b85c7d77
 {
+    public static $files = array (
+        'c594688b3441835d5575f3085da4a242' => __DIR__ . '/..' . '/webonyx/graphql-php/src/deprecated.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
-        'Y' => 
+        'G' => 
         array (
-            'Youshido\\GraphQL\\' => 17,
+            'GraphQL\\' => 8,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Youshido\\GraphQL\\' => 
+        'GraphQL\\' => 
         array (
-            0 => __DIR__ . '/..' . '/youshido/graphql/src',
+            0 => __DIR__ . '/..' . '/webonyx/graphql-php/src',
         ),
     );
 

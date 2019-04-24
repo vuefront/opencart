@@ -1,12 +1,12 @@
 {
-    "name": "user/d_graphql",
+    "name": "d_graphql",
     "authors": [
         {
-            "name": "Alexandr Krasnij",
-            "email": "php4.drvn@gmail.com"
+            "name": "Dreamvention",
+            "email": "info@dreamvention.com"
         }
     ],
     "require": {
-        "youshido/graphql": "^1.5"
+        "webonyx/graphql-php": "0.11.6"
     }
 }
