@@ -1,10 +1,10 @@
 <?php
 
-class ControllerExtensionDVuefrontCurrency extends Controller
+class ControllerExtensionDVuefrontStoreCurrency extends Controller
 {
     private $codename = "d_vuefront";
 
-    public function currency()
+    public function get()
     {
         $this->load->model('localisation/currency');
 
@@ -34,6 +34,6 @@ class ControllerExtensionDVuefrontCurrency extends Controller
         unset($this->session->data['shipping_method']);
         unset($this->session->data['shipping_methods']);
 
-        return $this->currency();
+        return $this->get();
     }
 }

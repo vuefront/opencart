@@ -1,10 +1,10 @@
 <?php
 
-class ControllerExtensionDVuefrontPage extends Controller
+class ControllerExtensionDVuefrontCommonPage extends Controller
 {
     private $codename = "d_vuefront";
 
-    public function page($args)
+    public function get($args)
     {
         $this->load->model('extension/'.$this->codename.'/page');
         $information_info = $this->model_extension_d_vuefront_page->getPage($args['id']);
@@ -17,7 +17,7 @@ class ControllerExtensionDVuefrontPage extends Controller
         );
     }
 
-    public function pageList($args)
+    public function getList($args)
     {
         $this->load->model('extension/'.$this->codename.'/page');
 
@@ -46,7 +46,7 @@ class ControllerExtensionDVuefrontPage extends Controller
         $results = $this->model_extension_d_vuefront_page->getPages($filter_data);
 
         foreach ($results as $result) {
-            $posts[] = $this->page(array('id' => $result['information_id']));
+            $posts[] = $this->get(array('id' => $result['information_id']));
         }
 
         return array(

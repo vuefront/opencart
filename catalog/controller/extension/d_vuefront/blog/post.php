@@ -17,7 +17,7 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
         $this->setting = $this->model_extension_module_d_blog_module->getConfigData('d_blog_module', 'd_blog_module_setting', $this->config->get('config_store_id'), $this->config_file);
     }
 
-    public function post($args)
+    public function get($args)
     {
         $this->load->model('extension/d_blog_module/post');
         $this->load->model('tool/image');
@@ -40,16 +40,11 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
             'shortDescription' => strip_tags(html_entity_decode($post_info['short_description'], ENT_QUOTES, 'UTF-8')),
             'image' => $image,
             'imageLazy' => $imageLazy,
-            'reviews' => function($root, $args) {
-                return $this->postReview(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            }
+            'reviews' => $this->vfload->resolver('blog/review/get')
         );
     }
 
-    public function postList($args)
+    public function getList($args)
     {
         $this->load->model('extension/d_blog_module/post');
 
@@ -79,7 +74,7 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
         $results = $this->model_extension_d_blog_module_post->getPosts($filter_data);
 
         foreach ($results as $result) {
-            $posts[] = $this->post(array('id' => $result['post_id']));
+            $posts[] = $this->get(array('id' => $result['post_id']));
         }
 
         return array(
@@ -92,49 +87,5 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
             'totalPages' => (int)ceil($post_total / $args['size']),
             'totalElements' => (int)$post_total,
         );
-    }
-
-    public function postReview($data) {
-        $post = $data['parent'];
-
-        $this->load->model('extension/d_blog_module/review');
-
-        $results = $this->model_extension_d_blog_module_review->getReviewsByPostId($post['id']);
-
-        $reviews = array();
-
-        foreach ($results as $result) {
-            $reviews[] = array(
-                'author' => $result['author'],
-                'author_email' => $result['guest_email'],
-                'content' => $result['description'],
-                'created_at' => $result['date_added'],
-                'rating' => (float)$result['rating']
-            );
-        }
-
-        return $reviews;
-    }
-
-    public function addReview($args)
-    {
-        $this->load->model('extension/d_blog_module/review');
-
-        $reviewData = array(
-            'author' => $args['author'],
-            'image' => '',
-            'description' => $args['content'],
-            'rating' => $args['rating']
-        );
-
-        $reviewData['status'] = 0;
-
-        if(!$this->setting['review']['moderate']){
-            $reviewData['status'] = 1;
-        }
-
-        $this->model_extension_d_blog_module_review->addReview($args['id'], $reviewData);
-
-        return $this->post($args);
     }
 }

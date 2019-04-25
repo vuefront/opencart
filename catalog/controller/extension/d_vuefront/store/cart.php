@@ -1,10 +1,10 @@
 <?php
 
-class ControllerExtensionDVuefrontCart extends Controller
+class ControllerExtensionDVuefrontStoreCart extends Controller
 {
     private $codename = "d_vuefront";
 
-    public function cart($args)
+    public function get($args)
     {
         $cart = array();
         $results = $this->cart->getProducts();
@@ -23,7 +23,7 @@ class ControllerExtensionDVuefrontCart extends Controller
 				$total = false;
             }
             
-            $product_info = $this->load->controller('extension/'.$this->codename.'/product/product', array('id' => $product['product_id']));
+            $product_info = $this->vfload->data('store/product/get', array('id' => $product['product_id']));
             $product_info['price'] = $price;
 
             $cart['products'][] = array(
@@ -37,7 +37,7 @@ class ControllerExtensionDVuefrontCart extends Controller
         return $cart;
     }
 
-    public function addToCart($args)
+    public function add($args)
     {
         $this->request->post['product_id'] = $args['id'];
         $this->request->post['quantity'] = $args['quantity'];
@@ -60,20 +60,20 @@ class ControllerExtensionDVuefrontCart extends Controller
             }
         }
 
-        return $this->cart(array());
+        return $this->get(array());
     }
 
-    public function updateCart($args)
+    public function update($args)
     {
         $this->cart->update($args['key'], $args['quantity']);
 
-        return $this->cart(array());
+        return $this->get(array());
     }
 
-    public function removeCart($args)
+    public function remove($args)
     {
         $this->cart->remove($args['key']);
 
-        return $this->cart(array());
+        return $this->get(array());
     }
 }

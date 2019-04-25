@@ -1,6 +1,6 @@
 <?php
 
-class ControllerExtensionDVuefrontAccount extends Controller
+class ControllerExtensionDVuefrontCommonAccount extends Controller
 {
     public function register($args)
     {
@@ -51,6 +51,17 @@ class ControllerExtensionDVuefrontAccount extends Controller
         } else {
             throw new Exception($this->language->get('error_login'));
         }
+    }
+
+    public function logout()
+    {
+        $this->customer->logout();
+
+        $logged = $this->customer->isLogged();
+
+        return array(
+            'status' => !empty($logged)
+        );
     }
 
     public function edit($args) {
@@ -110,17 +121,6 @@ class ControllerExtensionDVuefrontAccount extends Controller
         return array(
             'status' => !empty($logged),
             'customer' => $customer
-        );
-    }
-
-    public function logout()
-    {
-        $this->customer->logout();
-
-        $logged = $this->customer->isLogged();
-
-        return array(
-            'status' => !empty($logged)
         );
     }
 }

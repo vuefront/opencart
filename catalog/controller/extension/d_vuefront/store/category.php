@@ -1,10 +1,10 @@
 <?php
 
-class ControllerExtensionDVuefrontCategory extends Controller
+class ControllerExtensionDVuefrontStoreCategory extends Controller
 {
     private $codename = "d_vuefront";
 
-    public function category($args) {
+    public function get($args) {
         $this->load->model('catalog/category');
         $this->load->model('tool/image');
         $category_info = $this->model_catalog_category->getCategory($args['id']);
@@ -26,22 +26,12 @@ class ControllerExtensionDVuefrontCategory extends Controller
             'parent_id'   => $category_info['parent_id'],
             'image'       => $image,
             'imageLazy'   => $imageLazy,
-            'url' => function($root, $args) {
-                return $this->categoryUrl(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            },
-            'categories' => function($root, $args) {
-                return $this->childCategories(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            }
+            'url' => $this->vfload->resolver('store/category/url'),
+            'categories' => $this->vfload->resolver('store/category/child')
         );
     }
 
-    public function categoryList($args) {
+    public function getList($args) {
         $this->load->model('extension/'.$this->codename.'/category');
 
         $filter_data = array(
@@ -64,7 +54,7 @@ class ControllerExtensionDVuefrontCategory extends Controller
         $categories = array();
 
         foreach ($results as $result) {
-            $categories[] = $this->category(array('id' => $result['category_id']));
+            $categories[] = $this->get(array('id' => $result['category_id']));
         }
 
         return array(
@@ -79,7 +69,7 @@ class ControllerExtensionDVuefrontCategory extends Controller
         );
     }
 
-    public function childCategories($data) {
+    public function child($data) {
         $this->load->model('extension/'.$this->codename.'/category');
         $category_info = $data['parent'];
         $results = $this->model_extension_d_vuefront_category->getCategories(array('parent' => $category_info['id']));
@@ -87,13 +77,13 @@ class ControllerExtensionDVuefrontCategory extends Controller
         $categories = array();
 
         foreach ($results as $result) {
-            $categories[] = $this->category(array('id' => $result['category_id']));
+            $categories[] = $this->get(array('id' => $result['category_id']));
         }
 
         return $categories;
     }
 
-    public function categoryUrl($data) {
+    public function url($data) {
         $category_info = $data['parent'];
         $result = $data['args']['url'];
 

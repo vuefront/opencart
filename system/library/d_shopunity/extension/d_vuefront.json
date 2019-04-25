@@ -33,9 +33,8 @@
         "catalog/model/extension/module/d_vuefront.php"
     ],
     "dirs": [
-
         "catalog/controller/extension/d_vuefront",
-        "catalog/controller/extension/d_vuefront_type",
+        "catalog/controller/extension/module/d_vuefront",
         "catalog/model/extension/d_vuefront",
 
         "system/library/d_graphql"

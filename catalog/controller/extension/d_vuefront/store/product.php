@@ -1,10 +1,10 @@
 <?php
 
-class ControllerExtensionDVuefrontProduct extends Controller
+class ControllerExtensionDVuefrontStoreProduct extends Controller
 {
     private $codename = "d_vuefront";
 
-    public function products($args)
+    public function getList($args)
     {
         $this->load->model('catalog/product');
         $this->load->model('extension/' . $this->codename . '/product');
@@ -47,7 +47,7 @@ class ControllerExtensionDVuefrontProduct extends Controller
         $results = $this->model_extension_d_vuefront_product->getProducts($filter_data);
 
         foreach ($results as $result) {
-            $products[] = $this->product(array('id' => $result['product_id']));
+            $products[] = $this->get(array('id' => $result['product_id']));
         }
 
         return array(
@@ -62,7 +62,7 @@ class ControllerExtensionDVuefrontProduct extends Controller
         );
     }
 
-    public function product($args)
+    public function get($args)
     {
         $this->load->model('catalog/product');
         $this->load->model('tool/image');
@@ -117,36 +117,11 @@ class ControllerExtensionDVuefrontProduct extends Controller
             'imageLazy' => $imageLazy,
             'stock' => $stock,
             'rating' => (float)$rating,
-            'images' => function($root, $args) {
-                return $this->productImage(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            },
-            'products' => function($root, $args) {
-                return $this->relatedProducts(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            },
-            'attributes' => function($root, $args) {
-                return $this->productAttribute(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            },
-            'reviews' => function($root, $args) {
-                return $this->productReview(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            },
-            'options' => function($root, $args) {
-                return $this->productOption(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            }
+            'images' => $this->vfload->resolver('store/product/images'),
+            'products' => $this->vfload->resolver('store/product/relatedProducts'),
+            'attributes' => $this->vfload->resolver('store/product/attribute'),
+            'reviews' => $this->vfload->resolver('store/review/get'),
+            'options' => $this->vfload->resolver('store/product/option')
         );
     }
 
@@ -159,13 +134,13 @@ class ControllerExtensionDVuefrontProduct extends Controller
         $products = array();
 
         foreach ($results as $result) {
-            $products[] = $this->product(array('id' => $result['product_id']));
+            $products[] = $this->get(array('id' => $result['product_id']));
         }
 
         return $products;
     }
 
-    public function productAttribute($data)
+    public function attribute($data)
     {
         $this->load->model('catalog/product');
         $product_info = $data['parent'];
@@ -186,30 +161,7 @@ class ControllerExtensionDVuefrontProduct extends Controller
         return $attributes;
     }
 
-    public function productReview($data)
-    {
-        $this->load->model('catalog/review');
-        $product = $data['parent'];
-
-        $results = $this->model_catalog_review->getReviewsByProductId($product['id']);
-
-        $reviews = array();
-
-        foreach ($results as $result) {
-            $reviews[] = array(
-                'author' => $result['author'],
-                'author_email' => '',
-                'content' => nl2br($result['text']),
-                'rating' => (float)$result['rating'],
-                'created_at' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-
-            );
-        }
-
-        return $reviews;
-    }
-
-    public function productOption($data)
+    public function option($data)
     {
         $this->load->model('catalog/product');
         $product_info = $data['parent'];
@@ -241,7 +193,7 @@ class ControllerExtensionDVuefrontProduct extends Controller
         return $options;
     }
 
-    public function productImage($data)
+    public function images($data)
     {
         $this->load->model('catalog/product');
         $this->load->model('tool/image');
@@ -269,20 +221,5 @@ class ControllerExtensionDVuefrontProduct extends Controller
         }
 
         return $images;
-    }
-
-    public function addReview($args)
-    {
-        $this->load->model('catalog/review');
-
-        $reviewData = array(
-            'name' => $args['author'],
-            'text' => $args['content'],
-            'rating' => $args['rating']
-        );
-
-        $this->model_catalog_review->addReview($args['id'], $reviewData);
-
-        return $this->product($args);
     }
 }

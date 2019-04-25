@@ -1,10 +1,10 @@
 <?php
 
-class ControllerExtensionDVuefrontLanguage extends Controller
+class ControllerExtensionDVuefrontCommonLanguage extends Controller
 {
     private $codename = "d_vuefront";
 
-    public function language()
+    public function get()
     {
         $this->load->model('localisation/language');
 
@@ -32,6 +32,6 @@ class ControllerExtensionDVuefrontLanguage extends Controller
     {
         $this->session->data['language'] = $args['code'];
 
-        return $this->language();
+        return $this->get();
     }
 }

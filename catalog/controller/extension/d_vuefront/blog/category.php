@@ -16,7 +16,7 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
         $this->setting = $this->model_extension_module_d_blog_module->getConfigData('d_blog_module', 'd_blog_module_setting', $this->config->get('config_store_id'), $this->config_file);
     }
 
-    public function category($args)
+    public function get($args)
     {
         $this->load->model('extension/d_blog_module/category');
         $this->load->model('tool/image');
@@ -39,22 +39,12 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
             'parent_id'   => $category_info['parent_id'],
             'image' => $image,
             'imageLazy' => $imageLazy,
-            'url' => function($root, $args) {
-                return $this->categoryUrl(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            },
-            'categories' => function($root, $args) {
-                return $this->childCategories(array(
-                    'parent' => $root,
-                    'args' => $args
-                ));
-            }
+            'url' => $this->vfload->resolver('blog/category/url'),
+            'categories' => $this->vfload->resolver('blog/category/child')
         );
     }
 
-    public function categoryList($args)
+    public function getList($args)
     {
         $this->load->model('extension/'.$this->codename.'/d_blog_module');
 
@@ -75,7 +65,7 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
         $categories = array();
 
         foreach ($results as $result) {
-            $categories[] = $this->category(array('id' => $result['category_id']));
+            $categories[] = $this->get(array('id' => $result['category_id']));
         }
 
         return array(
@@ -90,7 +80,7 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
         );
     }
 
-    public function childCategories($data)
+    public function child($data)
     {
         $this->load->model('extension/'.$this->codename.'/d_blog_module');
         $category_info = $data['parent'];
@@ -99,13 +89,13 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
         $categories = array();
 
         foreach ($results as $result) {
-            $categories[] = $this->category(array('id' => $result['category_id']));
+            $categories[] = $this->get(array('id' => $result['category_id']));
         }
 
         return $categories;
     }
 
-    public function categoryUrl($data) {
+    public function url($data) {
         $category_info = $data['parent'];
         $result = $data['args']['url'];
 
