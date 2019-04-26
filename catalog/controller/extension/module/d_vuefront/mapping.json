@@ -40,5 +40,8 @@
     
     "wishlist": "store/wishlist/getList",
     "addToWishlist": "store/wishlist/add",
-    "removeWishlist": "store/wishlist/remove"
+    "removeWishlist": "store/wishlist/remove",
+
+    "contactSend": "common/contact/send",
+    "contact": "common/contact/get"
 }

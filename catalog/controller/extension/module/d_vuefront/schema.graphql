@@ -209,6 +209,33 @@ type productReview {
   rating: Float
 }
 
+type ContactResult {
+    status: Boolean
+}
+
+type Location {
+    image: String
+    imageLazy: String
+    address: String
+    geocode: String
+    telephone: String
+    fax: String
+    open: String
+    comment: String
+}
+
+type Contact {
+    locations: [Location]
+    store: String
+    address: String
+    email: String
+    geocode: String
+    telephone: String
+    fax: String
+    open: String
+    comment: String
+}
+
 type RootMutationType {
   accountLogin(email: String, password: String): Customer
   accountLogout: LogoutResult
@@ -227,6 +254,7 @@ type RootMutationType {
   addReview(id: Int, rating: Float, author: String, content: String): Product
   addToWishlist(id: Int): [Product]
   removeWishlist(id: String): [Product]
+  contactSend(name: String, email: String, message: String): ContactResult
 }
 
 type RootQueryType {
@@ -244,6 +272,7 @@ type RootQueryType {
   pagesList(page: Int = 1, size: Int = 10, search: String = "", sort: String = "sort_order", order: String = "ASC"): PageResult
   productsList(page: Int = 1, size: Int = 15, filter: String = "", special: Boolean = false, search: String = "", ids: [Int] = [], category_id: Int = 0, sort: String = "sort_order", order: String = "ASC"): ProductResult
   product(id: Int): Product
-  wishlist: [Product]
+  wishlist: [Product],
+  contact: Contact
 }
 
