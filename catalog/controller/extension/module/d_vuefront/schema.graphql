@@ -236,12 +236,35 @@ type Contact {
     comment: String
 }
 
+type AccountAddress {
+  id: String
+  firstName: String
+  lastName: String
+  company: String
+  address1: String
+  address2: String
+  city: String
+  zipcode: String
+}
+
+input type AccountAddressInput {
+  firstName: String
+  lastName: String
+  company: String
+  address1: String
+  address2: String
+  city: String
+  zipcode: String
+}
+
 type RootMutationType {
   accountLogin(email: String, password: String): Customer
   accountLogout: LogoutResult
   accountRegister(customer: CustomerInput): Customer
   accountEdit(customer: CustomerInput): Customer
   accountEditPassword(password: String): Customer
+  accountAddAddress(address: AccountAddressInput): AccountAddress
+  accountEditAddress(id: String, address: AccountAddressInput): AccountAddress
   accountCheckLogged: LoggedResult
   addBlogPostReview(id: Int, rating: Float, author: String, content: String): Post
   addToCart(id: Int, quantity: Int = 1, options: [CartOption] = []): Cart
@@ -272,7 +295,9 @@ type RootQueryType {
   pagesList(page: Int = 1, size: Int = 10, search: String = "", sort: String = "sort_order", order: String = "ASC"): PageResult
   productsList(page: Int = 1, size: Int = 15, filter: String = "", special: Boolean = false, search: String = "", ids: [Int] = [], category_id: Int = 0, sort: String = "sort_order", order: String = "ASC"): ProductResult
   product(id: Int): Product
-  wishlist: [Product],
+  wishlist: [Product]
   contact: Contact
+  accountAddressList: [AccountAddress]
+  accountAddress(id: String): AccountAddress
 }
 

@@ -5,6 +5,10 @@
     "accountEdit": "common/account/edit",
     "accountEditPassword": "common/account/editPassword",
     "accountCheckLogged": "common/account/isLogged",
+    "accountAddressList": "common/account/addressList",
+    "accountAddress": "common/account/address",
+    "accountAddAddress": "common/account/addAddress",
+    "accountEditAddress": "common/account/editAddress",
 
     "categoryBlog": "blog/category/get",
     "categoriesBlogList": "blog/category/getList",
