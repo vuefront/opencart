@@ -247,7 +247,7 @@ type AccountAddress {
   zipcode: String
 }
 
-input type AccountAddressInput {
+input AccountAddressInput {
   firstName: String
   lastName: String
   company: String
