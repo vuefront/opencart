@@ -34,7 +34,7 @@ class ModelExtensionModuleDVuefront extends Model
 
     public function getResolvers()
     {
-        $rawMapping = file_get_contents(DIR_APPLICATION.'controller/extension/module/'.$this->codename.'/mapping.json');
+        $rawMapping = file_get_contents(DIR_APPLICATION.'controller/extension/module/'.$this->codename.'_schema/mapping.json');
         $mapping = json_decode( $rawMapping, true );
         $result = array();
         foreach ($mapping as $key => $value) {

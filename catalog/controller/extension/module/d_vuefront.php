@@ -15,7 +15,7 @@ class ControllerExtensionModuleDVuefront extends Controller
         $resolvers = $this->model_extension_module_d_vuefront->getResolvers();
 
         try {
-            $schema = BuildSchema::build(file_get_contents(__DIR__ . '/'.$this->codename.'/schema.graphql'));
+            $schema = BuildSchema::build(file_get_contents(__DIR__ . '/'.$this->codename.'_schema/schema.graphql'));
             $rawInput = file_get_contents('php://input');
             $input = json_decode($rawInput, true);
             $query = $input['query'];
