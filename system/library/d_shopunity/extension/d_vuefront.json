@@ -34,7 +34,7 @@
     ],
     "dirs": [
         "catalog/controller/extension/d_vuefront",
-        "catalog/controller/extension/module/d_vuefront",
+        "catalog/controller/extension/module/d_vuefront_schema",
         "catalog/model/extension/d_vuefront",
 
         "system/library/d_graphql"
