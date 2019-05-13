@@ -33,6 +33,6 @@ class ControllerExtensionDVuefrontStoreCompare extends Controller
         $this->load->model("extension/".$this->codename."/compare");
         $this->model_extension_d_vuefront_compare->deleteCompare($args['id']);
 
-        return $this->fegett(array());
+        return $this->get(array());
     }
 }
