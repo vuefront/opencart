@@ -125,16 +125,7 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller {
 		$results   = $this->model_account_address->getAddresses();
 		$addresses = array();
 		foreach ( $results as $result ) {
-			$addresses[] = array(
-				'id'        => $result['address_id'],
-				'firstName' => $result['firstname'],
-				'lastName'  => $result['lastname'],
-				'company'   => $result['company'],
-				'address1'  => $result['address_1'],
-				'address2'  => $result['address_2'],
-				'city'      => $result['city'],
-				'zipcode'   => $result['postcode'],
-			);
+			$addresses[] = $this->address(array('id' => $result['address_id']));
 		}
 
 		return $addresses;
@@ -149,13 +140,24 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller {
 			'id'        => $result['address_id'],
 			'firstName' => $result['firstname'],
 			'lastName'  => $result['lastname'],
-			'company'   => $result['company'],
+            'company'   => $result['company'],
+            'zoneId'    => $result['zone_id'],
+            'zone'      => $this->vfload->resolver('common/account/zone'),
+            'countryId' => $result['country_id'],
+            'country'   => $this->vfload->resolver('common/account/country'),
 			'address1'  => $result['address_1'],
 			'address2'  => $result['address_2'],
 			'city'      => $result['city'],
 			'zipcode'   => $result['postcode'],
 		);
-	}
+    }
+    
+    public function country($args) {
+        return $this->vfload->data('common/country/get', array('id' => $args['parent']['countryId']));
+    }
+    public function zone($args) {
+        return $this->vfload->data('common/zone/get', array('id' => $args['parent']['zoneId']));
+    }
 
 	public function addAddress($args) {
 		$this->load->model( 'extension/d_vuefront/address' );

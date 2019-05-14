@@ -10,6 +10,12 @@
     "accountAddAddress": "common/account/addAddress",
     "accountEditAddress": "common/account/editAddress",
 
+    "countriesList": "common/country/getList",
+    "country": "common/country/get",
+
+    "zonesList": "common/zone/getList",
+    "zone": "common/zone/get",
+
     "categoryBlog": "blog/category/get",
     "categoriesBlogList": "blog/category/getList",
 
