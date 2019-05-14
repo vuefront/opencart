@@ -301,6 +301,7 @@ type RootMutationType {
   accountEditPassword(password: String): Customer
   accountAddAddress(address: AccountAddressInput): AccountAddress
   accountEditAddress(id: String, address: AccountAddressInput): AccountAddress
+  accountRemoveAddress(id: String, page: Int = 1, size: Int = 10): [AccountAddress]
   accountCheckLogged: LoggedResult
   addBlogPostReview(id: Int, rating: Float, author: String, content: String): Post
   addToCart(id: Int, quantity: Int = 1, options: [CartOption] = []): Cart

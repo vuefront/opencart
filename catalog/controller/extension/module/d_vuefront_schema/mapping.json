@@ -9,6 +9,7 @@
     "accountAddress": "common/account/address",
     "accountAddAddress": "common/account/addAddress",
     "accountEditAddress": "common/account/editAddress",
+    "accountRemoveAddress": "common/account/removeAddress",
 
     "countriesList": "common/country/getList",
     "country": "common/country/get",

@@ -173,5 +173,13 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller {
         $this->model_extension_d_vuefront_address->editAddress($args['id'], $args['address']);
 
 		return $this->address(array('id' => $args['id']));
-	}
+    }
+    
+    public function removeAddress($args) {
+        $this->load->model(  'extension/d_vuefront/address' );
+
+        $this->model_extension_d_vuefront_address->deleteAddress($args['id']);
+
+		return $this->addressList($args);
+    }
 }
