@@ -158,17 +158,17 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller {
 	}
 
 	public function addAddress($args) {
-		$this->load->model( 'account/address' );
+		$this->load->model( 'extension/d_vuefront/address' );
 
-		$address_id = $this->model_account_address->addAddress($this->customer->getId(), $args['address']);
+		$address_id = $this->model_extension_d_vuefront_address->addAddress($this->customer->getId(), $args['address']);
 
 		return $this->address(array('id' => $address_id));
 	}
 
 	public function editAddress($args) {
-		$this->load->model( 'account/address' );
+		$this->load->model(  'extension/d_vuefront/address' );
 
-		$this->model_account_address->editAddress($args['id'], $args['address']);
+        $this->model_extension_d_vuefront_address->editAddress($args['id'], $args['address']);
 
 		return $this->address(array('id' => $args['id']));
 	}

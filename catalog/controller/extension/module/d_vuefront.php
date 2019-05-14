@@ -18,7 +18,7 @@ class ControllerExtensionModuleDVuefront extends Controller
             $schema = BuildSchema::build(file_get_contents(__DIR__ . '/'.$this->codename.'_schema/schema.graphql'));
             $rawInput = file_get_contents('php://input');
             $input = json_decode($rawInput, true);
-            $query = $input['query'];
+            $query = isset($input['query']) ? $input['query']: '';
             $variableValues = isset($input['variables']) ? $input['variables'] : null;
             $result = GraphQL::executeQuery($schema, $query, $resolvers, null, $variableValues);
         } catch (Exception $e) {
@@ -30,10 +30,14 @@ class ControllerExtensionModuleDVuefront extends Controller
         }
 
         if (!empty($this->request->get['cors'])) {
-            $this->response->addHeader('Access-Control-Allow-Origin: '.$this->request->server['HTTP_ORIGIN']);
+            if(!empty($this->request->server['HTTP_ORIGIN'])) {
+                $this->response->addHeader('Access-Control-Allow-Origin: '.$this->request->server['HTTP_ORIGIN']);
+            } else {
+                $this->response->addHeader('Access-Control-Allow-Origin: *');
+            }
             $this->response->addHeader('Access-Control-Allow-Methods: POST, OPTIONS');
             $this->response->addHeader('Access-Control-Allow-Credentials: true');
-            $this->response->addHeader('Access-Control-Allow-Headers: DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Token,token,Cookie,cookie');
+            $this->response->addHeader('Access-Control-Allow-Headers: DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Token,token,Cookie,cookie,content-type');
         }
 
         $this->response->addHeader('Content-Type: application/json; charset=UTF-8');
