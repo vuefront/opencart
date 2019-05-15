@@ -169,26 +169,24 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
         $options = array();
 
         foreach ($results as $option) {
-            if ($option['type'] == 'checkbox' || $option['type'] == 'radio' || $option['type'] == 'select') {
-                $product_option_value_data = array();
+            $product_option_value_data = array();
 
-                foreach ($option['product_option_value'] as $option_value) {
-                    if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
-                        $product_option_value_data[] = array(
-                            'id' => $option_value['product_option_value_id'],
-                            'name' => $option_value['name'],
-                        );
-                    }
+            foreach ($option['product_option_value'] as $option_value) {
+                if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
+                    $product_option_value_data[] = array(
+                        'id' => $option_value['product_option_value_id'],
+                        'name' => $option_value['name'],
+                    );
                 }
-
-                $options[] = array(
-                    'id' => $option['product_option_id'],
-                    'values' => $product_option_value_data,
-                    'name' => $option['name']
-                );
             }
-        }
 
+            $options[] = array(
+                'id' => $option['product_option_id'],
+                'values' => $product_option_value_data,
+                'name' => $option['name'],
+                'type' => $option['type']
+            );
+        }
 
         return $options;
     }

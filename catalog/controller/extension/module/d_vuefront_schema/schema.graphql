@@ -3,6 +3,8 @@ schema {
   mutation: RootMutationType
 }
 
+scalar Upload
+
 type Cart {
   products: [CartProduct]
 }
@@ -197,6 +199,7 @@ type productImage {
 type productOption {
   id: String
   name: String
+  type: String
   values: [OptionValue]
 }
 
@@ -293,7 +296,12 @@ input AccountAddressInput {
   zipcode: String
 }
 
+type FileResult {
+  code: String
+}
+
 type RootMutationType {
+  uploadFile(file: Upload): FileResult
   accountLogin(email: String, password: String): Customer
   accountLogout: LogoutResult
   accountRegister(customer: CustomerInput): Customer

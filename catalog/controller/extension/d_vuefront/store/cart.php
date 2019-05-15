@@ -44,13 +44,13 @@ class ControllerExtensionDVuefrontStoreCart extends Controller
         $this->request->post['option'] = array();
 
         foreach ($args['options'] as $option) {
-            $this->request->post['option'][$option['id']] = $option['value'];
+            $this->request->post['option'][$option['id']] = strpos( $option['value'], '|') == false ? $option['value'] : explode('|', $option['value']);
         }
+        
         $this->load->controller('checkout/cart/add');
 
         $result = json_decode($this->response->getOutput(), true);
-
-        if($result['error']) {
+        if(!empty($result['error'])) {
             if(!empty($result['error']['option'])) {
                 throw new Exception(reset($result['error']['option']));
             } else if(!empty($result['error']['recurring'])) {
