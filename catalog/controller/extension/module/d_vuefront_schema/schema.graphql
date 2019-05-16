@@ -170,6 +170,7 @@ type Product {
   id: ID
   image: String
   imageLazy: String
+  imageBig: String
   name: String
   shortDescription: String
   description: String
@@ -194,6 +195,7 @@ type productAttribute {
 type productImage {
   image: String
   imageLazy: String
+  imageBig: String
 }
 
 type productOption {

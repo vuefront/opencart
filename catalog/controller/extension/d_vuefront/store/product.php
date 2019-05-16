@@ -71,12 +71,16 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
 
         $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
         $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
+        $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
+        $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
         if ($product_info['image']) {
             $image = $this->model_tool_image->resize($product_info['image'], $width, $height);
             $imageLazy = $this->model_tool_image->resize($product_info['image'], 10, ceil(10 * $height / $width));
+            $imageBig = $this->model_tool_image->resize($product_info['image'], $popup_width, $popup_height);
         } else {
             $image = '';
             $imageLazy = '';
+            $imageBig = '';
         }
 
         if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -115,6 +119,7 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             'model' => $product_info['model'],
             'image' => $image,
             'imageLazy' => $imageLazy,
+            'imageBig' => $imageBig,
             'stock' => $stock,
             'rating' => (float)$rating,
             'images' => $this->vfload->resolver('store/product/images'),
@@ -204,17 +209,22 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
         foreach ($results as $result) {
             $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
             $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
+            $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
+            $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
             if ($product_info['image']) {
                 $image = $this->model_tool_image->resize($result['image'], $width, $height);
                 $imageLazy = $this->model_tool_image->resize($result['image'], 10, ceil(10 * $height / $width));
+                $imageBig = $this->model_tool_image->resize($result['image'], $popup_width, $popup_height);
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
                 $imageLazy = $this->model_tool_image->resize('placeholder.png', 10, 6);
+                $imageBig = '';
             }
 
             $images[] = array(
                 'image' => $image,
-                'imageLazy' => $imageLazy
+                'imageLazy' => $imageLazy,
+                'imageBig' => $imageBig
             );
         }
 
