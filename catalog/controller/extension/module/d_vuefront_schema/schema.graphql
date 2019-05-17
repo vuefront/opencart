@@ -314,7 +314,6 @@ type RootMutationType {
   accountAddAddress(address: AccountAddressInput): AccountAddress
   accountEditAddress(id: String, address: AccountAddressInput): AccountAddress
   accountRemoveAddress(id: String, page: Int = 1, size: Int = 10): [AccountAddress]
-  accountCheckLogged: LoggedResult
   addBlogPostReview(id: Int, rating: Float, author: String, content: String): Post
   addToCart(id: Int, quantity: Int = 1, options: [CartOption] = []): Cart
   updateCart(key: String, quantity: Int = 1): Cart
@@ -350,6 +349,7 @@ type RootQueryType {
   product(id: String): Product
   wishlist: [Product]
   contact: Contact
+  accountCheckLogged: LoggedResult
   accountAddressList: [AccountAddress]
   accountAddress(id: String): AccountAddress
 }
