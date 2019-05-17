@@ -65,9 +65,16 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
     public function get($args)
     {
         $this->load->model('catalog/product');
+        $this->load->model('extension/'.$this->codename.'/product');
         $this->load->model('tool/image');
         $product_info = $this->model_catalog_product->getProduct($args['id']);
+        $product_keyword = $this->model_extension_d_vuefront_product->getProductKeyword($args['id']);
 
+        if(!empty($product_keyword['keyword'])) {
+            $keyword = $product_keyword['keyword'];
+        } else {
+            $keyword = '';
+        }
 
         $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
         $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
@@ -126,7 +133,8 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             'products' => $this->vfload->resolver('store/product/relatedProducts'),
             'attributes' => $this->vfload->resolver('store/product/attribute'),
             'reviews' => $this->vfload->resolver('store/review/get'),
-            'options' => $this->vfload->resolver('store/product/option')
+            'options' => $this->vfload->resolver('store/product/option'),
+            'keyword' => $keyword
         );
     }
 

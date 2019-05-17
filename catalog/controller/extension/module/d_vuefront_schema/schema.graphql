@@ -30,6 +30,7 @@ type Category {
   parent_id: String
   url(url: String): String
   categories(limit: Int = 3): [Category]
+  keyword: String
 }
 
 type categoryBlog {
@@ -185,6 +186,7 @@ type Product {
   reviews: [productReview]
   options: [productOption]
   images(limit: Int = 3): [productImage]
+  keyword: String
 }
 
 type productAttribute {
@@ -337,15 +339,15 @@ type RootQueryType {
   post(id: Int): Post
   postsList(page: Int = 1, size: Int = 10, filter: String, search: String, category_id: Int = 0, sort: String = "sort_order", order: String = "ASC"): PostResult
   cart: Cart 
-  category(id: Int): Category
+  category(id: String): Category
   categoriesList(page: Int = 1, size: Int = 10, filter: String, parent: Int = -1, sort: String = "sort_order", order: String = "ASC"): CategoryResult
   compare: [Product]
   currency: [Currency]
   language: [Language]
   page(id: Int): Page
   pagesList(page: Int = 1, size: Int = 10, search: String = "", sort: String = "sort_order", order: String = "ASC"): PageResult
-  productsList(page: Int = 1, size: Int = 15, filter: String = "", special: Boolean = false, search: String = "", ids: [Int] = [], category_id: Int = 0, sort: String = "sort_order", order: String = "ASC"): ProductResult
-  product(id: Int): Product
+  productsList(page: Int = 1, size: Int = 15, filter: String = "", special: Boolean = false, search: String = "", ids: [Int] = [], category_id: String = "", sort: String = "sort_order", order: String = "ASC"): ProductResult
+  product(id: String): Product
   wishlist: [Product]
   contact: Contact
   accountAddressList: [AccountAddress]

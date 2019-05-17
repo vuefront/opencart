@@ -4,10 +4,19 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
 {
     private $codename = "d_vuefront";
 
-    public function get($args) {
+    public function get($args)
+    {
         $this->load->model('catalog/category');
+        $this->load->model('extension/'.$this->codename.'/category');
         $this->load->model('tool/image');
         $category_info = $this->model_catalog_category->getCategory($args['id']);
+        $category_keyword = $this->model_extension_d_vuefront_category->getCategoryKeyword($args['id']);
+
+        if (!empty($category_keyword['keyword'])) {
+            $keyword = $category_keyword['keyword'];
+        } else {
+            $keyword = '';
+        }
 
         $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_width');
         $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_height');
@@ -27,11 +36,13 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
             'image'       => $image,
             'imageLazy'   => $imageLazy,
             'url' => $this->vfload->resolver('store/category/url'),
-            'categories' => $this->vfload->resolver('store/category/child')
+            'categories' => $this->vfload->resolver('store/category/child'),
+            'keyword'    => $keyword
         );
     }
 
-    public function getList($args) {
+    public function getList($args)
+    {
         $this->load->model('extension/'.$this->codename.'/category');
 
         $filter_data = array(
@@ -39,12 +50,12 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
             'order'   => $args['order']
         );
 
-        if($args['size'] !== -1) {
+        if ($args['size'] !== -1) {
             $filter_data['start'] = ($args['page'] - 1) * $args['size'];
             $filter_data['limit'] = $args['size'];
         }
 
-        if ( $args['parent'] !== -1 ) {
+        if ($args['parent'] !== -1) {
             $filter_data['parent'] = $args['parent'];
         }
 
@@ -69,7 +80,8 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
         );
     }
 
-    public function child($data) {
+    public function child($data)
+    {
         $this->load->model('extension/'.$this->codename.'/category');
         $category_info = $data['parent'];
         $results = $this->model_extension_d_vuefront_category->getCategories(array('parent' => $category_info['id']));
@@ -83,13 +95,20 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
         return $categories;
     }
 
-    public function url($data) {
+    public function url($data)
+    {
         $category_info = $data['parent'];
         $result = $data['args']['url'];
 
         $result = str_replace("_id", $category_info['id'], $result);
         $result = str_replace("_name", $category_info['name'], $result);
+        
 
+        if ($category_info['keyword']) {
+            $result = '/'.$category_info['keyword'];
+        }
+
+        
         return $result;
     }
 }
