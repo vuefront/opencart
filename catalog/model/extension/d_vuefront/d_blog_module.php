@@ -2,6 +2,16 @@
 
 class ModelExtensionDVuefrontDBlogModule extends Model
 {
+    public function getCategoryKeyword($category_id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id='".(int)$this->config->get('config_language_id')."' AND `query` LIKE 'bm_category_id=".(int)$category_id."'");
+        return $query->row;
+    }
+
+    public function getPostKeyword($post_id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id='".(int)$this->config->get('config_language_id')."' AND `query` LIKE 'bm_post_id=".(int)$post_id."'");
+        return $query->row;
+    }
+
     public function getCategories($data = array())
     {
         $sql = "SELECT cp.category_id AS category_id, c1.status, "

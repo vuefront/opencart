@@ -19,8 +19,17 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
     public function get($args)
     {
         $this->load->model('extension/d_blog_module/category');
+        $this->load->model('extension/'.$this->codename.'/d_blog_module');
         $this->load->model('tool/image');
+
         $category_info = $this->model_extension_d_blog_module_category->getCategory($args['id']);
+        $category_keyword = $this->model_extension_d_vuefront_d_blog_module->getCategoryKeyword($args['id']);
+
+        if (!empty($category_keyword['keyword'])) {
+            $keyword = $category_keyword['keyword'];
+        } else {
+            $keyword = '';
+        }
 
         $width = $this->setting['category']['sub_category_image_width'];
         $height = $this->setting['category']['sub_category_image_height'];
@@ -40,7 +49,8 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
             'image' => $image,
             'imageLazy' => $imageLazy,
             'url' => $this->vfload->resolver('blog/category/url'),
-            'categories' => $this->vfload->resolver('blog/category/child')
+            'categories' => $this->vfload->resolver('blog/category/child'),
+            'keyword' => $keyword
         );
     }
 
@@ -101,6 +111,10 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
 
         $result = str_replace("_id", $category_info['id'], $result);
         $result = str_replace("_name", $category_info['name'], $result);
+
+        if ($category_info['keyword']) {
+            $result = '/'.$category_info['keyword'];
+        }
 
         return $result;
     }

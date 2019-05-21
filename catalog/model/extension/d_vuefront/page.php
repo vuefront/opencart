@@ -2,6 +2,10 @@
 
 class ModelExtensionDVuefrontPage extends Model
 {
+    public function getPageKeyword($information_id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id='".(int)$this->config->get('config_language_id')."' AND `query` LIKE 'information_id=".(int)$information_id."'");
+        return $query->row;
+    }
     public function getPage($information_id)
     {
         $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "information i LEFT JOIN " . DB_PREFIX . "information_description id ON (i.information_id = id.information_id) WHERE id.language_id = '" . (int)$this->config->get('config_language_id') . "' AND i.information_id = '" . (int)$information_id . "'");

@@ -8,12 +8,20 @@ class ControllerExtensionDVuefrontCommonPage extends Controller
     {
         $this->load->model('extension/'.$this->codename.'/page');
         $information_info = $this->model_extension_d_vuefront_page->getPage($args['id']);
+        $category_keyword = $this->model_extension_d_vuefront_page->getPageKeyword($args['id']);
+
+        if (!empty($category_keyword['keyword'])) {
+            $keyword = $category_keyword['keyword'];
+        } else {
+            $keyword = '';
+        }
 
         return array(
             'id'          => $information_info['information_id'],
             'title'        => $information_info['title'],
             'description' => html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8'),
-            'sort_order' => (int)$information_info['sort_order']
+            'sort_order' => (int)$information_info['sort_order'],
+            'keyword' => $keyword
         );
     }
 

@@ -20,8 +20,16 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
     public function get($args)
     {
         $this->load->model('extension/d_blog_module/post');
+        $this->load->model('extension/'.$this->codename.'/d_blog_module');
         $this->load->model('tool/image');
         $post_info = $this->model_extension_d_blog_module_post->getPost($args['id']);
+        $post_keyword = $this->model_extension_d_vuefront_d_blog_module->getPostKeyword($args['id']);
+
+        if (!empty($post_keyword['keyword'])) {
+            $keyword = $post_keyword['keyword'];
+        } else {
+            $keyword = '';
+        }
 
         $width = $this->setting['post']['image_width'];
         $height = $this->setting['post']['image_height'];
@@ -40,7 +48,8 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
             'shortDescription' => strip_tags(html_entity_decode($post_info['short_description'], ENT_QUOTES, 'UTF-8')),
             'image' => $image,
             'imageLazy' => $imageLazy,
-            'reviews' => $this->vfload->resolver('blog/review/get')
+            'reviews' => $this->vfload->resolver('blog/review/get'),
+            'keyword' => $keyword
         );
     }
 
