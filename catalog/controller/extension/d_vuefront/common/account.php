@@ -1,6 +1,7 @@
 <?php
 
 class ControllerExtensionDVuefrontCommonAccount extends Controller {
+
 	public function register( $args ) {
 		$this->load->model( 'account/customer' );
 		$this->load->language( 'account/register' );
