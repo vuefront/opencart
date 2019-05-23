@@ -22,6 +22,30 @@ class ControllerExtensionDVuefrontStoreCart extends Controller
 				$price = false;
 				$total = false;
             }
+
+            $option_data = array();
+
+			foreach ($product['option'] as $option) {
+				if ($option['type'] != 'file') {
+					$value = $option['value'];
+				} else {
+                    $this->load->model('tool/upload');
+
+                    $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
+
+					if ($upload_info) {
+						$value = $upload_info['name'];
+					} else {
+						$value = '';
+					}
+				}
+
+				$option_data[] = array(
+					'name'  => $option['name'],
+					'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value),
+					'type'  => $option['type']
+				);
+			}
             
             $product_info = $this->vfload->data('store/product/get', array('id' => $product['product_id']));
             $product_info['price'] = $price;
@@ -30,9 +54,12 @@ class ControllerExtensionDVuefrontStoreCart extends Controller
                 'key' => $product['cart_id'],
                 'product' => $product_info,
                 'quantity' => (int)$product['quantity'],
+                'option' => $option_data,
                 'total' => $total
             );
         }
+
+        $cart['total'] =  $this->currency->format($this->cart->getTotal(),  $this->session->data['currency']);
 
         return $cart;
     }
