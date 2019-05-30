@@ -17,9 +17,14 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
         } else {
             $keyword = '';
         }
-
-        $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_width');
-        $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_height');
+        if(VERSION >= "3.0.0.0"){
+            $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_width');
+            $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_height');
+        }
+        else {
+            $width = $this->config->get($this->config->get('config_theme') . '_image_category_width');
+            $height = $this->config->get($this->config->get('config_theme') . '_image_category_height');
+        }
         if ($category_info['image']) {
             $image = $this->model_tool_image->resize($category_info['image'], $width, $height);
             $imageLazy = $this->model_tool_image->resize($category_info['image'], 10, ceil(10 * $height / $width));

@@ -1,4 +1,5 @@
 <?php
+use SemVer\version;
 
 class ControllerExtensionDVuefrontStoreProduct extends Controller
 {
@@ -76,10 +77,19 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             $keyword = '';
         }
 
-        $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
-        $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
-        $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
-        $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
+        if(VERSION >= "3.0.0.0"){
+            $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
+            $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
+            $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
+            $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
+        }
+        else {
+            $width = $this->config->get($this->config->get('config_theme') . '_image_product_width');
+            $height = $this->config->get($this->config->get('config_theme') . '_image_product_height');
+            $popup_width = $this->config->get($this->config->get('config_theme') . '_image_popup_width');
+            $popup_height = $this->config->get($this->config->get('config_theme') . '_image_popup_height');
+        }
+        
         if ($product_info['image']) {
             $image = $this->model_tool_image->resize($product_info['image'], $width, $height);
             $imageLazy = $this->model_tool_image->resize($product_info['image'], 10, ceil(10 * $height / $width));
@@ -215,16 +225,24 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
         $images = array();
 
         foreach ($results as $result) {
-            $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
-            $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
-            $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
-            $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
+            if(VERSION >= "3.0.0.0"){
+                $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
+                $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
+                $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
+                $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
+            }
+            else {
+                $width = $this->config->get($this->config->get('config_theme') . '_image_product_width');
+                $height = $this->config->get($this->config->get('config_theme') . '_image_product_height');
+                $popup_width = $this->config->get($this->config->get('config_theme') . '_image_popup_width');
+                $popup_height = $this->config->get($this->config->get('config_theme') . '_image_popup_height');
+            }
             if ($product_info['image']) {
                 $image = $this->model_tool_image->resize($result['image'], $width, $height);
                 $imageLazy = $this->model_tool_image->resize($result['image'], 10, ceil(10 * $height / $width));
                 $imageBig = $this->model_tool_image->resize($result['image'], $popup_width, $popup_height);
             } else {
-                $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
+                $image = $this->model_tool_image->resize('placeholder.png', $width, $height);
                 $imageLazy = $this->model_tool_image->resize('placeholder.png', 10, 6);
                 $imageBig = '';
             }

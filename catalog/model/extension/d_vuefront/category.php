@@ -1,8 +1,13 @@
 <?php
 class ModelExtensionDVuefrontCategory extends Model
 {
-    public function getCategoryKeyword($category_id) {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id='".(int)$this->config->get('config_language_id')."' AND `query` LIKE 'category_id=".(int)$category_id."'");
+    public function getCategoryKeyword($category_id)
+    {
+        if (VERSION >= '3.0.0.0') {
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id='".(int)$this->config->get('config_language_id')."' AND `query` LIKE 'category_id=".(int)$category_id."'");
+        } else {
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` LIKE 'category_id=".(int)$category_id."'");
+        }
         return $query->row;
     }
 

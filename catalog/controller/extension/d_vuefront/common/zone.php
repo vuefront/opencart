@@ -38,7 +38,7 @@ class ControllerExtensionDVuefrontCommonZone extends Controller
         if (!empty($args['country_id'])) {
             $filter_data['filter_country_id'] = $args['country_id'];
         }
-        
+
         $zone_total = $this->model_extension_d_vuefront_zone->getTotalZones($filter_data);
 
         $results = $this->model_extension_d_vuefront_zone->getZones($filter_data);

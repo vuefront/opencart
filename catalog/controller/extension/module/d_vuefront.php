@@ -26,7 +26,6 @@ class ControllerExtensionModuleDVuefront extends Controller {
 	public function graphql() {
 		$this->load->model( $this->route );
 		$resolvers = $this->model_extension_module_d_vuefront->getResolvers();
-
 		$typeConfigDecorator = function ($typeConfig) {
 			switch ($typeConfig['name']) {
 				case 'Upload':
@@ -58,7 +57,7 @@ class ControllerExtensionModuleDVuefront extends Controller {
 				$input          = json_decode( $rawInput, true );
 				$query          = isset( $input['query'] ) ? $input['query'] : '';
 				$variableValues = isset( $input['variables'] ) ? $input['variables'] : null;
-			}
+            }
 
 			$result = GraphQL::executeQuery( $schema, $query, $resolvers, null, $variableValues );
 		} catch ( Exception $e ) {
