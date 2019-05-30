@@ -43,7 +43,7 @@ class ControllerExtensionModuleDVuefront extends Controller {
 
 			$schema = BuildSchema::build( file_get_contents( __DIR__ . '/' . $this->codename . '_schema/schema.graphql' ) , $typeConfigDecorator);
 
-			if ( strpos( $this->request->server['CONTENT_TYPE'], 'multipart/form-data' ) !== false ) {
+			if (!empty($this->request->server['CONTENT_TYPE']) && strpos( $this->request->server['CONTENT_TYPE'], 'multipart/form-data' ) !== false ) {
 				$rawInput       = html_entity_decode( $this->request->post['operations'], ENT_QUOTES, 'UTF-8' );
 				$input          = json_decode( $rawInput, true );
 				$query          = isset( $input['query'] ) ? $input['query'] : '';
