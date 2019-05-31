@@ -16,9 +16,15 @@ class ControllerExtensionDVuefrontCommonLanguage extends Controller
 
         foreach ($results as $result) {
             if ($result['status']) {
+                $code = $result['code'];
+
+                if(VERSION < '2.2.0.0') {
+                    $code = $code == 'en' ? 'en-gb' : $code;
+                    $code = $code == 'ru' ? 'ru-ru' : $code;
+                }
                 $languages[] = array(
                     'name'        => $result['name'],
-                    'code'         => $result['code'],
+                    'code'         => $code,
                     'image' => $siteUrl."catalog/language/".$result['code']."/".$result['code'].".png",
                     'active'  => $this->session->data['language'] == $result['code']
                 );

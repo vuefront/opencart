@@ -83,11 +83,16 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
             $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
         }
-        else {
+        else if (VERSION >= '2.2.0.0') {
             $width = $this->config->get($this->config->get('config_theme') . '_image_product_width');
             $height = $this->config->get($this->config->get('config_theme') . '_image_product_height');
             $popup_width = $this->config->get($this->config->get('config_theme') . '_image_popup_width');
             $popup_height = $this->config->get($this->config->get('config_theme') . '_image_popup_height');
+        } else {
+            $width = $this->config->get('config_image_product_width');
+            $height = $this->config->get('config_image_product_height');
+            $popup_width = $this->config->get('config_image_popup_width');
+            $popup_height = $this->config->get('config_image_popup_height');
         }
         
         if ($product_info['image']) {
@@ -230,13 +235,18 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
                 $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
                 $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
                 $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
-            }
-            else {
+            } else if (VERSION >= '2.2.0.0') {
                 $width = $this->config->get($this->config->get('config_theme') . '_image_product_width');
                 $height = $this->config->get($this->config->get('config_theme') . '_image_product_height');
                 $popup_width = $this->config->get($this->config->get('config_theme') . '_image_popup_width');
                 $popup_height = $this->config->get($this->config->get('config_theme') . '_image_popup_height');
+            } else {
+                $width = $this->config->get('config_image_product_width');
+                $height = $this->config->get('config_image_product_height');
+                $popup_width = $this->config->get('config_image_popup_width');
+                $popup_height = $this->config->get('config_image_popup_height');
             }
+
             if ($product_info['image']) {
                 $image = $this->model_tool_image->resize($result['image'], $width, $height);
                 $imageLazy = $this->model_tool_image->resize($result['image'], 10, ceil(10 * $height / $width));
