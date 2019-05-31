@@ -18,6 +18,7 @@ class ControllerExtensionDVuefrontCommonZone extends Controller
 
     public function getList($args)
     {
+
         $this->load->model('extension/'.$this->codename.'/zone');
 
         $countries = array();
@@ -43,14 +44,15 @@ class ControllerExtensionDVuefrontCommonZone extends Controller
 
         $results = $this->model_extension_d_vuefront_zone->getZones($filter_data);
 
-        if ($args['size'] == -1) {
+        if ($args['size'] == -1 && $zone_total != 0) {
             $args['size'] = $zone_total;
+        } else if($args['size'] == -1 && $zone_total == 0) {
+            $args['size'] = 1;
         }
 
         foreach ($results as $result) {
             $countries[] = $this->get(array('id' => $result['zone_id']));
         }
-
         return array(
             'content' => $countries,
             'first' => $args['page'] === 1,
