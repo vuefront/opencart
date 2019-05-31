@@ -82,17 +82,20 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
             $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
             $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
+            $description_length = $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length');
         }
         else if (VERSION >= '2.2.0.0') {
             $width = $this->config->get($this->config->get('config_theme') . '_image_product_width');
             $height = $this->config->get($this->config->get('config_theme') . '_image_product_height');
             $popup_width = $this->config->get($this->config->get('config_theme') . '_image_popup_width');
             $popup_height = $this->config->get($this->config->get('config_theme') . '_image_popup_height');
+            $description_length = $this->config->get($this->config->get('config_theme') . '_product_description_length');
         } else {
             $width = $this->config->get('config_image_product_width');
             $height = $this->config->get('config_image_product_height');
             $popup_width = $this->config->get('config_image_popup_width');
             $popup_height = $this->config->get('config_image_popup_height');
+            $description_length = $this->config->get('config_product_description_length');
         }
         
         if ($product_info['image']) {
@@ -135,7 +138,7 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             'id' => $product_info['product_id'],
             'name' => html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8'),
             'description' => html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'),
-            'shortDescription' => utf8_substr(trim(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
+            'shortDescription' => utf8_substr(trim(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'))), 0, $description_length) . '..',
             'price' => $price,
             'special' => $special,
             'model' => $product_info['model'],
