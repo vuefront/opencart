@@ -48,6 +48,7 @@ class ControllerExtensionModuleDVuefront extends Controller
         $data['heading_title'] = $this->language->get('heading_title_main');
 
         $data['text_edit'] = $this->language->get('text_edit');
+        $data['text_title'] = $this->language->get('text_title');
         $data['text_description'] = $this->language->get('text_description');
 
         // Button

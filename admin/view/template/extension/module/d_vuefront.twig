@@ -38,6 +38,7 @@
                         <img src="view/image/d_vuefront/logo.png"/>
                     </div>
                     <div class="module-content__form">
+                        <h3 class="text-center mb-1">{{ text_title }}</h3>
                         <input class="form-control mb-2" type="text" value="{{ catalog }}" readonly>
                         <p>{{ text_description }}</p>
                     </div>
@@ -46,19 +47,22 @@
             </div>
         </div>
     </div>
-</div>
-<style>
-    .module-content__form {
-        max-width: 45%;
-        margin: 0 auto;
-    }
-    .mb-2 {
-        margin-bottom: 25px;
-    }
-    @media(max-width: 767px) {
+    <style>
         .module-content__form {
-            max-width: 100%;
+            max-width: 45%;
+            margin: 0 auto;
         }
-    }
-</style>
+        .mb-1 {
+            margin-bottom: 15px;
+        }
+        .mb-2 {
+            margin-bottom: 25px;
+        }
+        @media(max-width: 767px) {
+            .module-content__form {
+                max-width: 100%;
+            }
+        }
+    </style>
+</div>
 {{ footer }}

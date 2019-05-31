@@ -9,10 +9,9 @@ $_['heading_title_main']        = 'Vuefront';
 $_['text_edit']                 = 'Edit Vuefront settings';
 $_['text_module']               = 'Modules';
 
-$_['text_description']          = 'CMS Connect URL
-
-This is your CMS Connect URL link that shares your Store data via GraphQL. When installing VueFront via the command line, you will be prompted to enter this URL. Simply copy and paste it into the command line. 
-
+$_['text_title']                = 'CMS Connect URL';
+$_['text_description']          = 'This is your CMS Connect URL link that shares your Store data via GraphQL. When installing VueFront via the command line, you will be prompted to enter this URL. Simply copy and paste it into the command line. 
+<br>
 Read more about the <a href="https://vuefront.com/cms/opencart.html" target="_blank">CMS Connect for OpenCart</a>';
 
 //support
