@@ -24,10 +24,13 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             'filter_category_id' => $args['category_id'],
             'filter_filter' => $args['filter'],
             'sort' => $args['sort'],
-            'order' => $args['order'],
-            'start' => ($args['page'] - 1) * $args['size'],
-            'limit' => $args['size']
+            'order' => $args['order']
         );
+
+        if($args['size'] != '-1') {
+            $filter_data['start'] = ($args['page'] - 1) * $args['size'];
+            $filter_data['limit'] = $args['size'];
+        }
 
         if (!empty($args['search'])) {
             $filter_data['filter_name'] = $args['search'];
@@ -46,6 +49,12 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
         $product_total = $this->model_extension_d_vuefront_product->getTotalProducts($filter_data);
 
         $results = $this->model_extension_d_vuefront_product->getProducts($filter_data);
+
+        if ($args['size'] == -1 && $product_total != 0) {
+            $args['size'] = $product_total;
+        } else if($args['size'] == -1 && $product_total == 0) {
+            $args['size'] = 1;
+        }
 
         foreach ($results as $result) {
             $products[] = $this->get(array('id' => $result['product_id']));
