@@ -50,8 +50,10 @@ class ControllerExtensionDVuefrontStoreCart extends Controller
             $product_info = $this->vfload->data('store/product/get', array('id' => $product['product_id']));
             $product_info['price'] = $price;
 
+            $cart_id = VERSION > '2.0.3.1' ? $product['cart_id'] : $product['key'];
+
             $cart['products'][] = array(
-                'key' => $product['cart_id'],
+                'key' => $cart_id,
                 'product' => $product_info,
                 'quantity' => (int)$product['quantity'],
                 'option' => $option_data,

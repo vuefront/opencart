@@ -6,7 +6,7 @@ class ControllerExtensionDVuefrontCommonFile extends Controller {
 
 		if (!empty($args['file']['name']) && is_file($args['file']['tmp_name'])) {
 			// Sanitize the filename
-			$filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($args['file']['name'], ENT_QUOTES, 'UTF-8')));
+            $filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($args['file']['name'], ENT_QUOTES, 'UTF-8')));
 
 			// Validate the filename length
 			if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 64)) {
@@ -15,7 +15,7 @@ class ControllerExtensionDVuefrontCommonFile extends Controller {
 
 			// Allowed file extension types
 			$allowed = array();
-
+ 
 			$extension_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_ext_allowed'));
 
 			$filetypes = explode("\n", $extension_allowed);
@@ -23,7 +23,7 @@ class ControllerExtensionDVuefrontCommonFile extends Controller {
 			foreach ($filetypes as $filetype) {
 				$allowed[] = trim($filetype);
 			}
-
+            
 			if (!in_array(strtolower(substr(strrchr($filename, '.'), 1)), $allowed)) {
 				throw new Exception($this->language->get('error_filetype'));
 			}
@@ -38,7 +38,7 @@ class ControllerExtensionDVuefrontCommonFile extends Controller {
 			foreach ($filetypes as $filetype) {
 				$allowed[] = trim($filetype);
 			}
-
+            
 			if (!in_array($args['file']['type'], $allowed)) {
 				throw new Exception($this->language->get('error_filetype'));
 			}
@@ -59,8 +59,12 @@ class ControllerExtensionDVuefrontCommonFile extends Controller {
 			throw new Exception($this->language->get('error_upload'));
 		}
 
-		$file = $filename . '.' . token(32);
-
+        if(VERSION > '2.0.3.1') {
+            $file = $filename . '.' . token(32);
+        } else {
+            $file = $filename . '.' . md5(mt_rand());
+        }
+		
 		move_uploaded_file($args['file']['tmp_name'], DIR_UPLOAD . $file);
 
 		$this->load->model('tool/upload');
