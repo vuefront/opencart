@@ -1,0 +1,24 @@
+
+
+<extension>
+    <id>d_vuefront</id>
+    <type>module</type>
+    <version>1.0</version>
+    <mbooth_version>1.0</mbooth_version>
+    <author>Dreamvention</author>
+    <files>
+		<file>admin/controller/module/d_vuefront.php</file>
+		<file>admin/language/english/module/d_vuefront.php</file>
+		<file>admin/view/template/module/d_vuefront.tpl</file>
+		<file>admin/mbooth/xml/d_vuefront.xml</file>
+		<file>catalog/controller/module/d_vuefront.php</file>
+		<file>catalog/model/module/d_vuefront.php</file>
+    </files>
+    <dirs>
+        <dir>admin/view/image/d_vuefront</dir>
+        <dir>catalog/controller/d_vuefront</dir>
+        <dir>catalog/controller/module/d_vuefront_schema</dir>
+        <dir>catalog/model/d_vuefront</dir>
+        <dir>system/library/d_graphql</dir>
+    </dirs>
+</extension>
