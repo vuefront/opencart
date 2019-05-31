@@ -3056,3 +3056,4 @@ admin/view/javascript/ckeditor/plugins/codemirror/theme/ambiance-mobile.css
 admin/view/javascript/ckeditor/plugins/codemirror/plugin.js
 admin/view/javascript/ckeditor/plugins/codemirror/lang/zh.js
 admin/view/javascript/ckeditor/plugins/codemirror/lang/no.js
+system/cache
