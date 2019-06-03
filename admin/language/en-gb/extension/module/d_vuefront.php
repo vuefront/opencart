@@ -18,6 +18,6 @@ Read more about the <a href="https://vuefront.com/cms/opencart.html" target="_bl
 $_['text_blog_module'] = 'Blog support';
 $_['text_blog_enabled'] = 'Blog enabled';
 $_['text_blog_disabled'] = 'Blog module missing. Click to download';
-$_['text_blog_description'] = 'VueFront relies on the free <a href="https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=10468" target="_blank">Blog Module</a> by Dreamvention to implement blog support. You can install it via OpenCart Marketplace or Shopunity.';
+$_['text_blog_description'] = 'VueFront relies on the free <a href="https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=10468" target="_blank">Blog Module</a> by Dreamvention to implement blog support. The blog feature is optional and VueFront will work fine without it. You can install it via OpenCart Marketplace or Shopunity. ';
 //support
 $_['text_powered_by'] = 'Tested with <a href="https://shopunity.net/extension/blog-module-pro" target="_blank">Shopunity.net</a> <br> Find more amazing extensions at <a href="https://dreamvention.ee/" target="_blank">Dreamvention.ee</a>';
