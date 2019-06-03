@@ -3,32 +3,45 @@
 class ControllerDVuefrontBlogPost extends Controller
 {
     private $codename = "d_vuefront";
+    private $blog = false;
+    private $model_blog = false;
+
+    public function __construct( $registry ) {
+        parent::__construct($registry);
+        $this->load->model('module/'.$this->codename);
+        $this->blog = $this->model_module_d_vuefront->detectBlog();
+
+        if($this->blog) {
+            $this->load->model($this->codename.'/blog_'.$this->blog);
+            $this->model_blog = $this->{'model_'.$this->codename.'_blog_'.$this->blog};
+        }
+    }
 
     public function get($args)
     {
-        $this->load->model($this->codename . '/blog');
-        $this->load->model('tool/image');
-        $post_info = $this->model_d_vuefront_blog->getPost($args['id']);
-        $post_keyword = $this->model_d_vuefront_blog->getPostKeyword($args['id']);
+        if ($this->blog) {
+            $this->load->model('tool/image');
+            $post_info = $this->model_blog->getPost($args['id']);
+            $post_keyword = $this->model_blog->getPostKeyword($args['id']);
 
-        if (!empty($post_keyword['keyword'])) {
-            $keyword = $post_keyword['keyword'];
-        } else {
-            $keyword = '';
-        }
+            if (!empty($post_keyword['keyword'])) {
+                $keyword = $post_keyword['keyword'];
+            } else {
+                $keyword = '';
+            }
 
-        $width = $this->config->get('config_image_product_width');
-        $height = $this->config->get('config_image_product_height');
+            $width = $this->config->get('config_image_product_width');
+            $height = $this->config->get('config_image_product_height');
 
-        if ($post_info['image']) {
-            $image = $this->model_tool_image->resize($post_info['image'], $width, $height);
-            $imageLazy = $this->model_tool_image->resize($post_info['image'], 10, ceil(10 * $height / $width));
-        } else {
-            $image = '';
-            $imageLazy = '';
-        }
+            if ($post_info['image']) {
+                $image = $this->model_tool_image->resize($post_info['image'], $width, $height);
+                $imageLazy = $this->model_tool_image->resize($post_info['image'], 10, ceil(10 * $height / $width));
+            } else {
+                $image = '';
+                $imageLazy = '';
+            }
 
-        return array(
+            return array(
                 'id' => $post_info['post_id'],
                 'title' => $post_info['title'],
                 'description' => html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8'),
@@ -38,15 +51,15 @@ class ControllerDVuefrontBlogPost extends Controller
                 'reviews' => $this->vfload->resolver('blog/review/get'),
                 'keyword' => $keyword,
             );
+        }
     }
 
     public function getList($args)
     {
-        $this->load->model($this->codename . '/blog');
-
-        $posts = array();
-
-        $filter_data = array(
+        if ($this->blog) {
+            $posts = array();
+            
+            $filter_data = array(
                 'filter_category_id' => $args['category_id'],
                 'sort' => $args['sort'],
                 'order' => $args['order'],
@@ -54,28 +67,29 @@ class ControllerDVuefrontBlogPost extends Controller
                 'limit' => $args['size'],
             );
 
-        if (!empty($args['search'])) {
-            $filter_data['filter_name'] = $args['search'];
-            $filter_data['filter_description'] = $args['search'];
+            if (!empty($args['search'])) {
+                $filter_data['filter_name'] = $args['search'];
+                $filter_data['filter_description'] = $args['search'];
+            }
+
+            $post_total = $this->model_blog->getTotalPosts($filter_data);
+
+            $results = $this->model_blog->getPosts($filter_data);
+
+            foreach ($results as $result) {
+                $posts[] = $this->get(array('id' => $result['post_id']));
+            }
+
+            return array(
+                'content' => $posts,
+                'first' => $args['page'] === 1,
+                'last' => $args['page'] === ceil($post_total / $args['size']),
+                'number' => (int) $args['page'],
+                'numberOfElements' => count($posts),
+                'size' => (int) $args['size'],
+                'totalPages' => (int) ceil($post_total / $args['size']),
+                'totalElements' => (int) $post_total,
+            );
         }
-
-        $post_total = $this->model_d_vuefront_blog->getTotalPosts($filter_data);
-
-        $results = $this->model_d_vuefront_blog->getPosts($filter_data);
-
-        foreach ($results as $result) {
-            $posts[] = $this->get(array('id' => $result['post_id']));
-        }
-
-        return array(
-            'content' => $posts,
-            'first' => $args['page'] === 1,
-            'last' => $args['page'] === ceil($post_total / $args['size']),
-            'number' => (int) $args['page'],
-            'numberOfElements' => count($posts),
-            'size' => (int) $args['size'],
-            'totalPages' => (int) ceil($post_total / $args['size']),
-            'totalElements' => (int) $post_total,
-        );
     }
 }

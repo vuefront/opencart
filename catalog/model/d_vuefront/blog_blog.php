@@ -1,27 +1,27 @@
 <?php
 
-class ModelDVuefrontBlog extends Model
+class ModelDVuefrontBlogBlog extends Model
 {
     public function getCategoryKeyword($category_id)
     {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` LIKE 'ncategory_id=".(int)$category_id."'");
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` LIKE 'blog_category_id=".(int)$category_id."'");
         return $query->row;
     }
 
     public function getPostKeyword($post_id)
     {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` LIKE 'news_id=".(int)$post_id."'");
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` LIKE 'blog_article_id=".(int)$post_id."'");
 
         return $query->row;
     }
 
     public function getCategory($category_id)
     {
-        $sql = "SELECT *, c.ncategory_id as category_id, cd.name as title FROM " . DB_PREFIX . "sb_ncategory c "
-            . "LEFT JOIN " . DB_PREFIX . "sb_ncategory_description cd ON (c.ncategory_id = cd.ncategory_id) "
-            . "WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c.ncategory_id = '".(int)$category_id."'";
+        $sql = "SELECT *, c.category_id as category_id, cd.name as title FROM " . DB_PREFIX . "blog_category c "
+            . "LEFT JOIN " . DB_PREFIX . "blog_category_description cd ON (c.category_id = cd.category_id) "
+            . "WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c.category_id = '".(int)$category_id."'";
 
-        $sql .= " GROUP BY c.ncategory_id";
+        $sql .= " GROUP BY c.category_id";
 
         $query = $this->db->query($sql);
 
@@ -30,10 +30,10 @@ class ModelDVuefrontBlog extends Model
 
     public function getCategories($data = array())
     {
-        $sql = "SELECT c.ncategory_id AS category_id, c.status, "
+        $sql = "SELECT c.category_id AS category_id, c.status, "
             . "cd.name AS title, c.parent_id, c.sort_order "
-            . "FROM " . DB_PREFIX . "sb_ncategory c "
-            . "LEFT JOIN " . DB_PREFIX . "sb_ncategory_description cd ON (c.ncategory_id = cd.ncategory_id) "
+            . "FROM " . DB_PREFIX . "blog_category c "
+            . "LEFT JOIN " . DB_PREFIX . "blog_category_description cd ON (c.category_id = cd.category_id) "
             . "WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 
@@ -45,7 +45,7 @@ class ModelDVuefrontBlog extends Model
             $sql .= " AND c.parent_id = '" . (int)$data['parent'] . "'";
         }
 
-        $sql .= " GROUP BY c.ncategory_id";
+        $sql .= " GROUP BY c.category_id";
 
         $sort_data = array(
             'name',
@@ -84,8 +84,8 @@ class ModelDVuefrontBlog extends Model
     public function getTotalCategories($data = array())
     {
         $sql = "SELECT count(*) as total "
-        . "FROM " . DB_PREFIX . "sb_ncategory c "
-        . "LEFT JOIN " . DB_PREFIX . "sb_ncategory_description cd ON (c.ncategory_id = cd.ncategory_id) "
+        . "FROM " . DB_PREFIX . "blog_category c "
+        . "LEFT JOIN " . DB_PREFIX . "blog_category_description cd ON (c.category_id = cd.category_id) "
         . "WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 
@@ -97,8 +97,7 @@ class ModelDVuefrontBlog extends Model
             $sql .= " AND c.parent_id = '" . (int)$data['parent'] . "'";
         }
 
-        $sql .= " GROUP BY c.ncategory_id";
-
+        $sql .= " GROUP BY c.category_id";
 
         $query = $this->db->query($sql);
 
@@ -107,11 +106,11 @@ class ModelDVuefrontBlog extends Model
 
     public function getPost($category_id)
     {
-        $sql = "SELECT *, n.news_id as post_id FROM " . DB_PREFIX . "sb_news n "
-            . "LEFT JOIN " . DB_PREFIX . "sb_news_description nd ON (n.news_id = nd.news_id) "
-            . "WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n.news_id = '".(int)$category_id."'";
+        $sql = "SELECT *, n.article_id as post_id FROM " . DB_PREFIX . "blog_article n "
+            . "LEFT JOIN " . DB_PREFIX . "blog_article_description nd ON (n.article_id = nd.article_id) "
+            . "WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n.article_id = '".(int)$category_id."'";
 
-        $sql .= " GROUP BY n.news_id";
+        $sql .= " GROUP BY n.article_id";
 
         $query = $this->db->query($sql);
 
@@ -120,15 +119,15 @@ class ModelDVuefrontBlog extends Model
 
     public function getPosts($data = array())
     {
-        $sql = "SELECT n.news_id AS post_id ";
+        $sql = "SELECT n.article_id AS post_id ";
         if (!empty($data['filter_category_id'])) {
-            $sql .= " FROM " . DB_PREFIX . "sb_news_to_ncategory n2c";
-            $sql .= " LEFT JOIN " . DB_PREFIX . "sb_news n ON (n2c.news_id = n.news_id)";
+            $sql .= " FROM " . DB_PREFIX . "blog_article_to_category n2c";
+            $sql .= " LEFT JOIN " . DB_PREFIX . "blog_article n ON (n2c.article_id = n.article_id)";
         } else {
-            $sql .= " FROM " . DB_PREFIX . "sb_news n ";
+            $sql .= " FROM " . DB_PREFIX . "blog_article n ";
         }
 
-        $sql .= "LEFT JOIN " . DB_PREFIX . "sb_news_description nd ON (n.news_id = nd.news_id) "
+        $sql .= "LEFT JOIN " . DB_PREFIX . "blog_article_description nd ON (n.article_id = nd.article_id) "
             . "WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 
@@ -145,10 +144,10 @@ class ModelDVuefrontBlog extends Model
         }
 
         if (!empty($data['filter_category_id'])) {
-            $sql .= " AND n2c.ncategory_id = '" . (int)$data['filter_category_id'] . "'";
+            $sql .= " AND n2c.category_id = '" . (int)$data['filter_category_id'] . "'";
         }
 
-        $sql .= " GROUP BY n.news_id";
+        $sql .= " GROUP BY n.article_id";
 
         $sort_data = array(
             'title',
@@ -188,13 +187,13 @@ class ModelDVuefrontBlog extends Model
     {
         $sql = "SELECT count(*) as total ";
         if (!empty($data['filter_category_id'])) {
-            $sql .= " FROM " . DB_PREFIX . "sb_news_to_ncategory n2c";
-            $sql .= " LEFT JOIN " . DB_PREFIX . "sb_news n ON (n2c.news_id = n.news_id)";
+            $sql .= " FROM " . DB_PREFIX . "blog_article_to_category n2c";
+            $sql .= " LEFT JOIN " . DB_PREFIX . "blog_article n ON (n2c.article_id = n.article_id)";
         } else {
-            $sql .= " FROM " . DB_PREFIX . "sb_news n ";
+            $sql .= " FROM " . DB_PREFIX . "blog_article n ";
         }
 
-        $sql .= "LEFT JOIN " . DB_PREFIX . "sb_news_description nd ON (n.news_id = nd.news_id) "
+        $sql .= "LEFT JOIN " . DB_PREFIX . "blog_article_description nd ON (n.article_id = nd.article_id) "
             . "WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 
@@ -211,7 +210,7 @@ class ModelDVuefrontBlog extends Model
         }
 
         if (!empty($data['filter_category_id'])) {
-            $sql .= " AND n2c.ncategory_id = '" . (int)$data['filter_category_id'] . "'";
+            $sql .= " AND n2c.category_id = '" . (int)$data['filter_category_id'] . "'";
         }
 
         $query = $this->db->query($sql);
@@ -219,21 +218,19 @@ class ModelDVuefrontBlog extends Model
         return $query->row['total'];
     }
 
-    public function getReviewsByPostId($news_id)
+    public function getReviewsByPostId($article_id)
     {
 
-        $sql = "SELECT *, c.ncomment_id, c.author, 0 as rating, c.text as description, '' as guest_email, n.news_id as post_id, nd.title, n.image, c.date_added "
-        . "FROM " . DB_PREFIX . "sb_ncomments c "
-        . "LEFT JOIN " . DB_PREFIX . "sb_news n ON (c.news_id = n.news_id) "
-        . "LEFT JOIN " . DB_PREFIX . "sb_news_description nd "
-        . "ON (n.news_id = nd.news_id) "
-        . "WHERE n.news_id = '" . (int)$news_id . "' "
+        $sql = "SELECT *, c.comment_id, c.name as author, 0 AS rating, c.content AS description, c.email AS guest_email, n.article_id AS post_id, nd.title, n.image, c.created AS date_added "
+        . "FROM " . DB_PREFIX . "blog_comment c "
+        . "LEFT JOIN " . DB_PREFIX . "blog_article n ON (c.article_id = n.article_id) "
+        . "LEFT JOIN " . DB_PREFIX . "blog_article_description nd "
+        . "ON (n.article_id = nd.article_id) "
+        . "WHERE n.article_id = '" . (int)$article_id . "' "
         . "AND n.status = '1' "
         . "AND c.status = '1' "
-        . "AND reply_id = '0' "
         . "AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "' "
-        . "ORDER BY c.date_added DESC";
-
+        . "ORDER BY c.created DESC";
         $query = $this->db->query($sql);
 
 
@@ -241,9 +238,9 @@ class ModelDVuefrontBlog extends Model
     }
 
     public function addReview($post_id, $data) {
-        $sql = "INSERT INTO " . DB_PREFIX . "sb_ncomments "
-        . "SET author = '" . $this->db->escape($data['author']) . "', "
-        . "news_id = '" . (int)$post_id . "', "
+        $sql = "INSERT INTO " . DB_PREFIX . "blog_comment "
+        . "SET name = '" . $this->db->escape($data['author']) . "', "
+        . "article_id = '" . (int)$post_id . "', "
         . "status = ". (int)$data['status'] .", "
         . "text = '" . $this->db->escape($data['description']) . "', "
         . "date_added = NOW(), date_modified = NOW()";

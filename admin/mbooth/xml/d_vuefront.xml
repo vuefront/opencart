@@ -13,7 +13,6 @@
 		<file>admin/mbooth/xml/d_vuefront.xml</file>
 		<file>catalog/controller/module/d_vuefront.php</file>
 		<file>catalog/model/module/d_vuefront.php</file>
-        <file>READMY.md</file>
     </files>
     <dirs>
         <dir>admin/view/image/d_vuefront</dir>
