@@ -56,6 +56,7 @@
     ],
     "dirs": [
         "admin/view/image/d_vuefront",
+        "admin/view/javascript/d_vuefront",
         "catalog/controller/extension/d_vuefront",
         "catalog/controller/extension/module/d_vuefront_schema",
         "catalog/model/extension/d_vuefront",
