@@ -9,6 +9,7 @@ CMS Connect App - adds the connection between the OpenCart CMS and VueFront WebA
 ## DEMO
 
 [VueFront](https://opencart.vuefront.com/)
+
 [Admin](https://opencart.vuefront.com/admin)
 
 ## OpenCart Versions
