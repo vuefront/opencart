@@ -97,8 +97,6 @@ class ModelDVuefrontBlogBlog extends Model
             $sql .= " AND c.parent_id = '" . (int)$data['parent'] . "'";
         }
 
-        $sql .= " GROUP BY c.category_id";
-
         $query = $this->db->query($sql);
 
         return $query->row['total'];
