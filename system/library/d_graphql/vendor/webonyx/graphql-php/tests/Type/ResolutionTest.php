@@ -2,6 +2,7 @@
 namespace GraphQL\Tests\Type;
 
 use GraphQL\Error\InvariantViolation;
+use GraphQL\Type\Definition\Config;
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ObjectType;
@@ -82,6 +83,8 @@ class ResolutionTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        Config::enableValidation(false);
+
         $this->node = new InterfaceType([
             'name' => 'Node',
             'fields' => [

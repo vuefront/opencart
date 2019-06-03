@@ -12,7 +12,7 @@ use GraphQL\Type\Definition\FieldDefinition;
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\WrappingType;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 class QueryGenerator
 {

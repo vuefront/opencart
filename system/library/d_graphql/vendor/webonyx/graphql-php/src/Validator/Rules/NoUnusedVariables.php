@@ -6,7 +6,7 @@ use GraphQL\Language\AST\NodeKind;
 use GraphQL\Language\AST\OperationDefinitionNode;
 use GraphQL\Validator\ValidationContext;
 
-class NoUnusedVariables extends AbstractValidationRule
+class NoUnusedVariables
 {
     static function unusedVariableMessage($varName, $opName = null)
     {
@@ -17,7 +17,7 @@ class NoUnusedVariables extends AbstractValidationRule
 
     public $variableDefs;
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         $this->variableDefs = [];
 

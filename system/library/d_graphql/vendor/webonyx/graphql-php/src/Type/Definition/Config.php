@@ -2,13 +2,11 @@
 namespace GraphQL\Type\Definition;
 
 use GraphQL\Error\InvariantViolation;
-use GraphQL\Error\Warning;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 /**
  * Class Config
  * @package GraphQL\Type\Definition
- * @deprecated See https://github.com/webonyx/graphql-php/issues/148 for alternatives
  */
 class Config
 {
@@ -44,10 +42,7 @@ class Config
     private static $allowCustomOptions = true;
 
     /**
-     *
      * Disables config validation
-     *
-     * @deprecated See https://github.com/webonyx/graphql-php/issues/148 for alternatives
      */
     public static function disableValidation()
     {
@@ -57,18 +52,9 @@ class Config
     /**
      * Enable deep config validation (disabled by default because it creates significant performance overhead).
      * Useful only at development to catch type definition errors quickly.
-     *
-     * @deprecated See https://github.com/webonyx/graphql-php/issues/148 for alternatives
      */
     public static function enableValidation($allowCustomOptions = true)
     {
-        Warning::warnOnce(
-            'GraphQL\Type\Defintion\Config is deprecated and will be removed in the next version. ' .
-            'See https://github.com/webonyx/graphql-php/issues/148 for alternatives',
-            Warning::WARNING_CONFIG_DEPRECATION,
-            E_USER_DEPRECATED
-        );
-
         self::$enableValidation = true;
         self::$allowCustomOptions = $allowCustomOptions;
     }
@@ -141,10 +127,7 @@ class Config
 
         if (!empty($unexpectedKeys)) {
             if (!self::$allowCustomOptions) {
-                Warning::warnOnce(
-                    sprintf('Error in "%s" type definition: Non-standard keys "%s" ' . $suffix, $typeName, implode(', ', $unexpectedKeys)),
-                    Warning::WARNING_CONFIG
-                );
+                trigger_error(sprintf('Error in "%s" type definition: Non-standard keys "%s" ' . $suffix, $typeName, implode(', ', $unexpectedKeys)));
             }
             $map = array_intersect_key($map, $definitions);
         }
@@ -204,14 +187,12 @@ class Config
                             $arrValue = ['name' => $arrValue];
                         }
 
-                        if (!$arrValue instanceof FieldDefinition) {
-                            Utils::invariant(is_array($arrValue), $err, $arrKey, Utils::getVariableType($arrValue));
+                        Utils::invariant(is_array($arrValue), $err, $arrKey, Utils::getVariableType($arrValue));
 
-                            if ($def->flags & self::KEY_AS_NAME && is_string($arrKey)) {
-                                $arrValue += ['name' => $arrKey];
-                            }
-                            self::validateMap($typeName, $arrValue, $def->definition, "$pathStr:$arrKey");
+                        if ($def->flags & self::KEY_AS_NAME && is_string($arrKey)) {
+                            $arrValue += ['name' => $arrKey];
                         }
+                        self::validateMap($typeName, $arrValue, $def->definition, "$pathStr:$arrKey");
                     } else {
                         self::validateEntry($typeName, $arrKey, $arrValue, $def->definition, "$pathStr:$arrKey");
                     }

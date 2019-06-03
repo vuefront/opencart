@@ -1,12 +1,11 @@
 # Type System
-To start using GraphQL you are expected to implement a type hierarchy and expose it as [Schema](schema.md). 
+To start using GraphQL you are expected to implement a type hierarchy and expose it as [Schema](type-system/schema/). 
 
-In graphql-php **type** is an instance of internal class from 
-`GraphQL\Type\Definition` namespace: [`ObjectType`](object-types.md), 
-[`InterfaceType`](interfaces.md), [`UnionType`](unions.md), [`InputObjectType`](input-types.md), 
-[`ScalarType`](scalar-types.md), [`EnumType`](enum-types.md) (or one of subclasses).
+In **graphql-php** `type` is an instance of internal class from 
+`GraphQL\Type\Definition` namespace: `ScalarType`, `ObjectType`, `InterfaceType`, 
+`UnionType`, `InputObjectType` (or one of it's subclasses).
 
-But most of the types in your schema will be [object types](object-types.md).
+But most of the types in your schema will be [object types](/type-system/object-types/).
 
 # Type Definition Styles
 Several styles of type definitions are supported depending on your preferences.
@@ -51,34 +50,42 @@ class MyType extends ObjectType
 }
 ```
 
-Using [GraphQL Type language](http://graphql.org/learn/schema/#type-language):
+You can also mix-and-match styles for convenience. For example:
+```php
+<?php
+namespace MyApp;
 
-```graphql
-schema {
-    query: Query
-    mutation: Mutation
-}
+use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\Type;
 
-type Query {
-    greetings(input: HelloInput!): String!
-}
-
-input HelloInput {
-    firstName: String!
-    lastName: String
+class BlogPostType extends ObjectType
+{
+    public function __construct()
+    {
+        $config = [
+            'fields' => [
+                'body' => new ObjectType([
+                    'name' => 'BlogPostBody',
+                    'fields' => [
+                        'html' => Type::string(),
+                        'text' => Type::string(),
+                    ]
+                ])
+            ]
+        ];
+        parent::__construct($config);
+    }
 }
 ```
 
-Read more about type language definitions in a [dedicated docs section](type-language.md).
-
 # Type Registry
-Every type must be presented in Schema by a single instance (**graphql-php** 
-throws when it discovers several instances with the same **name** in the schema).
+Every type must be presented in Schema by single instance (**graphql-php** 
+throws when it discovers several instances with the same `name` in schema).
 
 Therefore if you define your type as separate PHP class you must ensure that only one 
-instance of that class is added to the schema.
+instance of that class is added to schema.
 
-The typical way to do this is to create a registry of your types:
+Typical way to do this is to create registry of your types:
 
 ```php
 <?php
@@ -119,9 +126,8 @@ class MyAType extends ObjectType
     }
 }
 ```
-Obviously, you can automate this registry as you wish to reduce boilerplate or even 
+Obviously you can automate this registry as you wish to reduce boilerplate or even 
 introduce Dependency Injection Container if your types have other dependencies.
 
-Alternatively, all methods of the registry could be static - then there is no need
-to pass it in constructor - instead just use use **TypeRegistry::myAType()** in your 
-type definitions.
+Alternatively all methods of registry could be static if you prefer - then there is no need
+to pass it in constructor - instead just use use `TypeRegistry::myAType()` in your type definitions.

@@ -18,12 +18,12 @@ use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\OutputType;
 use GraphQL\Type\Definition\Type;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 use GraphQL\Utils\PairSet;
 use GraphQL\Utils\TypeInfo;
 use GraphQL\Validator\ValidationContext;
 
-class OverlappingFieldsCanBeMerged extends AbstractValidationRule
+class OverlappingFieldsCanBeMerged
 {
     static function fieldsConflictMessage($responseName, $reason)
     {
@@ -49,7 +49,7 @@ class OverlappingFieldsCanBeMerged extends AbstractValidationRule
      */
     public $comparedSet;
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         $this->comparedSet = new PairSet();
 
@@ -379,7 +379,7 @@ class OverlappingFieldsCanBeMerged extends AbstractValidationRule
      *
      * @return bool|string
      */
-    private function sameArguments($arguments1, $arguments2)
+    private function sameArguments(array $arguments1, array $arguments2)
     {
         if (count($arguments1) !== count($arguments2)) {
             return false;

@@ -1,6 +1,6 @@
 # Prerequisites
 This documentation assumes your familiarity with GraphQL concepts. If it is not the case - 
-first learn about GraphQL on [the official website](http://graphql.org/learn/).
+first learn about  GraphQL on [official website](http://graphql.org/learn/).
 
 # Installation
 
@@ -17,7 +17,7 @@ they are explained in [upgrade instructions](https://github.com/webonyx/graphql-
 # Install Tools (optional)
 While it is possible to communicate with GraphQL API using regular HTTP tools it is way 
 more convenient for humans to use [GraphiQL](https://github.com/graphql/graphiql) - an in-browser 
-IDE for exploring GraphQL APIs.
+ide for exploring GraphQL APIs.
 
 It provides syntax-highlighting, auto-completion and auto-generated documentation for 
 GraphQL API.
@@ -27,12 +27,12 @@ The easiest way to use it is to install one of the existing Google Chrome extens
  - [ChromeiQL](https://chrome.google.com/webstore/detail/chromeiql/fkkiamalmpiidkljmicmjfbieiclmeij)
  - [GraphiQL Feen](https://chrome.google.com/webstore/detail/graphiql-feen/mcbfdonlkfpbfdpimkjilhdneikhfklp)
 
-Alternatively, you can follow instructions on [the GraphiQL](https://github.com/graphql/graphiql)
+Alternatively you can follow instructions on [GraphiQL](https://github.com/graphql/graphiql)
 page and install it locally.
 
 
 # Hello World
-Let's create a type system that will be capable to process following simple query:
+Let's create type system that will be capable to process following simple query:
 ```
 query {
   echo(message: "Hello World")
@@ -60,23 +60,22 @@ $queryType = new ObjectType([
         ],
     ],
 ]);
-
 ```
 
-(Note: type definition can be expressed in [different styles](type-system/index.md#type-definition-styles), 
+(Note: type definition can be expressed in [different styles](type-system/#type-definition-styles), 
 but this example uses **inline** style for simplicity)
 
-The interesting piece here is **resolve** option of field definition. It is responsible for returning 
-a value of our field. Values of **scalar** fields will be directly included in response while values of 
-**composite** fields (objects, interfaces, unions) will be passed down to nested field resolvers 
+The interesting piece here is `resolve` option of field definition. It is responsible for retuning 
+value of our field. Values of **scalar** fields will be directly included in response while values of 
+**complex** fields (objects, interfaces, unions) will be passed down to nested field resolvers 
 (not in this example though).
 
-Now when our type is ready, let's create GraphQL endpoint file for it **graphql.php**:
+Now when our type is ready, let's create GraphQL endpoint for it `graphql.php`:
 
 ```php
 <?php
 use GraphQL\GraphQL;
-use GraphQL\Type\Schema;
+use GraphQL\Schema;
 
 $schema = new Schema([
     'query' => $queryType
@@ -89,36 +88,32 @@ $variableValues = isset($input['variables']) ? $input['variables'] : null;
 
 try {
     $rootValue = ['prefix' => 'You said: '];
-    $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues);
-    $output = $result->toArray();
+    $result = GraphQL::execute($schema, $query, $rootValue, null, $variableValues);
 } catch (\Exception $e) {
-    $output = [
-        'errors' => [
-            [
-                'message' => $e->getMessage()
-            ]
+    $result = [
+        'error' => [
+            'message' => $e->getMessage()
         ]
     ];
 }
-header('Content-Type: application/json');
-echo json_encode($output);
+header('Content-Type: application/json; charset=UTF-8');
+echo json_encode($result);
 ```
 
-Our example is finished. Try it by running:
+Our example is ready. Try it by running:
 ```sh
 php -S localhost:8000 graphql.php
-curl http://localhost:8080 -d '{"query": "query { echo(message: \"Hello World\") }" }'
+curl http://localhost:8000 -d '{"query": "query { echo(message: \"Hello World\") }" }'
 ```
 
-Check out the full [source code](https://github.com/webonyx/graphql-php/blob/master/examples/00-hello-world) of this example
-which also includes simple mutation.
+Check out the full [source code](https://github.com/webonyx/graphql-php/blob/master/examples/00-hello-world) of this example.
 
 Obviously hello world only scratches the surface of what is possible. 
 So check out next example, which is closer to real-world apps.
-Or keep reading about [schema definition](type-system/index.md).
+Or keep reading about [schema definition](type-system/).
 
 # Blog example
-It is often easier to start with a full-featured example and then get back to documentation
+It is often easier to start with full-featured example and then get back to documentation
 for your own work. 
 
 Check out [Blog example of GraphQL API](https://github.com/webonyx/graphql-php/tree/master/examples/01-blog).

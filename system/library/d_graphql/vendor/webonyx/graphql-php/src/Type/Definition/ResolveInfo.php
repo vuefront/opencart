@@ -8,19 +8,16 @@ use GraphQL\Language\AST\FragmentSpreadNode;
 use GraphQL\Language\AST\InlineFragmentNode;
 use GraphQL\Language\AST\OperationDefinitionNode;
 use GraphQL\Language\AST\SelectionSetNode;
-use GraphQL\Type\Schema;
-use GraphQL\Utils\Utils;
+use GraphQL\Schema;
+use GraphQL\Utils;
 
 /**
- * Structure containing information useful for field resolution process.
- * Passed as 3rd argument to every field resolver. See [docs on field resolving (data fetching)](data-fetching.md).
+ * Class ResolveInfo
+ * @package GraphQL\Type\Definition
  */
 class ResolveInfo
 {
     /**
-     * The name of the field being resolved
-     *
-     * @api
      * @var string
      */
     public $fieldName;
@@ -32,74 +29,47 @@ class ResolveInfo
     public $fieldASTs;
 
     /**
-     * AST of all nodes referencing this field in the query.
-     *
-     * @api
      * @var FieldNode[]
      */
     public $fieldNodes;
 
     /**
-     * Expected return type of the field being resolved
-     *
-     * @api
-     * @var ScalarType|ObjectType|InterfaceType|UnionType|EnumType|ListOfType|NonNull
+     * @var OutputType
      */
     public $returnType;
 
     /**
-     * Parent type of the field being resolved
-     *
-     * @api
-     * @var ObjectType
+     * @var Type|CompositeType
      */
     public $parentType;
 
     /**
-     * Path to this field from the very root value
-     *
-     * @api
      * @var array
      */
     public $path;
 
     /**
-     * Instance of a schema used for execution
-     *
-     * @api
      * @var Schema
      */
     public $schema;
 
     /**
-     * AST of all fragments defined in query
-     *
-     * @api
      * @var FragmentDefinitionNode[]
      */
     public $fragments;
 
     /**
-     * Root value passed to query execution
-     *
-     * @api
      * @var mixed
      */
     public $rootValue;
 
     /**
-     * AST of operation definition node (query, mutation)
-     *
-     * @api
      * @var OperationDefinitionNode
      */
     public $operation;
 
     /**
-     * Array of variables passed to query execution
-     *
-     * @api
-     * @var array
+     * @var array<variableName, mixed>
      */
     public $variableValues;
 
@@ -110,9 +80,10 @@ class ResolveInfo
     }
 
     /**
-     * Helper method that returns names of all fields selected in query for
-     * $this->fieldName up to $depth levels
+     * Helper method that returns names of all fields selected in query for $this->fieldName up to $depth levels
      *
+     *
+     * query AppHomeRoute{viewer{id,..._0c28183ce}} fragment _0c28183ce on Viewer{id,profile{firstName,id,locations{id}}}
      * Example:
      * query MyQuery{
      * {
@@ -127,8 +98,7 @@ class ResolveInfo
      *   }
      * }
      *
-     * Given this ResolveInfo instance is a part of "root" field resolution, and $depth === 1,
-     * method will return:
+     * Given this ResolveInfo instance is a part of "root" field resolution, and $depth === 1, method will return:
      * [
      *     'id' => true,
      *     'nested' => [
@@ -137,10 +107,6 @@ class ResolveInfo
      *     ]
      * ]
      *
-     * Warning: this method it is a naive implementation which does not take into account
-     * conditional typed fragments. So use it with care for fields of interface and union types.
-     *
-     * @api
      * @param int $depth How many levels to include in output
      * @return array
      */

@@ -35,20 +35,6 @@ class ArgumentsOfCorrectTypeTest extends TestCase
     }
 
     /**
-     * @it Good negative int value
-     */
-    public function testGoodNegativeIntValue()
-    {
-        $this->expectPassesRule(new ArgumentsOfCorrectType(), '
-        {
-          complicatedArgs {
-            intArgField(intArg: -2)
-          }
-        }
-        ');
-    }
-
-    /**
      * @it Good boolean value
      */
     public function testGoodBooleanValue()
@@ -85,17 +71,6 @@ class ArgumentsOfCorrectTypeTest extends TestCase
         {
           complicatedArgs {
             floatArgField(floatArg: 1.1)
-          }
-        }
-        ');
-    }
-
-    public function testGoodNegativeFloatValue()
-    {
-        $this->expectPassesRule(new ArgumentsOfCorrectType(), '
-        {
-          complicatedArgs {
-            floatArgField(floatArg: -1.1)
           }
         }
         ');
@@ -152,20 +127,6 @@ class ArgumentsOfCorrectTypeTest extends TestCase
         {
           dog {
             doesKnowCommand(dogCommand: SIT)
-          }
-        }
-        ');
-    }
-
-    /**
-     * @it Enum with null value
-     */
-    public function testEnumWithNullValue()
-    {
-        $this->expectPassesRule(new ArgumentsOfCorrectType(), '
-        {
-          complicatedArgs {
-            enumArgField(enumArg: NO_FUR)
           }
         }
         ');

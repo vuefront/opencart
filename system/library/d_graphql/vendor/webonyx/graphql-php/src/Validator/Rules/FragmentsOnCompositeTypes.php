@@ -7,10 +7,9 @@ use GraphQL\Language\AST\InlineFragmentNode;
 use GraphQL\Language\AST\NodeKind;
 use GraphQL\Language\Printer;
 use GraphQL\Type\Definition\Type;
-use GraphQL\Utils\TypeInfo;
 use GraphQL\Validator\ValidationContext;
 
-class FragmentsOnCompositeTypes extends AbstractValidationRule
+class FragmentsOnCompositeTypes
 {
     static function inlineFragmentOnNonCompositeErrorMessage($type)
     {
@@ -22,22 +21,21 @@ class FragmentsOnCompositeTypes extends AbstractValidationRule
         return "Fragment \"$fragName\" cannot condition on non composite type \"$type\".";
     }
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         return [
             NodeKind::INLINE_FRAGMENT => function(InlineFragmentNode $node) use ($context) {
-                if ($node->typeCondition) {
-                    $type = TypeInfo::typeFromAST($context->getSchema(), $node->typeCondition);
-                    if ($type && !Type::isCompositeType($type)) {
-                        $context->reportError(new Error(
-                            static::inlineFragmentOnNonCompositeErrorMessage($type),
-                            [$node->typeCondition]
-                        ));
-                    }
+                $type = $context->getType();
+
+                if ($node->typeCondition && $type && !Type::isCompositeType($type)) {
+                    $context->reportError(new Error(
+                        static::inlineFragmentOnNonCompositeErrorMessage($type),
+                        [$node->typeCondition]
+                    ));
                 }
             },
             NodeKind::FRAGMENT_DEFINITION => function(FragmentDefinitionNode $node) use ($context) {
-                $type = TypeInfo::typeFromAST($context->getSchema(), $node->typeCondition);
+                $type = $context->getType();
 
                 if ($type && !Type::isCompositeType($type)) {
                     $context->reportError(new Error(

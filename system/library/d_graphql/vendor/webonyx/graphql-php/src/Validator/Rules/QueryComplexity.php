@@ -31,9 +31,9 @@ class QueryComplexity extends AbstractQuerySecurity
      */
     private $context;
 
-    public function __construct($maxQueryComplexity)
+    public function __construct($maxQueryDepth)
     {
-        $this->setMaxQueryComplexity($maxQueryComplexity);
+        $this->setMaxQueryComplexity($maxQueryDepth);
     }
 
     public static function maxQueryComplexityErrorMessage($max, $count)
@@ -68,7 +68,7 @@ class QueryComplexity extends AbstractQuerySecurity
         return $this->rawVariableValues;
     }
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         $this->context = $context;
 

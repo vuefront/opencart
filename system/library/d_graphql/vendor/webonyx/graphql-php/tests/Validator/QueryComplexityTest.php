@@ -5,7 +5,6 @@ use GraphQL\Error\Error;
 use GraphQL\Language\AST\NodeKind;
 use GraphQL\Language\Parser;
 use GraphQL\Validator\DocumentValidator;
-use GraphQL\Validator\Rules\CustomValidationRule;
 use GraphQL\Validator\Rules\QueryComplexity;
 use GraphQL\Validator\ValidationContext;
 
@@ -160,7 +159,7 @@ class QueryComplexityTest extends AbstractQuerySecurityTest
         $query = 'query MyQuery { human(name: INVALID_VALUE) { dogs {name} } }';
 
         $reportedError = new Error("OtherValidatorError");
-        $otherRule = new CustomValidationRule('otherRule', function(ValidationContext $context) use ($reportedError) {
+        $otherRule = function(ValidationContext $context) use ($reportedError) {
             return [
                 NodeKind::OPERATION_DEFINITION => [
                     'leave' => function() use ($context, $reportedError) {
@@ -168,7 +167,7 @@ class QueryComplexityTest extends AbstractQuerySecurityTest
                     }
                 ]
             ];
-        });
+        };
 
         $errors = DocumentValidator::validate(
             QuerySecuritySchema::buildSchema(),

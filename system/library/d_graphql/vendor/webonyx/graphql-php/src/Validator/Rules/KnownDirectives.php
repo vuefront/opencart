@@ -9,7 +9,7 @@ use GraphQL\Language\AST\NodeKind;
 use GraphQL\Validator\ValidationContext;
 use GraphQL\Type\Definition\DirectiveLocation;
 
-class KnownDirectives extends AbstractValidationRule
+class KnownDirectives
 {
     static function unknownDirectiveMessage($directiveName)
     {
@@ -21,7 +21,7 @@ class KnownDirectives extends AbstractValidationRule
         return "Directive \"$directiveName\" may not be used on \"$location\".";
     }
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         return [
             NodeKind::DIRECTIVE => function (DirectiveNode $node, $key, $parent, $path, $ancestors) use ($context) {

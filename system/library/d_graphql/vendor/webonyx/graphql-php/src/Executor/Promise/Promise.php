@@ -1,7 +1,7 @@
 <?php
 namespace GraphQL\Executor\Promise;
 
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 /**
  * Convenience wrapper for promises represented by Promise Adapter

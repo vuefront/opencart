@@ -1,27 +1,20 @@
 <?php
-namespace GraphQL\Tests\Type;
+namespace Type;
 
 use GraphQL\Error\InvariantViolation;
-use GraphQL\Error\Warning;
 use GraphQL\Type\Definition\Config;
 use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        Warning::suppress(Warning::WARNING_CONFIG_DEPRECATION);
-    }
-
     public static function tearDownAfterClass()
     {
         Config::disableValidation();
-        Warning::enable(Warning::WARNING_CONFIG_DEPRECATION);
     }
 
     public function testToggling()
@@ -650,7 +643,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
                 ['test' => Config::STRING]
             );
             $this->fail('Expected exception not thrown');
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertEquals(
                 $this->typeError('Non-standard keys "test2" '),
                 $e->getMessage()

@@ -1,32 +1,30 @@
 [
     {
         "name": "webonyx/graphql-php",
-        "version": "v0.11.6",
-        "version_normalized": "0.11.6.0",
+        "version": "v0.9.14",
+        "version_normalized": "0.9.14.0",
         "source": {
             "type": "git",
             "url": "https://github.com/webonyx/graphql-php.git",
-            "reference": "f438a726cd523bc584e78d866eca270165c42fd5"
+            "reference": "ed6629130869893e6efb5757dab5812def357bce"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/f438a726cd523bc584e78d866eca270165c42fd5",
-            "reference": "f438a726cd523bc584e78d866eca270165c42fd5",
+            "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/ed6629130869893e6efb5757dab5812def357bce",
+            "reference": "ed6629130869893e6efb5757dab5812def357bce",
             "shasum": ""
         },
         "require": {
             "ext-mbstring": "*",
-            "php": ">=5.5,<8.0-DEV"
+            "php": ">=5.4,<8.0-DEV"
         },
         "require-dev": {
-            "phpunit/phpunit": "^4.8",
-            "psr/http-message": "^1.0"
+            "phpunit/phpunit": "^4.8"
         },
         "suggest": {
-            "psr/http-message": "To use standard GraphQL server",
-            "react/promise": "To leverage async resolving on React PHP platform"
+            "react/promise": "To use ReactPHP promise adapter"
         },
-        "time": "2018-04-17T10:34:43+00:00",
+        "time": "2017-08-18T15:30:03+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -39,7 +37,7 @@
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "MIT"
+            "BSD"
         ],
         "description": "A PHP port of GraphQL reference implementation",
         "homepage": "https://github.com/webonyx/graphql-php",

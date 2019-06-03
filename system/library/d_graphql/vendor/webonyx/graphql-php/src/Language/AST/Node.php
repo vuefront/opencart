@@ -1,8 +1,7 @@
 <?php
 namespace GraphQL\Language\AST;
 
-use GraphQL\Error\InvariantViolation;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 abstract class Node
 {
@@ -43,9 +42,7 @@ abstract class Node
      */
     public function __construct(array $vars)
     {
-        if (!empty($vars)) {
-            Utils::assign($this, $vars);
-        }
+        Utils::assign($this, $vars);
     }
 
     /**
@@ -94,61 +91,34 @@ abstract class Node
      */
     public function toArray($recursive = false)
     {
+        $tmp = (array) $this;
+
+        $tmp['loc'] = [
+            'start' => $this->loc->start,
+            'end' => $this->loc->end
+        ];
+
         if ($recursive) {
-            return $this->recursiveToArray($this);
-        } else {
-            $tmp = (array) $this;
-
-            if ($this->loc) {
-                $tmp['loc'] = [
-                    'start' => $this->loc->start,
-                    'end' => $this->loc->end
-                ];
-            }
-
-            return $tmp;
+            $this->recursiveToArray($tmp);
         }
+
+        return $tmp;
     }
 
     /**
-     * @param Node $node
-     * @return array
+     * @param $object
      */
-    private function recursiveToArray(Node $node)
+    public function recursiveToArray(&$object)
     {
-        $result = [
-            'kind' => $node->kind,
-        ];
-
-        if ($node->loc) {
-            $result['loc'] = [
-                'start' => $node->loc->start,
-                'end' => $node->loc->end
-            ];
-        }
-
-        foreach (get_object_vars($node) as $prop => $propValue) {
-            if (isset($result[$prop]))
-                continue;
-
-            if ($prop === 'loc' && $propValue === null)
-                continue;
-
-            if (is_array($propValue) || $propValue instanceof NodeList) {
-                $tmp = [];
-                foreach ($propValue as $tmp1) {
-                    $tmp[] = $tmp1 instanceof Node ? $this->recursiveToArray($tmp1) : (array) $tmp1;
-                }
-            } else if ($propValue instanceof Node) {
-                $tmp = $this->recursiveToArray($propValue);
-            } else if (is_scalar($propValue) || null === $propValue) {
-                $tmp = $propValue;
-            } else {
-                $tmp = null;
+        if ($object instanceof Node) {
+            /** @var Node $object */
+            $object = $object->toArray(true);
+        } elseif (is_object($object)) {
+            $object = (array) $object;
+        } elseif (is_array($object)) {
+            foreach ($object as &$o) {
+                $this->recursiveToArray($o);
             }
-
-            $result[$prop] = $tmp;
         }
-        return $result;
     }
 }

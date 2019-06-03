@@ -7,7 +7,7 @@ use GraphQL\Language\AST\NodeKind;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Validator\ValidationContext;
 
-class ScalarLeafs extends AbstractValidationRule
+class ScalarLeafs
 {
     static function noSubselectionAllowedMessage($field, $type)
     {
@@ -19,13 +19,13 @@ class ScalarLeafs extends AbstractValidationRule
         return "Field \"$field\" of type \"$type\" must have a sub selection.";
     }
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         return [
             NodeKind::FIELD => function(FieldNode $node) use ($context) {
                 $type = $context->getType();
                 if ($type) {
-                    if (Type::isLeafType(Type::getNamedType($type))) {
+                    if (Type::isLeafType($type)) {
                         if ($node->selectionSet) {
                             $context->reportError(new Error(
                                 self::noSubselectionAllowedMessage($node->name->value, $type),

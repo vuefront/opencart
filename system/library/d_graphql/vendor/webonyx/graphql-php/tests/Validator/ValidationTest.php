@@ -1,10 +1,11 @@
 <?php
 namespace GraphQL\Tests\Validator;
 
+use GraphQL\Language\Parser;
+use GraphQL\Utils\TypeInfo;
 use GraphQL\Validator\DocumentValidator;
-use GraphQL\Validator\Rules\QueryComplexity;
 
-class ValidationTest extends TestCase
+class ValidationText extends TestCase
 {
     // Validate: Supports full validation
 
@@ -25,26 +26,5 @@ class ValidationTest extends TestCase
             }
           }
         ');
-    }
-/*
-    public function testAllowsSettingRulesGlobally()
-    {
-        $rule = new QueryComplexity(0);
-
-        DocumentValidator::addRule($rule);
-        $instance = DocumentValidator::getRule(QueryComplexity::class);
-        $this->assertSame($rule, $instance);
-    }
-*/
-    public function testPassesValidationWithEmptyRules()
-    {
-        $query = '{invalid}';
-
-        $expectedError = [
-            'message' => 'Cannot query field "invalid" on type "QueryRoot".',
-            'locations' => [ ['line' => 1, 'column' => 2] ]
-        ];
-        $this->expectFailsCompleteValidation($query, [$expectedError]);
-        $this->expectValid($this->getDefaultSchema(), [], $query);
     }
 }

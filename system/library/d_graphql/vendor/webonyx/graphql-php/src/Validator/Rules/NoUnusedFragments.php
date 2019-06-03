@@ -7,7 +7,7 @@ use GraphQL\Language\AST\NodeKind;
 use GraphQL\Language\Visitor;
 use GraphQL\Validator\ValidationContext;
 
-class NoUnusedFragments extends AbstractValidationRule
+class NoUnusedFragments
 {
     static function unusedFragMessage($fragName)
     {
@@ -18,7 +18,7 @@ class NoUnusedFragments extends AbstractValidationRule
 
     public $fragmentDefs;
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         $this->operationDefs = [];
         $this->fragmentDefs = [];

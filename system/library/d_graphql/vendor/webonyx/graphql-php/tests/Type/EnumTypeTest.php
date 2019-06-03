@@ -236,7 +236,7 @@ class EnumTypeTest extends \PHPUnit_Framework_TestCase
             '{ colorEnum(fromString: "GREEN") }',
             null,
             [
-                'message' => 'Expected a value of type "Color" but received: "GREEN"',
+                'message' => 'Expected a value of type "Color" but received: GREEN',
                 'locations' => [new SourceLocation(1, 3)]
             ]
         );
@@ -383,9 +383,9 @@ class EnumTypeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @it presents a getValues() API for complex enums
+     * @it may present a values API for complex enums
      */
-    public function testPresentsGetValuesAPIForComplexEnums()
+    public function testMayPresentValuesAPIForComplexEnums()
     {
         $ComplexEnum = $this->ComplexEnum;
         $values = $ComplexEnum->getValues();
@@ -398,29 +398,16 @@ class EnumTypeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @it presents a getValue() API for complex enums
-     */
-    public function testPresentsGetValueAPIForComplexEnums()
-    {
-        $oneValue = $this->ComplexEnum->getValue('ONE');
-        $this->assertEquals('ONE', $oneValue->name);
-        $this->assertEquals($this->Complex1, $oneValue->value);
-
-        $badUsage = $this->ComplexEnum->getValue($this->Complex1);
-        $this->assertEquals(null, $badUsage);
-    }
-
-    /**
      * @it may be internally represented with complex values
      */
     public function testMayBeInternallyRepresentedWithComplexValues()
     {
-        $result = GraphQL::executeAndReturnResult($this->schema, '{
+        $result = GraphQL::execute($this->schema, '{
         first: complexEnum
         second: complexEnum(fromEnum: TWO)
         good: complexEnum(provideGoodValue: true)
         bad: complexEnum(provideBadValue: true)
-        }')->toArray(true);
+        }');
 
         $expected = [
             'data' => [
@@ -430,7 +417,7 @@ class EnumTypeTest extends \PHPUnit_Framework_TestCase
                 'bad' => null
             ],
             'errors' => [[
-                'debugMessage' =>
+                'message' =>
                     'Expected a value of type "Complex" but received: instance of ArrayObject',
                 'locations' => [['line' => 5, 'column' => 9]]
             ]]
@@ -460,11 +447,11 @@ class EnumTypeTest extends \PHPUnit_Framework_TestCase
             [
                 'data' => ['first' => 'ONE', 'second' => 'TWO', 'third' => null],
                 'errors' => [[
-                    'debugMessage' => 'Expected a value of type "SimpleEnum" but received: "WRONG"',
+                    'message' => 'Expected a value of type "SimpleEnum" but received: WRONG',
                     'locations' => [['line' => 4, 'column' => 13]]
                 ]]
             ],
-            GraphQL::executeAndReturnResult($this->schema, $q)->toArray(true)
+            GraphQL::execute($this->schema, $q)
         );
     }
 

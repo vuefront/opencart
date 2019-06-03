@@ -4,7 +4,7 @@ namespace GraphQL\Examples\Blog\Type\Scalar;
 use GraphQL\Error\Error;
 use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\CustomScalarType;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 class EmailType
 {

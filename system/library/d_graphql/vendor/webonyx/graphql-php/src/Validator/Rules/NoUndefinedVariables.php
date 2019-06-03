@@ -15,7 +15,7 @@ use GraphQL\Validator\ValidationContext;
  *
  * @package GraphQL\Validator\Rules
  */
-class NoUndefinedVariables extends AbstractValidationRule
+class NoUndefinedVariables
 {
     static function undefinedVarMessage($varName, $opName = null)
     {
@@ -24,7 +24,7 @@ class NoUndefinedVariables extends AbstractValidationRule
             : "Variable \"$$varName\" is not defined.";
     }
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         $variableNameDefined = [];
 

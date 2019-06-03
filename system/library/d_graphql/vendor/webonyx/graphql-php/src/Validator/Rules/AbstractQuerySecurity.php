@@ -14,7 +14,7 @@ use GraphQL\Type\Introspection;
 use GraphQL\Utils\TypeInfo;
 use GraphQL\Validator\ValidationContext;
 
-abstract class AbstractQuerySecurity extends AbstractValidationRule
+abstract class AbstractQuerySecurity
 {
     const DISABLED = 0;
 
@@ -83,7 +83,7 @@ abstract class AbstractQuerySecurity extends AbstractValidationRule
      * time we do not know what object type will be used, so we unconditionally
      * spread in all fragments.
      *
-     * @see \GraphQL\Validator\Rules\OverlappingFieldsCanBeMerged
+     * @see GraphQL\Validator\Rules\OverlappingFieldsCanBeMerged
      *
      * @param ValidationContext $context
      * @param Type|null         $parentType

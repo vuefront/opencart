@@ -3,7 +3,7 @@ namespace GraphQL\Executor\Promise\Adapter;
 
 use GraphQL\Executor\Promise\Promise;
 use GraphQL\Executor\Promise\PromiseAdapter;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 use React\Promise\Promise as ReactPromise;
 use React\Promise\PromiseInterface as ReactPromiseInterface;
 
@@ -56,7 +56,7 @@ class ReactPromiseAdapter implements PromiseAdapter
     /**
      * @inheritdoc
      */
-    public function createRejected($reason)
+    public function createRejected(\Exception $reason)
     {
         $promise = \React\Promise\reject($reason);
         return new Promise($promise, $this);

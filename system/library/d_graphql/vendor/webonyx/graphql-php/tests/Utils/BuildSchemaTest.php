@@ -2,16 +2,12 @@
 namespace GraphQL\Tests\Utils;
 
 use GraphQL\GraphQL;
-use GraphQL\Language\AST\EnumTypeDefinitionNode;
-use GraphQL\Language\AST\InterfaceTypeDefinitionNode;
-use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
-use GraphQL\Language\Printer;
-use GraphQL\Type\Definition\EnumType;
-use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Utils\BuildSchema;
 use GraphQL\Utils\SchemaPrinter;
+
 use GraphQL\Type\Definition\Directive;
+use GraphQL\Type\Definition\EnumValueDefinition;
 
 class BuildSchemaTest extends \PHPUnit_Framework_TestCase
 {
@@ -138,7 +134,7 @@ type Hello {
 }
 ';
         $output = $this->cycleOutput($body);
-        $this->assertEquals($body, $output);
+        $this->assertEquals($output, $body);
     }
 
     /**
@@ -587,19 +583,26 @@ type Query {
         $ast = Parser::parse($body);
         $schema = BuildSchema::buildAST($ast);
 
-        /** @var EnumType $myEnum */
-        $myEnum = $schema->getType('MyEnum');
-
-        $value = $myEnum->getValue('VALUE');
-        $this->assertFalse($value->isDeprecated());
-
-        $oldValue = $myEnum->getValue('OLD_VALUE');
-        $this->assertTrue($oldValue->isDeprecated());
-        $this->assertEquals('No longer supported', $oldValue->deprecationReason);
-
-        $otherValue = $myEnum->getValue('OTHER_VALUE');
-        $this->assertTrue($otherValue->isDeprecated());
-        $this->assertEquals('Terrible reasons', $otherValue->deprecationReason);
+        $this->assertEquals($schema->getType('MyEnum')->getValues(), [
+            new EnumValueDefinition([
+                'name' => 'VALUE',
+                'description' => '',
+                'deprecationReason' => null,
+                'value' => 'VALUE'
+            ]),
+            new EnumValueDefinition([
+                'name' => 'OLD_VALUE',
+                'description' => '',
+                'deprecationReason' => 'No longer supported',
+                'value' => 'OLD_VALUE'
+            ]),
+            new EnumValueDefinition([
+                'name' => 'OTHER_VALUE',
+                'description' => '',
+                'deprecationReason' => 'Terrible reasons',
+                'value' => 'OTHER_VALUE'
+            ])
+        ]);
 
         $rootFields = $schema->getType('Query')->getFields();
         $this->assertEquals($rootFields['field1']->isDeprecated(), true);
@@ -607,73 +610,6 @@ type Query {
 
         $this->assertEquals($rootFields['field2']->isDeprecated(), true);
         $this->assertEquals($rootFields['field2']->deprecationReason, 'Because I said so');
-    }
-
-    /**
-     * @it Correctly assign AST nodes
-     */
-    public function testCorrectlyAssignASTNodes()
-    {
-
-        $schema = BuildSchema::build('
-      schema {
-        query: Query
-      }
-
-      type Query {
-        testField(testArg: TestInput): TestUnion
-      }
-
-      input TestInput {
-        testInputField: TestEnum
-      }
-
-      enum TestEnum {
-        TEST_VALUE
-      }
-
-      union TestUnion = TestType
-
-      interface TestInterface {
-        interfaceField: String
-      }
-
-      type TestType implements TestInterface {
-        interfaceField: String
-      }
-
-      directive @test(arg: Int) on FIELD
-    ');
-        /** @var ObjectType $query */
-        $query = $schema->getType('Query');
-        $testInput = $schema->getType('TestInput');
-        $testEnum = $schema->getType('TestEnum');
-        $testUnion = $schema->getType('TestUnion');
-        $testInterface = $schema->getType('TestInterface');
-        $testType = $schema->getType('TestType');
-        $testDirective = $schema->getDirective('test');
-
-        $restoredIDL = SchemaPrinter::doPrint(BuildSchema::build(
-            Printer::doPrint($schema->getAstNode()) . "\n" .
-            Printer::doPrint($query->astNode) . "\n" .
-            Printer::doPrint($testInput->astNode) . "\n" .
-            Printer::doPrint($testEnum->astNode) . "\n" .
-            Printer::doPrint($testUnion->astNode) . "\n" .
-            Printer::doPrint($testInterface->astNode) . "\n" .
-            Printer::doPrint($testType->astNode) . "\n" .
-            Printer::doPrint($testDirective->astNode)
-        ));
-
-        $this->assertEquals($restoredIDL, SchemaPrinter::doPrint($schema));
-
-        $testField = $query->getField('testField');
-        $this->assertEquals('testField(testArg: TestInput): TestUnion', Printer::doPrint($testField->astNode));
-        $this->assertEquals('testArg: TestInput', Printer::doPrint($testField->args[0]->astNode));
-        $this->assertEquals('testInputField: TestEnum', Printer::doPrint($testInput->getField('testInputField')->astNode));
-        $this->assertEquals('TEST_VALUE', Printer::doPrint($testEnum->getValue('TEST_VALUE')->astNode));
-        $this->assertEquals('interfaceField: String', Printer::doPrint($testInterface->getField('interfaceField')->astNode));
-        $this->assertEquals('interfaceField: String', Printer::doPrint($testType->getField('interfaceField')->astNode));
-        $this->assertEquals('arg: Int', Printer::doPrint($testDirective->args[0]->astNode));
     }
 
     // Describe: Failures
@@ -825,8 +761,7 @@ type Hello {
 }
 ';
         $doc = Parser::parse($body);
-        $schema = BuildSchema::buildAST($doc);
-        $schema->getTypeMap();
+        BuildSchema::buildAST($doc);
     }
 
     /**
@@ -843,8 +778,7 @@ schema {
 type Hello implements Bar { }
 ';
         $doc = Parser::parse($body);
-        $schema = BuildSchema::buildAST($doc);
-        $schema->getTypeMap();
+        BuildSchema::buildAST($doc);
     }
 
     /**
@@ -862,8 +796,7 @@ union TestUnion = Bar
 type Hello { testUnion: TestUnion }
 ';
         $doc = Parser::parse($body);
-        $schema = BuildSchema::buildAST($doc);
-        $schema->getTypeMap();
+        BuildSchema::buildAST($doc);
     }
 
     /**
@@ -962,197 +895,5 @@ fragment Foo on Type { field }
 ';
         $doc = Parser::parse($body);
         BuildSchema::buildAST($doc);
-    }
-
-    /**
-     * @it Forbids duplicate type definitions
-     */
-    public function testForbidsDuplicateTypeDefinitions()
-    {
-        $body = '
-schema {
-  query: Repeated
-}
-
-type Repeated {
-  id: Int
-}
-
-type Repeated {
-  id: String
-}
-';
-        $doc = Parser::parse($body);
-
-        $this->setExpectedException('GraphQL\Error\Error', 'Type "Repeated" was defined more than once.');
-        BuildSchema::buildAST($doc);
-    }
-
-    public function testSupportsTypeConfigDecorator()
-    {
-        $body = '
-schema {
-  query: Query
-}
-
-type Query {
-  str: String
-  color: Color
-  hello: Hello
-}
-
-enum Color {
-  RED
-  GREEN
-  BLUE
-}
-
-interface Hello {
-  world: String
-}
-';
-        $doc = Parser::parse($body);
-
-        $decorated = [];
-        $calls = [];
-
-        $typeConfigDecorator = function($defaultConfig, $node, $allNodesMap) use (&$decorated, &$calls) {
-            $decorated[] = $defaultConfig['name'];
-            $calls[] = [$defaultConfig, $node, $allNodesMap];
-            return ['description' => 'My description of ' . $node->name->value] + $defaultConfig;
-        };
-
-        $schema = BuildSchema::buildAST($doc, $typeConfigDecorator);
-        $schema->getTypeMap();
-        $this->assertEquals(['Query', 'Color', 'Hello'], $decorated);
-
-        list($defaultConfig, $node, $allNodesMap) = $calls[0];
-        $this->assertInstanceOf(ObjectTypeDefinitionNode::class, $node);
-        $this->assertEquals('Query', $defaultConfig['name']);
-        $this->assertInstanceOf(\Closure::class, $defaultConfig['fields']);
-        $this->assertInstanceOf(\Closure::class, $defaultConfig['interfaces']);
-        $this->assertArrayHasKey('description', $defaultConfig);
-        $this->assertCount(5, $defaultConfig);
-        $this->assertEquals(array_keys($allNodesMap), ['Query', 'Color', 'Hello']);
-        $this->assertEquals('My description of Query', $schema->getType('Query')->description);
-
-
-        list($defaultConfig, $node, $allNodesMap) = $calls[1];
-        $this->assertInstanceOf(EnumTypeDefinitionNode::class, $node);
-        $this->assertEquals('Color', $defaultConfig['name']);
-        $enumValue = [
-            'description' => '',
-            'deprecationReason' => ''
-        ];
-        $this->assertArraySubset([
-            'RED' => $enumValue,
-            'GREEN' => $enumValue,
-            'BLUE' => $enumValue,
-        ], $defaultConfig['values']);
-        $this->assertCount(4, $defaultConfig); // 3 + astNode
-        $this->assertEquals(array_keys($allNodesMap), ['Query', 'Color', 'Hello']);
-        $this->assertEquals('My description of Color', $schema->getType('Color')->description);
-
-        list($defaultConfig, $node, $allNodesMap) = $calls[2];
-        $this->assertInstanceOf(InterfaceTypeDefinitionNode::class, $node);
-        $this->assertEquals('Hello', $defaultConfig['name']);
-        $this->assertInstanceOf(\Closure::class, $defaultConfig['fields']);
-        $this->assertInstanceOf(\Closure::class, $defaultConfig['resolveType']);
-        $this->assertArrayHasKey('description', $defaultConfig);
-        $this->assertCount(5, $defaultConfig);
-        $this->assertEquals(array_keys($allNodesMap), ['Query', 'Color', 'Hello']);
-        $this->assertEquals('My description of Hello', $schema->getType('Hello')->description);
-    }
-
-    public function testCreatesTypesLazily()
-    {
-        $body = '
-schema {
-  query: Query
-}
-
-type Query {
-  str: String
-  color: Color
-  hello: Hello
-}
-
-enum Color {
-  RED
-  GREEN
-  BLUE
-}
-
-interface Hello {
-  world: String
-}
-
-type World implements Hello {
-  world: String
-}
-';
-        $doc = Parser::parse($body);
-        $created = [];
-
-        $typeConfigDecorator = function($config, $node) use (&$created) {
-            $created[] = $node->name->value;
-            return $config;
-        };
-
-        $schema = BuildSchema::buildAST($doc, $typeConfigDecorator);
-        $this->assertEquals(['Query'], $created);
-
-        $schema->getType('Color');
-        $this->assertEquals(['Query', 'Color'], $created);
-
-        $schema->getType('Hello');
-        $this->assertEquals(['Query', 'Color', 'Hello'], $created);
-
-        $types = $schema->getTypeMap();
-        $this->assertEquals(['Query', 'Color', 'Hello', 'World'], $created);
-        $this->assertArrayHasKey('Query', $types);
-        $this->assertArrayHasKey('Color', $types);
-        $this->assertArrayHasKey('Hello', $types);
-        $this->assertArrayHasKey('World', $types);
-    }
-
-    public function testScalarDescription()
-    {
-        $schemaDef = '
-# An ISO-8601 encoded UTC date string.
-scalar Date
-
-type Query {
-    now: Date
-    test: String
-}
-';
-        $q = '
-{
-  __type(name: "Date") {
-    name
-    description
-  }
-  strType: __type(name: "String") {
-    name
-    description
-  }
-}
-';
-        $schema = BuildSchema::build($schemaDef);
-        $result = GraphQL::executeQuery($schema, $q)->toArray();
-        $expected = ['data' => [
-            '__type' => [
-                'name' => 'Date',
-                'description' => 'An ISO-8601 encoded UTC date string.'
-            ],
-            'strType' => [
-                'name' => 'String',
-                'description' => 'The `String` scalar type represents textual data, represented as UTF-8' . "\n" .
-                    'character sequences. The String type is most often used by GraphQL to'. "\n" .
-                    'represent free-form human-readable text.'
-            ]
-        ]];
-        $this->assertEquals($expected, $result);
     }
 }

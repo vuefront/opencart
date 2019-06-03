@@ -5,7 +5,7 @@ use GraphQL\Deferred;
 use GraphQL\Error\InvariantViolation;
 use GraphQL\Executor\Promise\Promise;
 use GraphQL\Executor\Promise\PromiseAdapter;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 /**
  * Class SyncPromiseAdapter
@@ -60,8 +60,6 @@ class SyncPromiseAdapter implements PromiseAdapter
             );
         } catch (\Exception $e) {
             $promise->reject($e);
-        } catch (\Throwable $e) {
-            $promise->reject($e);
         }
 
         return new Promise($promise, $this);
@@ -79,7 +77,7 @@ class SyncPromiseAdapter implements PromiseAdapter
     /**
      * @inheritdoc
      */
-    public function createRejected($reason)
+    public function createRejected(\Exception $reason)
     {
         $promise = new SyncPromise();
         return new Promise($promise->reject($reason), $this);

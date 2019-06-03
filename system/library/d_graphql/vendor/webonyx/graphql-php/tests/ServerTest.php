@@ -1,10 +1,9 @@
 <?php
 namespace GraphQL\Tests;
 
-use GraphQL\Error\Debug;
-use GraphQL\Error\FormattedError;
+use GraphQL\Error\Error;
 use GraphQL\Error\InvariantViolation;
-use GraphQL\Error\UserError;
+use GraphQL\Executor\ExecutionResult;
 use GraphQL\Executor\Promise\Adapter\SyncPromiseAdapter;
 use GraphQL\Schema;
 use GraphQL\Server;
@@ -19,7 +18,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaults()
     {
-        $server = @new Server();
+        $server = new Server();
         $this->assertEquals(null, $server->getQueryType());
         $this->assertEquals(null, $server->getMutationType());
         $this->assertEquals(null, $server->getSubscriptionType());
@@ -48,7 +47,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 
     public function testSchemaDefinition()
     {
-        $mutationType = $queryType = $subscriptionType = new ObjectType(['name' => 'A', 'fields' => ['a' => Type::string()]]);
+        $mutationType = $queryType = $subscriptionType = new ObjectType(['name' => 'A', 'fields' => []]);
 
         $schema = new Schema([
             'query' => $queryType
@@ -284,7 +283,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
     public function testValidate()
     {
         $server = Server::create()
-            ->setQueryType(new ObjectType(['name' => 'Q', 'fields' => ['a' => Type::string()]]));
+            ->setQueryType(new ObjectType(['name' => 'Q', 'fields' => []]));
 
         $ast = $server->parse('{q}');
         $errors = $server->validate($ast);
@@ -467,7 +466,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
                 'withException' => [
                     'type' => Type::string(),
                     'resolve' => function() {
-                        throw new UserError("Error");
+                        throw new \Exception("Error");
                     }
                 ]
             ]
@@ -488,16 +487,12 @@ class ServerTest extends \PHPUnit_Framework_TestCase
                 'locations' => [[
                     'line' => 1,
                     'column' => 2
-                ]],
+                ]]
             ]]
         ];
-        $this->assertArraySubset($expected, $result->toArray());
+        $this->assertEquals($expected, $result->toArray());
 
         $server->setDebug(Server::DEBUG_EXCEPTIONS);
-        $server->setExceptionFormatter(function($e) {
-            $debug = Debug::INCLUDE_TRACE;
-            return FormattedError::createFromException($e, $debug);
-        });
         $result = $server->executeQuery('{withException}');
 
         $expected['errors'][0]['exception'] = ['message' => 'Error', 'trace' => []];
@@ -509,7 +504,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 
         $result = $server->executeQuery('{withException}');
         $expected['errors'][0]['exception'] = ['test' => 'Error'];
-        $this->assertArraySubset($expected, $result->toArray());
+        $this->assertEquals($expected, $result->toArray());
     }
 
     public function testHandleRequest()
@@ -532,7 +527,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $mock->handleRequest();
 
         $this->assertInternalType('array', $output);
-        $this->assertArraySubset(['errors' => [['message' => 'Unexpected Error']]], $output[0]);
+        $this->assertEquals(['errors' => [['message' => 'Unexpected Error']]], $output[0]);
         $this->assertEquals(500, $output[1]);
 
         $output = null;
@@ -567,8 +562,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
                 'locations' => [[
                     'line' => 1,
                     'column' => 2
-                ]],
-                'category' => 'graphql',
+                ]]
             ]]],
             200
         ];

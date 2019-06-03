@@ -83,8 +83,6 @@ union Feed = Story | Article | Advert
 
 union AnnotatedUnion @onUnion = A | B
 
-union AnnotatedUnionTwo @onUnion = A | B
-
 scalar CustomScalar
 
 scalar AnnotatedScalar @onScalar
@@ -119,8 +117,6 @@ type NoFields {}
 directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 
 directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
-
-directive @include2(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 ';
         $this->assertEquals($expected, $printed);
     }

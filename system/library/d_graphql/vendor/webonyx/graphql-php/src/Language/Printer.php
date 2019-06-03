@@ -38,29 +38,9 @@ use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Language\AST\TypeExtensionDefinitionNode;
 use GraphQL\Language\AST\UnionTypeDefinitionNode;
 use GraphQL\Language\AST\VariableDefinitionNode;
-use GraphQL\Utils\Utils;
 
-/**
- * Prints AST to string. Capable of printing GraphQL queries and Type definition language.
- * Useful for pretty-printing queries or printing back AST for logging, documentation, etc.
- *
- * Usage example:
- *
- * ```php
- * $query = 'query myQuery {someField}';
- * $ast = GraphQL\Language\Parser::parse($query);
- * $printed = GraphQL\Language\Printer::doPrint($ast);
- * ```
- */
 class Printer
 {
-    /**
-     * Prints AST to string. Capable of printing GraphQL queries and Type definition language.
-     *
-     * @api
-     * @param Node $ast
-     * @return string
-     */
     public static function doPrint($ast)
     {
         static $instance;
@@ -300,7 +280,7 @@ class Printer
         return $maybeArray
             ? implode(
                 $separator,
-                Utils::filter(
+                array_filter(
                     $maybeArray,
                     function($x) { return !!$x;}
                 )

@@ -5,7 +5,6 @@ require_once __DIR__ . '/TestClasses.php';
 
 use GraphQL\Deferred;
 use GraphQL\Error\Error;
-use GraphQL\Error\UserError;
 use GraphQL\Executor\Executor;
 use GraphQL\Language\Parser;
 use GraphQL\Schema;
@@ -248,7 +247,7 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
 
         $rootValue = [ 'root' => 'val' ];
 
-        Executor::execute($schema, $ast, $rootValue, null, [ 'var' => '123' ]);
+        Executor::execute($schema, $ast, $rootValue, null, [ 'var' => 123 ]);
 
         $this->assertEquals([
             'fieldName',
@@ -372,55 +371,55 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
                 return 'sync';
             },
             'syncError' => function () {
-                throw new UserError('Error getting syncError');
+                throw new \Exception('Error getting syncError');
             },
             'syncRawError' => function() {
-                throw new UserError('Error getting syncRawError');
+                throw new \Exception('Error getting syncRawError');
             },
             // inherited from JS reference implementation, but make no sense in this PHP impl
             // leaving it just to simplify migrations from newer js versions
             'syncReturnError' => function() {
-                return new UserError('Error getting syncReturnError');
+                return new \Exception('Error getting syncReturnError');
             },
             'syncReturnErrorList' => function () {
                 return [
                     'sync0',
-                    new UserError('Error getting syncReturnErrorList1'),
+                    new \Exception('Error getting syncReturnErrorList1'),
                     'sync2',
-                    new UserError('Error getting syncReturnErrorList3')
+                    new \Exception('Error getting syncReturnErrorList3')
                 ];
             },
             'async' => function() {
                 return new Deferred(function() { return 'async'; });
             },
             'asyncReject' => function() {
-                return new Deferred(function() { throw new UserError('Error getting asyncReject'); });
+                return new Deferred(function() { throw new \Exception('Error getting asyncReject'); });
             },
             'asyncRawReject' => function () {
                 return new Deferred(function() {
-                    throw new UserError('Error getting asyncRawReject');
+                    throw new \Exception('Error getting asyncRawReject');
                 });
             },
             'asyncEmptyReject' => function () {
                 return new Deferred(function() {
-                    throw new UserError();
+                    throw new \Exception();
                 });
             },
             'asyncError' => function() {
                 return new Deferred(function() {
-                    throw new UserError('Error getting asyncError');
+                    throw new \Exception('Error getting asyncError');
                 });
             },
             // inherited from JS reference implementation, but make no sense in this PHP impl
             // leaving it just to simplify migrations from newer js versions
             'asyncRawError' => function() {
                 return new Deferred(function() {
-                    throw new UserError('Error getting asyncRawError');
+                    throw new \Exception('Error getting asyncRawError');
                 });
             },
             'asyncReturnError' => function() {
                 return new Deferred(function() {
-                    throw new UserError('Error getting asyncReturnError');
+                    throw new \Exception('Error getting asyncReturnError');
                 });
             },
         ];
@@ -522,7 +521,7 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
 
         $result = Executor::execute($schema, $docAst, $data)->toArray();
 
-        $this->assertArraySubset($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -590,9 +589,9 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @it provides error if no operation is provided
+     * @it throws if no operation is provided
      */
-    public function testProvidesErrorIfNoOperationIsProvided()
+    public function testThrowsIfNoOperationIsProvided()
     {
         $doc = 'fragment Example on Type { a }';
         $data = [ 'a' => 'b' ];
@@ -606,84 +605,62 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
             ])
         ]);
 
-        $result = Executor::execute($schema, $ast, $data);
-        $expected = [
-            'errors' => [
-                [
-                    'message' => 'Must provide an operation.',
-                ]
-            ]
-        ];
-
-        $this->assertArraySubset($expected, $result->toArray());
+        try {
+            Executor::execute($schema, $ast, $data);
+            $this->fail('Expected exception was not thrown');
+        } catch (Error $e) {
+            $this->assertEquals('Must provide an operation.', $e->getMessage());
+        }
     }
 
     /**
-     * @it errors if no op name is provided with multiple operations
+     * @it throws if no operation name is provided with multiple operations
      */
-    public function testErrorsIfNoOperationIsProvidedWithMultipleOperations()
+    public function testThrowsIfNoOperationIsProvidedWithMultipleOperations()
     {
         $doc = 'query Example { a } query OtherExample { a }';
-        $data = ['a' => 'b'];
+        $data = [ 'a' => 'b' ];
         $ast = Parser::parse($doc);
         $schema = new Schema([
             'query' => new ObjectType([
                 'name' => 'Type',
                 'fields' => [
-                    'a' => ['type' => Type::string()],
+                    'a' => [ 'type' => Type::string() ],
                 ]
             ])
         ]);
 
-        $result = Executor::execute($schema, $ast, $data);
-
-        $expected = [
-            'errors' => [
-                [
-                    'message' => 'Must provide operation name if query contains multiple operations.',
-                ]
-            ]
-        ];
-
-        $this->assertArraySubset($expected, $result->toArray());
+        try {
+            Executor::execute($schema, $ast, $data);
+            $this->fail('Expected exception is not thrown');
+        } catch (Error $err) {
+            $this->assertEquals('Must provide operation name if query contains multiple operations.', $err->getMessage());
+        }
     }
 
     /**
-     * @it errors if unknown operation name is provided
+     * @it throws if unknown operation name is provided
      */
-    public function testErrorsIfUnknownOperationNameIsProvided()
+    public function testThrowsIfUnknownOperationNameIsProvided()
     {
         $doc = 'query Example { a } query OtherExample { a }';
+        $data = [ 'a' => 'b' ];
         $ast = Parser::parse($doc);
         $schema = new Schema([
             'query' => new ObjectType([
                 'name' => 'Type',
                 'fields' => [
-                    'a' => ['type' => Type::string()],
+                    'a' => [ 'type' => Type::string() ],
                 ]
             ])
         ]);
 
-
-        $result = Executor::execute(
-            $schema,
-            $ast,
-            null,
-            null,
-            null,
-            'UnknownExample'
-        );
-
-        $expected = [
-            'errors' => [
-                [
-                    'message' => 'Unknown operation named "UnknownExample".',
-                ]
-            ]
-
-        ];
-
-        $this->assertArraySubset($expected, $result->toArray());
+        try {
+            Executor::execute($schema, $ast, $data, null, null, 'UnknownExample');
+            $this->fail('Expected exception was not thrown');
+        } catch (Error $e) {
+            $this->assertEquals('Unknown operation named "UnknownExample".', $e->getMessage());
+        }
     }
 
     /**
@@ -957,10 +934,9 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
         ], $result->data);
 
         $this->assertEquals(1, count($result->errors));
-        $this->assertEquals([
-            'message' => 'Expected value of type "SpecialType" but got: instance of GraphQL\Tests\Executor\NotSpecial.',
-            'locations' => [['line' => 1, 'column' => 3]],
-            'path' => ['specials', 1]
+        $this->assertArraySubset([
+            'message' => 'Expected value of type SpecialType but got: GraphQL\Tests\Executor\NotSpecial',
+            'locations' => [['line' => 1, 'column' => 3]]
         ], $result->errors[0]->toSerializableArray());
     }
 
@@ -979,62 +955,20 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
             'query' => new ObjectType([
                 'name' => 'Query',
                 'fields' => [
-                    'foo' => ['type' => Type::string()]
+                    'foo' => ['type' => Type::string() ]
                 ]
             ])
         ]);
 
-
-        $result = Executor::execute($schema, $query);
-
-        $expected = [
-            'errors' => [
-                [
-                    'message' => 'GraphQL cannot execute a request containing a ObjectTypeDefinition.',
-                    'locations' => [['line' => 4, 'column' => 7]],
-                ]
-            ]
-        ];
-
-        $this->assertArraySubset($expected, $result->toArray());
-    }
-
-    /**
-     * @it uses a custom field resolver
-     */
-    public function testUsesACustomFieldResolver()
-    {
-        $query = Parser::parse('{ foo }');
-
-        $schema = new Schema([
-            'query' => new ObjectType([
-                'name' => 'Query',
-                'fields' => [
-                    'foo' => ['type' => Type::string()]
-                ]
-            ])
-        ]);
-
-        // For the purposes of test, just return the name of the field!
-        $customResolver = function ($source, $args, $context, ResolveInfo $info) {
-            return $info->fieldName;
-        };
-
-        $result = Executor::execute(
-            $schema,
-            $query,
-            null,
-            null,
-            null,
-            null,
-            $customResolver
-        );
-
-        $expected = [
-            'data' => ['foo' => 'foo']
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
+        try {
+            Executor::execute($schema, $query);
+            $this->fail('Expected exception was not thrown');
+        } catch (Error $e) {
+            $this->assertEquals([
+                'message' => 'GraphQL cannot execute a request containing a ObjectTypeDefinition.',
+                'locations' => [['line' => 4, 'column' => 7]]
+            ], $e->toSerializableArray());
+        }
     }
 
     public function testSubstitutesArgumentWithDefaultValue()

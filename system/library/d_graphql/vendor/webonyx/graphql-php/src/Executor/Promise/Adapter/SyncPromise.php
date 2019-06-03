@@ -1,7 +1,7 @@
 <?php
 namespace GraphQL\Executor\Promise\Adapter;
 
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 /**
  * Class SyncPromise
@@ -46,12 +46,8 @@ class SyncPromise
      */
     private $waiting = [];
 
-    public function reject($reason)
+    public function reject(\Exception $reason)
     {
-        if (!$reason instanceof \Exception && !$reason instanceof \Throwable) {
-            throw new \Exception('SyncPromise::reject() has to be called with an instance of \Throwable');
-        }
-
         switch ($this->state) {
             case self::PENDING:
                 $this->state = self::REJECTED;
@@ -135,8 +131,6 @@ class SyncPromise
                         $promise->resolve($onFulfilled ? $onFulfilled($this->result) : $this->result);
                     } catch (\Exception $e) {
                         $promise->reject($e);
-                    } catch (\Throwable $e) {
-                        $promise->reject($e);
                     }
                 } else if ($this->state === self::REJECTED) {
                     try {
@@ -146,8 +140,6 @@ class SyncPromise
                             $promise->reject($this->result);
                         }
                     } catch (\Exception $e) {
-                        $promise->reject($e);
-                    } catch (\Throwable $e) {
                         $promise->reject($e);
                     }
                 }

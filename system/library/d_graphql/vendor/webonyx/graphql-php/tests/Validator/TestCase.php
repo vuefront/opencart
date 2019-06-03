@@ -183,7 +183,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                 'BLACK' => [ 'value' => 1 ],
                 'TAN' => [ 'value' => 2 ],
                 'SPOTTED' => [ 'value' => 3 ],
-                'NO_FUR' => [ 'value' => null ],
             ],
         ]);
 

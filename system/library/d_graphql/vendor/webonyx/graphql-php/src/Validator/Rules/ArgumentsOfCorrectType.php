@@ -9,7 +9,7 @@ use GraphQL\Language\Visitor;
 use GraphQL\Validator\DocumentValidator;
 use GraphQL\Validator\ValidationContext;
 
-class ArgumentsOfCorrectType extends AbstractValidationRule
+class ArgumentsOfCorrectType
 {
     static function badValueMessage($argName, $type, $value, $verboseErrors = [])
     {
@@ -17,7 +17,7 @@ class ArgumentsOfCorrectType extends AbstractValidationRule
         return "Argument \"$argName\" has invalid value $value.$message";
     }
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         return [
             NodeKind::ARGUMENT => function(ArgumentNode $argNode) use ($context) {

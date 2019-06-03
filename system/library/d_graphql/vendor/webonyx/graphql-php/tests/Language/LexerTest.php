@@ -3,10 +3,9 @@ namespace GraphQL\Tests\Language;
 
 use GraphQL\Language\Lexer;
 use GraphQL\Language\Source;
-use GraphQL\Language\SourceLocation;
 use GraphQL\Language\Token;
 use GraphQL\Error\SyntaxError;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 class LexerTest extends \PHPUnit_Framework_TestCase
 {
@@ -108,14 +107,14 @@ class LexerTest extends \PHPUnit_Framework_TestCase
      */
     public function testErrorsRespectWhitespace()
     {
-        $str = '' .
-            "\n" .
-            "\n" .
-            "    ?\n" .
-            "\n";
+        $example = "
 
+    ?
+
+
+";
         try {
-            $this->lexOne($str);
+            $this->lexOne($example);
             $this->fail('Expected exception not thrown');
         } catch (SyntaxError $e) {
             $this->assertEquals(
@@ -128,48 +127,6 @@ class LexerTest extends \PHPUnit_Framework_TestCase
                 $e->getMessage()
             );
        }
-    }
-
-    /**
-     * @it updates line numbers in error for file context
-     */
-    public function testUpdatesLineNumbersInErrorForFileContext()
-    {
-        $str = '' .
-            "\n" .
-            "\n" .
-            "     ?\n" .
-            "\n";
-        $source = new Source($str, 'foo.js', new SourceLocation(11, 12));
-
-        $this->setExpectedException(
-            SyntaxError::class,
-            'Syntax Error foo.js (13:6) ' .
-            'Cannot parse the unexpected character "?".' . "\n" .
-            "\n" .
-            '12: ' . "\n" .
-            '13:      ?' . "\n" .
-            '         ^' . "\n" .
-            '14: ' . "\n"
-        );
-        $lexer = new Lexer($source);
-        $lexer->advance();
-    }
-
-    public function testUpdatesColumnNumbersInErrorForFileContext()
-    {
-        $source = new Source('?', 'foo.js', new SourceLocation(1, 5));
-
-        $this->setExpectedException(
-            SyntaxError::class,
-            'Syntax Error foo.js (1:5) ' .
-            'Cannot parse the unexpected character "?".' . "\n" .
-            "\n" .
-            '1:     ?' . "\n" .
-            '       ^' . "\n"
-        );
-        $lexer = new Lexer($source);
-        $lexer->advance();
     }
 
     /**

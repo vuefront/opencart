@@ -3,27 +3,19 @@ namespace GraphQL\Error;
 
 use GraphQL\Language\Source;
 use GraphQL\Language\SourceLocation;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 /**
- * Describes an Error found during the parse, validate, or
+ * Class Error
+ * A GraphQLError describes an Error found during the parse, validate, or
  * execute phases of performing a GraphQL operation. In addition to a message
  * and stack trace, it also includes information about the locations in a
  * GraphQL document and/or execution result that correspond to the Error.
  *
- * When the error was caused by an exception thrown in resolver, original exception
- * is available via `getPrevious()`.
- *
- * Also read related docs on [error handling](error-handling.md)
- *
- * Class extends standard PHP `\Exception`, so all standard methods of base `\Exception` class
- * are available in addition to those listed below.
+ * @package GraphQL
  */
-class Error extends \Exception implements \JsonSerializable, ClientAware
+class Error extends \Exception implements \JsonSerializable
 {
-    const CATEGORY_GRAPHQL = 'graphql';
-    const CATEGORY_INTERNAL = 'internal';
-
     /**
      * A message describing the Error for debugging purposes.
      *
@@ -32,6 +24,13 @@ class Error extends \Exception implements \JsonSerializable, ClientAware
     public $message;
 
     /**
+     * An array of [ line => x, column => y] locations within the source GraphQL document
+     * which correspond to this error.
+     *
+     * Errors during validation often contain multiple locations, for example to
+     * point out two things with the same name. Errors during execution include a
+     * single location, the field which produced the error.
+     *
      * @var SourceLocation[]
      */
     private $locations;
@@ -64,16 +63,6 @@ class Error extends \Exception implements \JsonSerializable, ClientAware
     private $positions;
 
     /**
-     * @var bool
-     */
-    private $isClientSafe;
-
-    /**
-     * @var string
-     */
-    protected $category;
-
-    /**
      * Given an arbitrary Error, presumably thrown while attempting to execute a
      * GraphQL operation, produce a new GraphQLError aware of the location in the
      * document responsible for the original Error.
@@ -85,13 +74,8 @@ class Error extends \Exception implements \JsonSerializable, ClientAware
      */
     public static function createLocatedError($error, $nodes = null, $path = null)
     {
-        if ($error instanceof self) {
-            if ($error->path && $error->nodes) {
-                return $error;
-            } else {
-                $nodes = $nodes ?: $error->nodes;
-                $path = $path ?: $error->path;
-            }
+        if ($error instanceof self && $error->path) {
+            return $error;
         }
 
         $source = $positions = $originalError = null;
@@ -102,7 +86,10 @@ class Error extends \Exception implements \JsonSerializable, ClientAware
             $nodes = $error->nodes ?: $nodes;
             $source = $error->source;
             $positions = $error->positions;
-        } else if ($error instanceof \Exception || $error instanceof \Throwable) {
+        } else if ($error instanceof \Exception) {
+            $message = $error->getMessage();
+            $originalError = $error;
+        } else if ($error instanceof \Error) {
             $message = $error->getMessage();
             $originalError = $error;
         } else {
@@ -135,16 +122,9 @@ class Error extends \Exception implements \JsonSerializable, ClientAware
      * @param Source $source
      * @param array|null $positions
      * @param array|null $path
-     * @param \Throwable $previous
+     * @param \Exception|\Error $previous
      */
-    public function __construct(
-        $message,
-        $nodes = null,
-        Source $source = null,
-        $positions = null,
-        $path = null,
-        $previous = null
-    )
+    public function __construct($message, $nodes = null, Source $source = null, $positions = null, $path = null, $previous = null)
     {
         parent::__construct($message, 0, $previous);
 
@@ -156,33 +136,6 @@ class Error extends \Exception implements \JsonSerializable, ClientAware
         $this->source = $source;
         $this->positions = $positions;
         $this->path = $path;
-
-        if ($previous instanceof ClientAware) {
-            $this->isClientSafe = $previous->isClientSafe();
-            $this->category = $previous->getCategory() ?: static::CATEGORY_INTERNAL;
-        } else if ($previous) {
-            $this->isClientSafe = false;
-            $this->category = static::CATEGORY_INTERNAL;
-        } else {
-            $this->isClientSafe = true;
-            $this->category = static::CATEGORY_GRAPHQL;
-        }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isClientSafe()
-    {
-        return $this->isClientSafe;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getCategory()
-    {
-        return $this->category;
     }
 
     /**
@@ -217,17 +170,6 @@ class Error extends \Exception implements \JsonSerializable, ClientAware
     }
 
     /**
-     * An array of locations within the source GraphQL document which correspond to this error.
-     *
-     * Each entry has information about `line` and `column` within source GraphQL document:
-     * $location->line;
-     * $location->column;
-     *
-     * Errors during validation often contain multiple locations, for example to
-     * point out to field mentioned in multiple fragments. Errors during execution include a
-     * single location, the field which produced the error.
-     *
-     * @api
      * @return SourceLocation[]
      */
     public function getLocations()
@@ -249,27 +191,14 @@ class Error extends \Exception implements \JsonSerializable, ClientAware
     }
 
     /**
-     * Returns an array describing the path from the root value to the field which produced this error.
-     * Only included for execution errors.
-     *
-     * @api
-     * @return array|null
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
      * Returns array representation of error suitable for serialization
      *
-     * @deprecated Use FormattedError::createFromException() instead
      * @return array
      */
     public function toSerializableArray()
     {
         $arr = [
-            'message' => $this->getMessage()
+            'message' => $this->getMessage(),
         ];
 
         $locations = Utils::map($this->getLocations(), function(SourceLocation $loc) {

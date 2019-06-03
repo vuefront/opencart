@@ -4,10 +4,10 @@ namespace GraphQL\Validator\Rules;
 use GraphQL\Error\Error;
 use GraphQL\Language\AST\ArgumentNode;
 use GraphQL\Language\AST\NodeKind;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 use GraphQL\Validator\ValidationContext;
 
-class KnownArgumentNames extends AbstractValidationRule
+class KnownArgumentNames
 {
     public static function unknownArgMessage($argName, $fieldName, $type)
     {
@@ -19,7 +19,7 @@ class KnownArgumentNames extends AbstractValidationRule
         return "Unknown argument \"$argName\" on directive \"@$directiveName\".";
     }
 
-    public function getVisitor(ValidationContext $context)
+    public function __invoke(ValidationContext $context)
     {
         return [
             NodeKind::ARGUMENT => function(ArgumentNode $node, $key, $parent, $path, $ancestors) use ($context) {

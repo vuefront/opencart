@@ -3,11 +3,11 @@ namespace GraphQL\Tests\Executor;
 
 require_once __DIR__ . '/TestClasses.php';
 
-use GraphQL\Error\Warning;
 use GraphQL\Executor\Executor;
 use GraphQL\GraphQL;
 use GraphQL\Language\Parser;
-use GraphQL\Type\Schema;
+use GraphQL\Schema;
+use GraphQL\Type\Definition\Config;
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -256,9 +256,7 @@ class UnionInterfaceTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        Warning::suppress(Warning::WARNING_FULL_SCHEMA_SCAN);
         $this->assertEquals($expected, Executor::execute($this->schema, $ast, $this->john)->toArray());
-        Warning::enable(Warning::WARNING_FULL_SCHEMA_SCAN);
     }
 
     /**
@@ -294,9 +292,7 @@ class UnionInterfaceTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        Warning::suppress(Warning::WARNING_FULL_SCHEMA_SCAN);
         $this->assertEquals($expected, Executor::execute($this->schema, $ast, $this->john)->toArray());
-        Warning::enable(Warning::WARNING_FULL_SCHEMA_SCAN);
     }
 
     /**
@@ -351,9 +347,7 @@ class UnionInterfaceTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        Warning::suppress(Warning::WARNING_FULL_SCHEMA_SCAN);
         $this->assertEquals($expected, Executor::execute($this->schema, $ast, $this->john)->toArray());
-        Warning::enable(Warning::WARNING_FULL_SCHEMA_SCAN);
     }
 
     /**

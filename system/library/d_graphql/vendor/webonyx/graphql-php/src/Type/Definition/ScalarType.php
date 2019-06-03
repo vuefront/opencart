@@ -1,8 +1,7 @@
 <?php
 namespace GraphQL\Type\Definition;
 
-use GraphQL\Language\AST\ScalarTypeDefinitionNode;
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 /**
  * Scalar Type Definition
@@ -25,41 +24,14 @@ use GraphQL\Utils\Utils;
 abstract class ScalarType extends Type implements OutputType, InputType, LeafType
 {
     /**
-     * @var ScalarTypeDefinitionNode|null
+     * ScalarType constructor.
      */
-    public $astNode;
-
-    function __construct(array $config = [])
+    public function __construct()
     {
-        $this->name = isset($config['name']) ? $config['name'] : $this->tryInferName();
-        $this->description = isset($config['description']) ? $config['description'] : $this->description;
-        $this->astNode = isset($config['astNode']) ? $config['astNode'] : null;
-        $this->config = $config;
+        if (!isset($this->name)) {
+            $this->name = $this->tryInferName();
+        }
 
-        Utils::assertValidName($this->name);
-    }
-
-    /**
-     * Determines if an internal value is valid for this type.
-     * Equivalent to checking for if the parsedValue is nullish.
-     *
-     * @param $value
-     * @return bool
-     */
-    public function isValidValue($value)
-    {
-        return null !== $this->parseValue($value);
-    }
-
-    /**
-     * Determines if an internal value is valid for this type.
-     * Equivalent to checking for if the parsedLiteral is nullish.
-     *
-     * @param $valueNode
-     * @return bool
-     */
-    public function isValidLiteral($valueNode)
-    {
-        return null !== $this->parseLiteral($valueNode);
+        Utils::invariant($this->name, 'Type must be named.');
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace GraphQL\Examples\Blog\Data;
 
-use GraphQL\Utils\Utils;
+use GraphQL\Utils;
 
 class User
 {
