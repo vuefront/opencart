@@ -36,6 +36,12 @@
         "email": "support@vuefront.com",
         "url": "https://vuefront.com/"
     },
+    "install": {
+        "url": "extension/module/install&extension=d_vuefront"
+    },
+    "uninstall": {
+        "url": "extension/module/uninstall&extension=d_vuefront"
+    },
     "required": {
         "d_twig_manager": ">= 1.5.5",
         "d_opencart_patch": ">=1.0.0"
