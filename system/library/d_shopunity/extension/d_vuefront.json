@@ -1,12 +1,12 @@
 {
     "codename": "d_vuefront",
     "version": "1.0.0",
-    "name": "Vuefront module",
-    "description": "Vuefront module",
+    "name": "Vuefront CMS Connect",
+    "description": "Vuefront CMS Connect App for OpenCart. Adds a GraphQL API to OpenCart to connect with VueFront Web App",
     "author": {
-        "name": "Shopunity",
-        "email": "info@shopunity.com",
-        "url": "https://shopunity.net/"
+        "name": "VueFront",
+        "email": "info@dreamvention.com",
+        "url": "https://vuefront.com/"
     },
     "opencart_version": [
         "2.0.0.0",
@@ -32,11 +32,10 @@
         "url": "https://shopunity.net/licenses/free"
     },
     "support": {
-        "email": "support@shopunity.com",
-        "url": "https://shopunity.net/"
+        "email": "support@vuefront.com",
+        "url": "https://vuefront.com/"
     },
     "required": {
-        "d_blog_module": ">= 3.0.0",
         "d_twig_manager": ">= 1.5.5",
         "d_opencart_patch": ">=1.0.0"
     },
@@ -53,13 +52,10 @@
         "catalog/controller/extension/d_vuefront",
         "catalog/controller/extension/module/d_vuefront_schema",
         "catalog/model/extension/d_vuefront",
-
         "system/library/d_graphql"
     ],
-    "changelog": [
-        {
-            "version": "1.0.0",
-            "change": "First version"
-        }
-    ]
+    "changelog": [{
+        "version": "1.0.0",
+        "change": "First version"
+    }]
 }

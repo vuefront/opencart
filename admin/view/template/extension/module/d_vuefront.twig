@@ -38,9 +38,30 @@
                         <img src="view/image/d_vuefront/logo.png"/>
                     </div>
                     <div class="module-content__form">
-                        <h3 class="text-center mb-1">{{ text_title }}</h3>
-                        <input class="form-control mb-2" type="text" value="{{ catalog }}" readonly>
-                        <p>{{ text_description }}</p>
+                        <div class="module-content__row">
+                            <h3 class="text-center mb-1">{{ text_title }}</h3>
+                            <div class="input-group">
+                                <input id="connect_url" class="form-control mb-2" type="text" value="{{ catalog }}" readonly>
+                                <div class="input-group-btn">
+                                    <span class="btn btn-primary clipboard" data-clipboard-target="#connect_url">{{text_copy}}</span>
+                                </div>
+                            </div>
+                            <p class="module-content__description">{{ text_description }}</p>
+                        </div>
+                        <hr/>
+                        <div class="module-content__row">
+
+                            <h3 class="text-center mb-1">{{text_blog_module}}</h3>
+                            <div class="text-center">
+                            {% if d_blog_module %}
+                                <span class="btn btn-success">{{ text_blog_enabled }}</span>
+                                <p class="module-content__description">{{ text_blog_description }}</p>
+                            {% else %}
+                                <a class="btn btn-danger" href="https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=10468" target="_blank">{{ text_blog_disabled }}</a>
+                                <p class="module-content__description">{{ text_blog_description }}</p>
+                            {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div style="text-align: center; padding: 30px;">{{ text_powered_by }}</div>
@@ -48,9 +69,16 @@
         </div>
     </div>
     <style>
+        .module-content{
+            padding:60px 0px;
+        }
         .module-content__form {
             max-width: 45%;
             margin: 0 auto;
+        }
+        .module-content__row{
+            padding-top:30px;
+            padding-bottom:30px;
         }
         .mb-1 {
             margin-bottom: 15px;
@@ -63,6 +91,27 @@
                 max-width: 100%;
             }
         }
+        .module-content__description{
+            font-size:12px;
+            color:#777;
+            text-align:center;
+            line-height:20px;
+            padding-top:20px;
+        }
+        .module-content__image img{
+            width:200px;
+        }
     </style>
+    <script>
+        
+        var clipboard = new ClipboardJS('.clipboard');
+
+        clipboard.on('success', function(e) {
+            $(e.trigger).text('copied!');
+            $(e.trigger).addClass('btn-success');
+
+            e.clearSelection();
+        });
+    </script>
 </div>
 {{ footer }}
