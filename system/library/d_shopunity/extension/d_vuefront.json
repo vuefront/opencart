@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "name": "Vuefront CMS Connect",
     "description": "Vuefront CMS Connect App for OpenCart. Adds a GraphQL API to OpenCart to connect with VueFront Web App",
+    "index": "extension/module/d_vuefront",
     "author": {
         "name": "VueFront",
         "email": "info@dreamvention.com",
