@@ -1,5 +1,7 @@
 # VueFront CMS Connect App for OpenCart
 
+https://vuefront.com/
+
 VueFront - Vue powered agnostic frontend web app for your old fashioned Blog and Ecommerce site. 
 
 OpenCart - Open-source eCommerce platform built with MVC pattern.
@@ -33,7 +35,25 @@ Since OpenCart does not have a built-in Blog, we use the [Free Blog Module](http
 
 You will need the CMS Connect URL to complete the [VueFront Web App installation](https://vuefront.com/guide/setup.html)
 
-### Advanced Install (install via Shopunity)
-The official compiled version of the CMS Connect APP includes the Blog Module and other supporting extensions which you may not want to install. 
+### Advanced Install
+The official compiled version of the CMS Connect APP includes other supporting extensions such as d_opencart_patch and d_twig_manager. 
 
-You can install is via Shopunity or by downloading the Extension Directly from the git repositiory. 
+You can download the source code from the master branch directly and upload via ftp to your root folder. When activating the module, you should have the following extensions preinstalled: d_opencart_patch, d_twig_manager, d_twig (only for 2.x)
+
+You can also install the d_blog_module to add blog features to VueFront. 
+
+### Install via Shopunity
+If you have shopunity module installed, you can use that for a super quick installation:
+1. go to OpenCart admin -> shopunity -> marketplace tab
+2. search for VueFront
+3. Click install.
+
+You can also install the d_blog_module via Shopunity as well. 
+
+## Support
+For support please contact us a https://dreamvention.ee/support 
+
+## Submit an issue
+For submiting an issue, please create one in the [issues tab](/issues/). Remeber to provide a detailed explonation of your case and a way to reproduce it. 
+
+Enjoy!
