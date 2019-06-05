@@ -27,11 +27,13 @@ class ControllerModuleDVuefront extends Controller
         $url = ((!empty($url_params)) ? '&' : '') . http_build_query($url_params);
 
         $this->document->setTitle($this->language->get('heading_title_main'));
+        $this->document->addScript('//cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js');
         $this->data['heading_title'] = $this->language->get('heading_title_main');
 
         $this->data['text_edit'] = $this->language->get('text_edit');
         $this->data['text_title'] = $this->language->get('text_title');
         $this->data['text_description'] = $this->language->get('text_description');
+        $this->data['text_copy'] = $this->language->get('text_copy');
 
         // Button
         $this->data['button_cancel'] = $this->language->get('button_cancel');

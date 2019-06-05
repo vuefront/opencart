@@ -1,18 +1,5 @@
 <?php
-use GraphQL\Error\ClientAware;
 
-class MySafeException extends \Exception implements ClientAware
-{
-    public function isClientSafe()
-    {
-        return true;
-    }
-
-    public function getCategory()
-    {
-        return 'businessLogic';
-    }
-}
 class VfLoad
 {
     private $registry;

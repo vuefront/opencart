@@ -21,7 +21,11 @@ class ControllerDVuefrontStoreWishlist extends Controller
     {
         $this->request->post['product_id'] = $args['id'];
 
-        $this->vfload->controller('account/wishlist/add', array(), true);
+        if(VERSION < '1.5.5.0') {
+            $this->vfload->controller('account/wishlist/update', array(), true);
+        } else {
+            $this->vfload->controller('account/wishlist/add', array(), true);
+        }
 
         return $this->getList(array());
     }

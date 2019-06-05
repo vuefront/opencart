@@ -62,7 +62,7 @@ class ControllerModuleDVuefront extends Controller {
 				$variableValues = isset( $input['variables'] ) ? $input['variables'] : null;
             }
 
-			$result = GraphQL::executeQuery( $schema, $query, $resolvers, null, $variableValues );
+			$result = GraphQL::execute( $schema, $query, $resolvers, null, $variableValues );
 		} catch ( Exception $e ) {
 			$result = [
 				'error' => [
@@ -86,7 +86,7 @@ class ControllerModuleDVuefront extends Controller {
                 try {
                     return $that->vfload->controller($value, $args);
                 } catch(Exception $e) {
-                    throw new MySafeException($e->getMessage());
+                    throw new Exception($e->getMessage());
                 }
             };
         }

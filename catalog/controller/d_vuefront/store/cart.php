@@ -67,7 +67,11 @@ class ControllerDVuefrontStoreCart extends Controller
             $this->request->post['option'][$option['id']] = strpos( $option['value'], '|') == false ? $option['value'] : explode('|', $option['value']);
         }
 
-        $this->vfload->controller('checkout/cart/add', array(), true);
+        if(VERSION < '1.5.5.0') {
+            $this->vfload->controller('checkout/cart/update', array(), true);
+        } else {
+            $this->vfload->controller('checkout/cart/add', array(), true);
+        }
 
         ob_start();
         $this->response->output();
