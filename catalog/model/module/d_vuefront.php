@@ -64,13 +64,13 @@ class ModelModuleDVuefront extends Model
 {
 
     public function detectBlog() {
-        $query = $this->db->query("SHOW TABLES LIKE '".DB_PREFIX."sb_news'");
+        $query = $this->db->query("SHOW TABLES LIKE '".DB_PREFIX."blog_article'");
         if($query->num_rows > 0) {
-            return 'news';
+            return 'blog';
         } else {
-            $query = $this->db->query("SHOW TABLES LIKE '".DB_PREFIX."blog_article'");
+            $query = $this->db->query("SHOW TABLES LIKE '".DB_PREFIX."sb_news'");
             if($query->num_rows > 0) {
-                return 'blog';
+                return 'news';
             } else {
                 return false;
             }

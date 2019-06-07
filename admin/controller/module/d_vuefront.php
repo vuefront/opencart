@@ -8,12 +8,15 @@ class ControllerModuleDVuefront extends Controller
     private $codename = 'd_vuefront';
     private $route = 'module/d_vuefront';
     private $error = array();
+    private $blog = false;
 
     public function __construct($registry)
     {
         parent::__construct($registry);
 
         $this->load->language($this->route);
+        $this->load->model($this->route);
+        $this->blog = $this->model_module_d_vuefront->detectBlog();
 
         $this->extension = json_decode(file_get_contents(DIR_APPLICATION.'mbooth/xml/d_vuefront.xml'), true);
     }
@@ -34,6 +37,25 @@ class ControllerModuleDVuefront extends Controller
         $this->data['text_title'] = $this->language->get('text_title');
         $this->data['text_description'] = $this->language->get('text_description');
         $this->data['text_copy'] = $this->language->get('text_copy');
+
+        $this->data['text_blog_module'] = $this->language->get('text_blog_module');
+        $this->data['text_blog_enabled'] = $this->language->get('text_blog_enabled');
+        $this->data['text_blog_disabled'] = $this->language->get('text_blog_disabled');
+        $link = '';
+        switch($this->blog) {
+            case 'news':
+                $link = '2419';
+                break;
+            case 'blog':
+                $link = '4552';
+                break;
+            default:
+                break;
+
+        }
+        $this->data['text_blog_description'] = sprintf($this->language->get('text_blog_description'), $link);
+
+        $this->data['blog'] = $this->blog;
 
         // Button
         $this->data['button_cancel'] = $this->language->get('button_cancel');

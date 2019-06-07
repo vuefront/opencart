@@ -21,14 +21,30 @@
                 <img src="view/image/d_vuefront/logo.png"/>
             </div>
             <div class="module-content__form">
-                <h3 class="text-center mb-1"><?php echo $text_title; ?></h3>
-                <div class="input-group  mb-2">
-                    <input id="connect_url" class="form-control" type="text" value="<?php echo $catalog; ?>" readonly>
-                    <div class="input-group-btn">
-                        <button class="clipboard" data-clipboard-target="#connect_url"><?php echo $text_copy; ?></button>
+                <div class="module-content__row">
+                    <h3 class="text-center mb-1"><?php echo $text_title; ?></h3>
+                    <div class="input-group  mb-2">
+                        <input id="connect_url" class="form-control" type="text" value="<?php echo $catalog; ?>" readonly>
+                        <div class="input-group-btn">
+                            <button class="clipboard" data-clipboard-target="#connect_url"><?php echo $text_copy; ?></button>
+                        </div>
+                    </div>
+                    <p class="module-content__description"><?php echo $text_description; ?></p>
+                </div>
+                <hr/>
+                <div class="module-content__row">
+
+                    <h3 class="text-center mb-1"><?php echo $text_blog_module; ?></h3>
+                    <div class="text-center">
+                    <?php if($blog) { ?>
+                        <button><?php echo $text_blog_enabled; ?></button>
+                        <p class="module-content__description"><?php echo $text_blog_description; ?></p>
+                    <?php } else { ?>
+                        <button href="https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=2419" target="_blank"><?php echo $text_blog_disabled; ?></button>
+                        <p class="module-content__description"><?php echo $text_blog_description; ?></p>
+                    <?php } ?>
                     </div>
                 </div>
-                <p class="module-content__description"><?php echo $text_description; ?></p>
             </div>
         </div>
         <div style="text-align: center; padding: 30px;"><?php echo $text_powered_by; ?></div>

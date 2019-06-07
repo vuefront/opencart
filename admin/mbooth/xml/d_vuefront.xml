@@ -9,6 +9,7 @@
     <files>
 		<file>admin/controller/module/d_vuefront.php</file>
 		<file>admin/language/english/module/d_vuefront.php</file>
+		<file>admin/model/module/d_vuefront.php</file>
 		<file>admin/view/template/module/d_vuefront.tpl</file>
 		<file>admin/mbooth/xml/d_vuefront.xml</file>
 		<file>catalog/controller/module/d_vuefront.php</file>
