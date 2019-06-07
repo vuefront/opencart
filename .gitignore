@@ -3115,3 +3115,10 @@ catalog/view/theme/default/template/blog/mail.tpl
 catalog/view/theme/default/stylesheet/blog_module.css
 catalog/view/theme/default/stylesheet/blog.css
 image/cache
+vqmod/xml/blog_manager.xml_bak
+catalog/view/theme/default/image/blog_livemarks.png
+catalog/controller/feed/blog_sitemap.php
+catalog/controller/feed/blog.php
+catalog/view/theme/default/image/blog_arrow.gif
+image/data/blog_avatar.jpg
+catalog/controller/feed/blog-sitemap-style.xsl
