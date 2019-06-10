@@ -28,7 +28,7 @@ Since OpenCart does not have a built-in Blog, we use the [Free Blog Module](http
 ## How to install?
 
 ### Quick Install
-1. [Download](/releases/latest) the **compiled** Extensions from the latest releases. 
+1. [Download](https://github.com/vuefront/opencart/releases) the **compiled** Extensions from the latest releases. 
 2. Upload via OpenCart Admin -> Extension Installer
 3. Go to Extensions -> Modules -> VueFront and click install
 4. Click edit to view copy the CMS Connect URL
@@ -54,6 +54,6 @@ You can also install the d_blog_module via Shopunity as well.
 For support please contact us a https://dreamvention.ee/support 
 
 ## Submit an issue
-For submiting an issue, please create one in the [issues tab](/issues/). Remeber to provide a detailed explonation of your case and a way to reproduce it. 
+For submiting an issue, please create one in the [issues tab](https://github.com/vuefront/opencart/issues). Remeber to provide a detailed explonation of your case and a way to reproduce it. 
 
 Enjoy!
