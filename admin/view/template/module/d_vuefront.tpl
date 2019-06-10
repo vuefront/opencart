@@ -40,7 +40,7 @@
                         <button><?php echo $text_blog_enabled; ?></button>
                         <p class="module-content__description"><?php echo $text_blog_description; ?></p>
                     <?php } else { ?>
-                        <button href="https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=2419" target="_blank"><?php echo $text_blog_disabled; ?></button>
+                        <button onclick="window.location.href='https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=2419'" target="_blank"><?php echo $text_blog_disabled; ?></button>
                         <p class="module-content__description"><?php echo $text_blog_description; ?></p>
                     <?php } ?>
                     </div>

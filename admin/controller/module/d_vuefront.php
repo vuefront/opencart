@@ -41,7 +41,7 @@ class ControllerModuleDVuefront extends Controller
         $this->data['text_blog_module'] = $this->language->get('text_blog_module');
         $this->data['text_blog_enabled'] = $this->language->get('text_blog_enabled');
         $this->data['text_blog_disabled'] = $this->language->get('text_blog_disabled');
-        $link = '';
+        $link = '2419';
         switch($this->blog) {
             case 'news':
                 $link = '2419';
