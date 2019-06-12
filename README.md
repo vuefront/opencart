@@ -1,6 +1,12 @@
-# VueFront CMS Connect App for OpenCart
-
-https://vuefront.com/
+<p align="center">
+  <br>
+  <a href="https://vuefront.com">
+    <img src="https://vuefront.com/logo.png" width="120"/>
+  </a>
+</p>
+<h1 align="center">VueFront</h1>
+<h3 align="center">CMS Connect App for OpenCart
+</h3>
 
 VueFront - Vue powered agnostic frontend web app for your old fashioned Blog and Ecommerce site. 
 
