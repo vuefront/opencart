@@ -48,6 +48,7 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
             return array(
                 'id' => $post_info['post_id'],
                 'title' => $post_info['title'],
+                'name' => $post_info['title'],
                 'description' => html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8'),
                 'shortDescription' => strip_tags(html_entity_decode($post_info['short_description'], ENT_QUOTES, 'UTF-8')),
                 'image' => $image,

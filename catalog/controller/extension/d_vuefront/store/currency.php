@@ -16,6 +16,7 @@ class ControllerExtensionDVuefrontStoreCurrency extends Controller
             if ($result['status']) {
                 $currencies[] = array(
                     'title'        => $result['title'],
+                    'name'        => $result['title'],
                     'code'         => $result['code'],
                     'symbol_left'  => $result['symbol_left'],
                     'symbol_right' => $result['symbol_right'],
