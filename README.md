@@ -1,6 +1,12 @@
-# VueFront CMS Connect App for OpenCart
-
-https://vuefront.com/
+<p align="center">
+  <br>
+  <a href="https://vuefront.com">
+    <img src="https://vuefront.com/logo.png" width="120"/>
+  </a>
+</p>
+<h1 align="center">VueFront</h1>
+<h3 align="center">CMS Connect App for OpenCart
+</h3>
 
 VueFront - Vue powered agnostic frontend web app for your old fashioned Blog and Ecommerce site. 
 
@@ -54,6 +60,6 @@ You can also install the d_blog_module via Shopunity as well.
 For support please contact us a https://dreamvention.ee/support 
 
 ## Submit an issue
-For submiting an issue, please create one in the [issues tab](https://github.com/vuefront/opencart/issues). Remeber to provide a detailed explonation of your case and a way to reproduce it. 
+For submiting an issue, please create one in the [issues tab](https://github.com/vuefront/opencart/issues). Remember to provide a detailed explanation of your case and a way to reproduce it. 
 
 Enjoy!
