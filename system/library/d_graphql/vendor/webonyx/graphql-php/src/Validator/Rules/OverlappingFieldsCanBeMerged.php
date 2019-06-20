@@ -352,12 +352,12 @@ class OverlappingFieldsCanBeMerged extends AbstractValidationRule
                     /** @var FragmentSpreadNode $selection */
                     $fragName = $selection->name->value;
                     if (!empty($_visitedFragmentNames[$fragName])) {
-                        continue;
+                        continue 2;
                     }
                     $_visitedFragmentNames[$fragName] = true;
                     $fragment = $context->getFragment($fragName);
                     if (!$fragment) {
-                        continue;
+                        continue 2;
                     }
                     $fragmentType = TypeInfo::typeFromAST($context->getSchema(), $fragment->typeCondition);
                     $_astAndDefs = $this->collectFieldNodesAndDefs(

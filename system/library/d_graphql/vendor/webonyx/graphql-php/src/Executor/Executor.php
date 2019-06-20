@@ -529,7 +529,7 @@ class Executor
             switch ($selection->kind) {
                 case NodeKind::FIELD:
                     if (!$this->shouldIncludeNode($selection)) {
-                        continue;
+                        continue 2;
                     }
                     $name = self::getFieldEntryKey($selection);
                     if (!isset($fields[$name])) {
@@ -541,7 +541,7 @@ class Executor
                     if (!$this->shouldIncludeNode($selection) ||
                         !$this->doesFragmentConditionMatch($selection, $runtimeType)
                     ) {
-                        continue;
+                        continue 2;
                     }
                     $this->collectFields(
                         $runtimeType,
@@ -553,14 +553,14 @@ class Executor
                 case NodeKind::FRAGMENT_SPREAD:
                     $fragName = $selection->name->value;
                     if (!empty($visitedFragmentNames[$fragName]) || !$this->shouldIncludeNode($selection)) {
-                        continue;
+                        continue 2;
                     }
                     $visitedFragmentNames[$fragName] = true;
 
                     /** @var FragmentDefinitionNode|null $fragment */
                     $fragment = isset($exeContext->fragments[$fragName]) ? $exeContext->fragments[$fragName] : null;
                     if (!$fragment || !$this->doesFragmentConditionMatch($fragment, $runtimeType)) {
-                        continue;
+                        continue 2;
                     }
                     $this->collectFields(
                         $runtimeType,
