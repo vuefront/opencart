@@ -24,6 +24,7 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
     {
         if ($this->d_blog_module) {
             $this->load->model('extension/d_blog_module/post');
+            $this->load->model('extension/d_blog_module/review');
             $this->load->model('extension/' . $this->codename . '/d_blog_module');
             $this->load->model('tool/image');
             $post_info = $this->model_extension_d_blog_module_post->getPost($args['id']);
@@ -45,6 +46,9 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
                 $imageLazy = '';
             }
 
+            $review_total_info = $this->model_extension_d_blog_module_review->getTotalReviewsByPostId($post_info['post_id']);
+            $rating = (int) $review_total_info['rating'];
+
             return array(
                 'id' => $post_info['post_id'],
                 'title' => $post_info['title'],
@@ -53,6 +57,10 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
                 'shortDescription' => strip_tags(html_entity_decode($post_info['short_description'], ENT_QUOTES, 'UTF-8')),
                 'image' => $image,
                 'imageLazy' => $imageLazy,
+                'datePublished' => iconv(mb_detect_encoding(strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']))), "utf-8//IGNORE", strftime($this->setting['post']['date_format'][$this->config->get('config_language_id')], strtotime($post_info['date_published']))),
+                'rating' => $rating,
+                'next' => $this->vfload->resolver('blog/post/next'),
+                'prev' => $this->vfload->resolver('blog/post/prev'),
                 'reviews' => $this->vfload->resolver('blog/review/get'),
                 'keyword' => $keyword,
             );
@@ -116,6 +124,37 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
                 'totalPages' => 0,
                 'totalElements' => 0,
             );
+        }
+    }
+
+    public function next($args)
+    {
+        if ($this->d_blog_module) {
+            $this->load->model('extension/d_blog_module_post');
+            $post = $args['parent'];
+            $next_post_info = $this->model_extension_d_blog_module_post->getNextPost($post['id'], 0);
+            if(empty($next_post_info)) {
+                return null;
+            }
+            return $this->get(array('id' => $next_post_info['post_id']));
+        } else {
+            return array();
+        }
+    }
+
+    public function prev($args)
+    {
+        if ($this->d_blog_module) {
+            $this->load->model('extension/d_blog_module_post');
+            $post = $args['parent'];
+            $prev_post_info = $this->model_extension_d_blog_module_post->getPrevPost($post['id'], 0);
+            if (empty($prev_post_info)) {
+                return null;
+            }
+            return $this->get(array('id' => $prev_post_info['post_id']));
+
+        } else {
+            return array();
         }
     }
 }
