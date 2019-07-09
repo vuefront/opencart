@@ -44,6 +44,7 @@ class ControllerExtensionDVuefrontBlogReview extends Controller
             $this->load->model('extension/d_blog_module/review');
 
             $results = $this->model_extension_d_blog_module_review->getReviewsByPostId($post['id']);
+            $total = $this->model_extension_d_blog_module_review->getTotalReviewsByPostId($post['id']);
 
             $reviews = array();
 
@@ -57,7 +58,10 @@ class ControllerExtensionDVuefrontBlogReview extends Controller
                 );
             }
 
-            return $reviews;
+            return array(
+                'content'=> $reviews,
+                'totalElements' => $total['total']
+            );
         } else {
             return array();
         }

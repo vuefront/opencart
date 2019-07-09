@@ -62,6 +62,7 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
                 'next' => $this->vfload->resolver('blog/post/next'),
                 'prev' => $this->vfload->resolver('blog/post/prev'),
                 'reviews' => $this->vfload->resolver('blog/review/get'),
+                'categories' => $this->vfload->resolver('blog/post/categories'),
                 'keyword' => $keyword,
             );
         } else {
@@ -127,10 +128,26 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
         }
     }
 
+    public function categories($args)
+    {
+        if ($this->d_blog_module) {
+            $this->load->model('extension/d_blog_module/category');
+            $post = $args['parent'];
+
+            $result = $this->model_extension_d_blog_module_category->getCategoryByPostId($post['id']);
+            $categories = array();
+            foreach ($result as $category) {
+                $categories[] =$this->vfload->data('blog/category/get', array('id' => $category['category_id']));
+            }
+            return $categories;
+        } else {
+            return array();
+        }
+    }
     public function next($args)
     {
         if ($this->d_blog_module) {
-            $this->load->model('extension/d_blog_module_post');
+            $this->load->model('extension/d_blog_module/post');
             $post = $args['parent'];
             $next_post_info = $this->model_extension_d_blog_module_post->getNextPost($post['id'], 0);
             if(empty($next_post_info)) {
@@ -145,7 +162,7 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
     public function prev($args)
     {
         if ($this->d_blog_module) {
-            $this->load->model('extension/d_blog_module_post');
+            $this->load->model('extension/d_blog_module/post');
             $post = $args['parent'];
             $prev_post_info = $this->model_extension_d_blog_module_post->getPrevPost($post['id'], 0);
             if (empty($prev_post_info)) {
