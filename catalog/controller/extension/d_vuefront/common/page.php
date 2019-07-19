@@ -22,6 +22,11 @@ class ControllerExtensionDVuefrontCommonPage extends Controller
             'name'        => $information_info['title'],
             'description' => html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8'),
             'sort_order' => (int)$information_info['sort_order'],
+            'meta' => array(
+                'title' =>  html_entity_decode($information_info['meta_title'], ENT_QUOTES, 'UTF-8'),
+                'description' =>  html_entity_decode($information_info['meta_description'], ENT_QUOTES, 'UTF-8'),
+                'keyword' =>  html_entity_decode($information_info['meta_keyword'], ENT_QUOTES, 'UTF-8')
+            ),
             'keyword' => $keyword
         );
     }

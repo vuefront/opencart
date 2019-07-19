@@ -57,6 +57,11 @@ class ControllerExtensionDVuefrontBlogCategory extends Controller
                 'url' => $this->vfload->resolver('blog/category/url'),
                 'categories' => $this->vfload->resolver('blog/category/child'),
                 'keyword' => $keyword,
+                'meta' => array(
+                    'title' => html_entity_decode($category_info['meta_title'], ENT_QUOTES, 'UTF-8'),
+                    'description' => html_entity_decode($category_info['meta_description'], ENT_QUOTES, 'UTF-8'),
+                    'keyword' => html_entity_decode($category_info['meta_keyword'], ENT_QUOTES, 'UTF-8'),
+                )
             );
         } else {
             return array();

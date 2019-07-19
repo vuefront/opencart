@@ -17,7 +17,6 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             $args['sort'] = 'pd.' . $args['sort'];
         }
 
-
         $products = array();
 
         $filter_data = array(
@@ -161,7 +160,12 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             'attributes' => $this->vfload->resolver('store/product/attribute'),
             'reviews' => $this->vfload->resolver('store/review/get'),
             'options' => $this->vfload->resolver('store/product/option'),
-            'keyword' => $keyword
+            'keyword' => $keyword,
+            'meta' => array(
+                'title' => html_entity_decode($product_info['meta_title'], ENT_QUOTES, 'UTF-8'),
+                'description' => html_entity_decode($product_info['meta_description'], ENT_QUOTES, 'UTF-8'),
+                'keyword' => html_entity_decode($product_info['meta_keyword'], ENT_QUOTES, 'UTF-8'),
+            )
         );
     }
 

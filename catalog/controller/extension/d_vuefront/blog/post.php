@@ -64,6 +64,11 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
                 'reviews' => $this->vfload->resolver('blog/review/get'),
                 'categories' => $this->vfload->resolver('blog/post/categories'),
                 'keyword' => $keyword,
+                'meta' => array(
+                    'title' => html_entity_decode($post_info['meta_title'], ENT_QUOTES, 'UTF-8'),
+                    'description' => html_entity_decode($post_info['meta_description'], ENT_QUOTES, 'UTF-8'),
+                    'keyword' => html_entity_decode($post_info['meta_keyword'], ENT_QUOTES, 'UTF-8')
+                )
             );
         } else {
             return array();
