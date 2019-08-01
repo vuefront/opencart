@@ -1,3 +1,5 @@
+.idea
+/system/database/mysqliz.php
 catalog/view/theme/default/template/payment/amazon_checkout_address.tpl
 catalog/view/theme/default/template/news/search.tpl
 catalog/view/theme/default/template/news/ncategory.tpl

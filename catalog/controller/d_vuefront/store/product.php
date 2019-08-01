@@ -145,7 +145,12 @@ class ControllerDVuefrontStoreProduct extends Controller
             'attributes' => $this->vfload->resolver('store/product/attribute'),
             'reviews' => $this->vfload->resolver('store/review/get'),
             'options' => $this->vfload->resolver('store/product/option'),
-            'keyword' => $keyword
+            'keyword' => $keyword,
+            'meta' => array(
+                'title' => html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8'),
+                'description' => html_entity_decode($product_info['meta_description'], ENT_QUOTES, 'UTF-8'),
+                'keyword' => html_entity_decode($product_info['meta_keyword'], ENT_QUOTES, 'UTF-8'),
+            )
         );
     }
 

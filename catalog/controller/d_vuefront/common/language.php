@@ -12,7 +12,7 @@ class ControllerDVuefrontCommonLanguage extends Controller
 
         $results = $this->model_localisation_language->getLanguages();
 
-        $siteUrl = $this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url');
+        $siteUrl = !empty($this->request->server['HTTPS']) ? $this->config->get('config_ssl') : $this->config->get('config_url');
 
         foreach ($results as $result) {
             if ($result['status']) {

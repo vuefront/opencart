@@ -17,7 +17,7 @@ class ModelDVuefrontBlogNews extends Model
 
     public function getCategory($category_id)
     {
-        $sql = "SELECT *, c.ncategory_id as category_id, cd.name as title FROM " . DB_PREFIX . "sb_ncategory c "
+        $sql = "SELECT *, c.ncategory_id as category_id, cd.name as title, cd.name as meta_title FROM " . DB_PREFIX . "sb_ncategory c "
             . "LEFT JOIN " . DB_PREFIX . "sb_ncategory_description cd ON (c.ncategory_id = cd.ncategory_id) "
             . "WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c.ncategory_id = '".(int)$category_id."'";
 
@@ -107,7 +107,7 @@ class ModelDVuefrontBlogNews extends Model
 
     public function getPost($category_id)
     {
-        $sql = "SELECT *, n.news_id as post_id FROM " . DB_PREFIX . "sb_news n "
+        $sql = "SELECT *, n.news_id as post_id, nd.ctitle as meta_title, nd.meta_key as meta_keyword, nd.meta_desc as meta_description, n.date_pub as date_published FROM " . DB_PREFIX . "sb_news n "
             . "LEFT JOIN " . DB_PREFIX . "sb_news_description nd ON (n.news_id = nd.news_id) "
             . "WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n.news_id = '".(int)$category_id."'";
 
@@ -249,5 +249,58 @@ class ModelDVuefrontBlogNews extends Model
         . "date_added = NOW(), date_modified = NOW()";
         $this->db->query($sql);
         $review_id = $this->db->getLastId();
+
+        return $review_id;
+    }
+
+    public function getTotalReviewsByPostId($post_id) {
+        return 0;
+    }
+
+    public function getNextPost($post_id)
+    {
+        $sql = "SELECT p.news_id as post_id ";
+        $sql .= "FROM " . DB_PREFIX . "sb_news p "
+            . "WHERE p.news_id > '" . (int)$post_id . "' "
+            . "AND p.status = 1 ";
+        $sql .= " GROUP BY p.news_id ";
+        $sql .= " ORDER BY p.date_pub ";
+        $sql .= " ASC ";
+
+        $query = $this->db->query($sql);
+
+        if (empty($query->row['post_id'])) {
+            return false;
+        }
+
+        return $query->row;
+    }
+    public function getPrevPost($post_id, $category_id = 0)
+    {
+        $sql = "SELECT p.news_id as post_id ";
+        $sql .= " FROM " . DB_PREFIX . "sb_news p "
+            . "WHERE p.news_id < '" . (int)$post_id . "' "
+            . "AND p.status = 1 ";
+
+        $sql .= " GROUP BY p.news_id ";
+        $sql .= " ORDER BY p.news_id ";
+        $sql .= " DESC ";
+
+        $query = $this->db->query($sql);
+        if (empty($query->row['post_id'])) {
+            return false;
+        }
+
+        return $query->row;
+    }
+
+    public function getCategoryByPostId($post_id) {
+        $query = $this->db->query("SELECT *, p2c.ncategory_id as category_id FROM " . DB_PREFIX . "sb_news_to_ncategory p2c "
+            . "LEFT JOIN ". DB_PREFIX . "sb_ncategory_description cd "
+            . "ON (p2c.ncategory_id = cd.ncategory_id) "
+            . "WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' "
+            . "AND p2c.news_id = '" . (int) $post_id . "'");
+
+        return $query->rows;
     }
 }

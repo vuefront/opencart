@@ -38,7 +38,12 @@ class ControllerDVuefrontStoreCategory extends Controller
             'imageLazy'   => $imageLazy,
             'url' => $this->vfload->resolver('store/category/url'),
             'categories' => $this->vfload->resolver('store/category/child'),
-            'keyword'    => $keyword
+            'keyword'    => $keyword,
+            'meta' => array(
+                'title' => html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8'),
+                'description' => html_entity_decode($category_info['meta_description'], ENT_QUOTES, 'UTF-8'),
+                'keyword' => $category_info['meta_keyword']
+            )
         );
     }
 

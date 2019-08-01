@@ -19,9 +19,15 @@ class ControllerDVuefrontCommonPage extends Controller
         return array(
             'id'          => $information_info['information_id'],
             'title'        => $information_info['title'],
+            'name'        => $information_info['title'],
             'description' => html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8'),
             'sort_order' => (int)$information_info['sort_order'],
-            'keyword' => $keyword
+            'keyword' => $keyword,
+            'meta' => array(
+                'title' => $information_info['title'],
+                'description' => '',
+                'keyword' => ''
+            )
         );
     }
 

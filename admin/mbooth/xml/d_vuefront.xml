@@ -3,7 +3,7 @@
 <extension>
     <id>d_vuefront</id>
     <type>module</type>
-    <version>1.0</version>
+    <version>1.1.0</version>
     <mbooth_version>1.0</mbooth_version>
     <author>Dreamvention</author>
     <files>

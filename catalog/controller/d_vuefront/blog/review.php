@@ -55,7 +55,10 @@ class ControllerDVuefrontBlogReview extends Controller
             }
 
 
-            return $reviews;
+            return array(
+                'content' => $reviews,
+                'totalElements' => count($reviews)
+            );
         }
     }
 }

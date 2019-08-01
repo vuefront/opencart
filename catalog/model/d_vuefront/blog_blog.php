@@ -104,7 +104,7 @@ class ModelDVuefrontBlogBlog extends Model
 
     public function getPost($category_id)
     {
-        $sql = "SELECT *, n.article_id as post_id FROM " . DB_PREFIX . "blog_article n "
+        $sql = "SELECT *, n.article_id as post_id, n.available as date_published FROM " . DB_PREFIX . "blog_article n "
             . "LEFT JOIN " . DB_PREFIX . "blog_article_description nd ON (n.article_id = nd.article_id) "
             . "WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n.article_id = '".(int)$category_id."'";
 
@@ -240,9 +240,65 @@ class ModelDVuefrontBlogBlog extends Model
         . "SET name = '" . $this->db->escape($data['author']) . "', "
         . "article_id = '" . (int)$post_id . "', "
         . "status = ". (int)$data['status'] .", "
-        . "text = '" . $this->db->escape($data['description']) . "', "
-        . "date_added = NOW(), date_modified = NOW()";
+        . "content = '" . $this->db->escape($data['description']) . "', "
+        . "created = NOW()";
         $this->db->query($sql);
         $review_id = $this->db->getLastId();
+
+        return $review_id;
+    }
+
+    public function getNextPost($post_id)
+    {
+        $sql = "SELECT p.article_id as post_id ";
+        $sql .= "FROM " . DB_PREFIX . "blog_article p "
+            . "WHERE p.article_id > '" . (int)$post_id . "' "
+            . "AND p.status = 1 ";
+        $sql .= " GROUP BY p.article_id ";
+        $sql .= " ORDER BY p.available ";
+        $sql .= " ASC ";
+
+        $query = $this->db->query($sql);
+
+        if (empty($query->row['post_id'])) {
+            return false;
+        }
+
+        return $query->row;
+    }
+    public function getPrevPost($post_id, $category_id = 0)
+    {
+        $sql = "SELECT p.article_id as post_id ";
+            $sql .= " FROM " . DB_PREFIX . "blog_article p "
+            . "WHERE p.article_id < '" . (int)$post_id . "' "
+            . "AND p.status = 1 ";
+
+        $sql .= " GROUP BY p.article_id ";
+        $sql .= " ORDER BY p.article_id ";
+        $sql .= " DESC ";
+
+        $query = $this->db->query($sql);
+        if (empty($query->row['post_id'])) {
+            return false;
+        }
+
+        if (empty($query->row['rating'])) {
+            $query->row['rating'] = 0;
+        }
+        return $query->row;
+    }
+
+    public function getCategoryByPostId($post_id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_article_to_category p2c "
+            . "LEFT JOIN ". DB_PREFIX . "blog_category_description cd "
+            . "ON (p2c.category_id = cd.category_id) "
+            . "WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' "
+            . "AND p2c.article_id = '" . (int) $post_id . "'");
+
+        return $query->rows;
+    }
+
+    public function getTotalReviewsByPostId($post_id) {
+        return 0;
     }
 }
