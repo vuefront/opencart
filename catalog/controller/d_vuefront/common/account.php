@@ -26,6 +26,7 @@ class ControllerDVuefrontCommonAccount extends Controller
         $customerData['address_2'] = '';
         $customerData['city'] = '';
         $customerData['postcode'] = '';
+        $customerData['tax_id'] = '';
         $customerData['country_id'] = $this->config->get('config_country_id');
         $customerData['zone_id'] = $this->config->get('config_zone_id');
 
@@ -53,10 +54,13 @@ class ControllerDVuefrontCommonAccount extends Controller
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 
             return array(
-                'id'        => $customer_info['customer_id'],
-                'firstName' => $customer_info['firstname'],
-                'lastName'  => $customer_info['lastname'],
-                'email'     => $customer_info['email'],
+                'token' => null, 
+                'customer' => array(
+                    'id'        => $customer_info['customer_id'],
+                    'firstName' => $customer_info['firstname'],
+                    'lastName'  => $customer_info['lastname'],
+                    'email'     => $customer_info['email'],
+                )
             );
         } else {
             throw new Exception($this->language->get('error_login'));
@@ -155,9 +159,8 @@ class ControllerDVuefrontCommonAccount extends Controller
         $this->load->model('account/address');
 
         $result = $this->model_account_address->getAddress($args['id']);
-
         return array(
-            'id'        => $result['address_id'],
+            'id'        => $args['id'],
             'firstName' => $result['firstname'],
             'lastName'  => $result['lastname'],
             'company'   => $result['company'],

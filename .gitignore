@@ -1,18 +1,6 @@
 .idea
 /system/database/mysqliz.php
-catalog/view/theme/default/template/payment/amazon_checkout_address.tpl
-catalog/view/theme/default/template/news/search.tpl
-catalog/view/theme/default/template/news/ncategory.tpl
-catalog/view/theme/default/template/news/layout.tpl
-catalog/view/theme/default/template/news/article.tpl
-catalog/view/theme/default/template/module/welcome.tpl
-catalog/view/theme/default/template/module/store.tpl
-catalog/view/theme/default/template/module/special.tpl
-catalog/view/theme/default/template/module/slideshow.tpl
-catalog/view/theme/default/template/module/pp_layout.tpl
-catalog/view/theme/default/template/module/news_side.tpl
-catalog/view/theme/default/template/module/news_archive.tpl
-catalog/view/theme/default/template/module/news.tpl
+catalog/view/theme/
 admin/view/template/payment/worldpay.tpl
 admin/view/template/payment/web_payment_software.tpl
 admin/view/template/payment/twocheckout.tpl
@@ -3124,3 +3112,4 @@ catalog/controller/feed/blog.php
 catalog/view/theme/default/image/blog_arrow.gif
 image/data/blog_avatar.jpg
 catalog/controller/feed/blog-sitemap-style.xsl
+image/data/
