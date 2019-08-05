@@ -54,10 +54,13 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 
             return array(
-                'id'        => $customer_info['customer_id'],
-                'firstName' => $customer_info['firstname'],
-                'lastName'  => $customer_info['lastname'],
-                'email'     => $customer_info['email'],
+                'token' => null,
+                'customer'=> array(
+                    'id'        => $customer_info['customer_id'],
+                    'firstName' => $customer_info['firstname'],
+                    'lastName'  => $customer_info['lastname'],
+                    'email'     => $customer_info['email'],
+                )
             );
         } else {
             throw new Exception($this->language->get('error_login'));
