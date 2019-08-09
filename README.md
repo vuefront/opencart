@@ -27,7 +27,7 @@ __CMS Connect App__ - adds the connection between the OpenCart CMS and VueFront 
 
 ## DEMO
 
-[VueFront on OpenCart](https://opencart.vuefront.com/)
+[VueFront on OpenCart](https://opencart1.vuefront.com/)
 
 ## OpenCart Versions
 This repo stores the codebase for the CMS Connect App for OpenCart. Because of OpenCart's versioning, the branches are structured as follows 
