@@ -5,7 +5,7 @@
   </a>
 </p>
 <h1 align="center">VueFront</h1>
-<h3 align="center">CMS Connect App for OpenCart
+<h3 align="center">CMS Connect App for OpenCart 1.5x
 </h3>
 
 <p align="center">
