@@ -1,32 +1,41 @@
 <p align="center">
   <br>
   <a href="https://vuefront.com">
-    <img src="https://vuefront.com/logo.png" width="120"/>
+    <img src="https://raw.githubusercontent.com/vuefront/vuefront-docs/master/.vuepress/public/img/github/vuefront-opencart.jpg" width="400"/>
   </a>
 </p>
 <h1 align="center">VueFront</h1>
-<h3 align="center">CMS Connect App for OpenCart
+<h3 align="center">CMS Connect App for OpenCart 2.x-3.x
 </h3>
 
-VueFront - Vue powered agnostic frontend web app for your old fashioned Blog and Ecommerce site. 
+<p align="center">
+  <a href="https://github.com/vuefront/vuefront"><img src="https://img.shields.io/badge/price-FREE-0098f7.svg" alt="Version"></a>
+  <a href="https://discord.gg/C9vcTCQ"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="Chat"></a>
+</p>
 
-OpenCart - Open-source eCommerce platform built with MVC pattern.
+<p align="center">
+Show your :heart: - give us a :star: <br/> 
+Help us grow this project to be the best it can be!
+  </p>
 
-CMS Connect App - adds the connection between the OpenCart CMS and VueFront WebApp via a GraphQL API.
+
+__VueFront__ is a <a href="//vuejs.org">VueJS powered</a> CMS agnostic SPA & PWA frontend for your old-fashioned Blog and E-commerce site. 
+
+__OpenCart__ - Open-source eCommerce platform built with MVC pattern.
+
+__CMS Connect App__ - adds the connection between the OpenCart CMS and VueFront Web App via a GraphQL API.
 
 ## DEMO
 
-[VueFront](https://opencart.vuefront.com/)
-
-[Admin](https://opencart.vuefront.com/admin)
+[VueFront on OpenCart](https://opencart.vuefront.com/)
 
 ## OpenCart Versions
 This repo stores the codebase for the CMS Connect App for OpenCart. Because of OpenCart's versioning, the branches are structured as follows 
 
 | Repo Branch | OpenCart Versions  |
 |--------|-------------|
-| master | 2.x-3.x     |
-| 1.5x   | 1.5.x       |
+| [master](https://github.com/vuefront/opencart) | 2.x-3.x     |
+| [1.5x](https://github.com/vuefront/opencart/tree/1.5x)   | 1.5.x       |
 
 ### OpenCart Blog 
 Since OpenCart does not have a built-in Blog, we use the [Free Blog Module](https://github.com/Dreamvention/2_d_blog_module) by Dreamvention for version 2.x-3.x
@@ -57,9 +66,9 @@ If you have shopunity module installed, you can use that for a super quick insta
 You can also install the d_blog_module via Shopunity as well. 
 
 ## Support
-For support please contact us a https://dreamvention.ee/support 
+For support please contact us at [Discord](https://discord.gg/C9vcTCQ)
 
 ## Submit an issue
-For submiting an issue, please create one in the [issues tab](https://github.com/vuefront/opencart/issues). Remember to provide a detailed explanation of your case and a way to reproduce it. 
+For submitting an issue, please create one in the [issues tab](https://github.com/vuefront/vuefront/issues). Remember to provide a detailed explanation of your case and a way to reproduce it. 
 
 Enjoy!
