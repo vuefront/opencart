@@ -211,8 +211,8 @@ type Product {
   stock: Boolean
   rating: Float
   attributes: [productAttribute]
-  reviews: [productReview]
-  options: [productOption]
+  reviews: [ProductReview]
+  options: [ProductOption]
   images(limit: Int = 3): [productImage]
   keyword: String
   meta: Meta
@@ -229,7 +229,7 @@ type productImage {
   imageBig: String
 }
 
-type productOption {
+type ProductOption {
   id: String
   name: String
   type: String
@@ -267,7 +267,7 @@ type ZonesResult {
   totalElements: Int
 }
 
-type productReview {
+type ProductReview {
   author: String
   author_email: String
   content: String
