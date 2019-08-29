@@ -1,26 +1,41 @@
-# VueFront CMS Connect App for OpenCart
+<p align="center">
+  <br>
+  <a href="https://vuefront.com">
+    <img src="https://raw.githubusercontent.com/vuefront/vuefront-docs/master/.vuepress/public/img/github/vuefront-opencart.jpg" width="379"/>
+  </a>
+</p>
+<h1 align="center">VueFront</h1>
+<h3 align="center">CMS Connect App for OpenCart 1.5x
+</h3>
 
-https://vuefront.com/
+<p align="center">
+  <a href="https://github.com/vuefront/vuefront"><img src="https://img.shields.io/badge/price-FREE-0098f7.svg" alt="Version"></a>
+  <a href="https://discord.gg/C9vcTCQ"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="Chat"></a>
+</p>
 
-VueFront - Vue powered agnostic frontend web app for your old fashioned Blog and Ecommerce site. 
+<p align="center">
+Show your :heart: - give us a :star: <br/> 
+Help us grow this project to be the best it can be!
+  </p>
 
-OpenCart - Open-source eCommerce platform built with MVC pattern.
 
-CMS Connect App - adds the connection between the OpenCart CMS and VueFront WebApp via a GraphQL API.
+__VueFront__ is a <a href="//vuejs.org">VueJS powered</a> CMS agnostic SPA & PWA frontend for your old-fashioned Blog and E-commerce site. 
+
+__OpenCart__ - Open-source eCommerce platform built with MVC pattern.
+
+__CMS Connect App__ - adds the connection between the OpenCart CMS and VueFront Web App via a GraphQL API.
 
 ## DEMO
 
-[VueFront](https://opencart.vuefront.com/)
-
-[Admin](https://opencart.vuefront.com/admin)
+[VueFront on OpenCart](https://opencart1.vuefront.com/)
 
 ## OpenCart Versions
-This repo stores the codebase for the CMS Connect App for OpenCart for version 1.5.x. Because of OpenCart's versioning, the branches are structured as follows 
+This repo stores the codebase for the CMS Connect App for OpenCart. Because of OpenCart's versioning, the branches are structured as follows 
 
 | Repo Branch | OpenCart Versions  |
 |--------|-------------|
-| master | 2.x-3.x     |
-| 1.5x   | 1.5.x       |
+| [master](https://github.com/vuefront/opencart) | 2.x-3.x     |
+| [1.5x](https://github.com/vuefront/opencart/tree/1.5x)   | 1.5.x       |
 
 ### OpenCart Blog 
 Since OpenCart does not have a built-in Blog, we use the [Blog / News](https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=2419) by florinsith or [Blog Manager](https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=4552) by qahar (disabled at this moment)
@@ -39,9 +54,9 @@ If you have another blog module that you would like us to integrate into VueFron
 You will need the CMS Connect URL to complete the [VueFront Web App installation](https://vuefront.com/guide/setup.html)
 
 ## Support
-For support please contact us a https://dreamvention.ee/support 
+For support please contact us at [Discord](https://discord.gg/C9vcTCQ)
 
 ## Submit an issue
-For submiting an issue, please create one in the [issues tab](/issues/). Remeber to provide a detailed explonation of your case and a way to reproduce it. 
+For submitting an issue, please create one in the [issues tab](https://github.com/vuefront/vuefront/issues). Remember to provide a detailed explanation of your case and a way to reproduce it. 
 
 Enjoy!
