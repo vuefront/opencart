@@ -62,8 +62,8 @@ class ModelExtensionDVuefrontCategory extends Model
     public function getTotalCategories($data = array())
     {
         $sql = "SELECT COUNT(c.category_id) AS total
-            FROM oc_category c
-            LEFT JOIN oc_category_description cd ON (c.category_id = cd.category_id)
+            FROM ".DB_PREFIX."category c
+            LEFT JOIN ".DB_PREFIX."category_description cd ON (c.category_id = cd.category_id)
             WHERE cd.language_id='" . (int)$this->config->get('config_language_id') . "'";
 
         if (isset($data['parent'])) {
