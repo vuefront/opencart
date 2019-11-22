@@ -41,6 +41,7 @@ This repo stores the codebase for the CMS Connect App for OpenCart. Because of O
 Since OpenCart does not have a built-in Blog, we use the [Free Blog Module](https://github.com/Dreamvention/2_d_blog_module) by Dreamvention for version 2.x-3.x
 
 ## How to install?
+Php version required >= 5.5, <= 7.2 (this limitation will be removed in the future)
 
 ### Quick Install
 1. [Download](https://github.com/vuefront/opencart/releases) the **compiled** Extensions from the latest releases. 
