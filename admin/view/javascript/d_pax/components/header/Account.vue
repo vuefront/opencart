@@ -171,7 +171,10 @@ export default {
       line-height: 1.33;
       letter-spacing: 0.18px;
       color: #1a1a1a;
-      padding-right: 100px;
+      padding-right: 10px;
+      @media (--widescreen) {
+        padding-right: 100px;
+      }
     }
 
     &__image {

@@ -74,16 +74,22 @@ export default {
 </script>
 <style lang="scss">
   .vf-header {
-    padding: 0 80px 50px;
     border-bottom: 1px solid #D9D9D9;
     margin-bottom: 70px;
+    padding: 0 40px 25px;
+    @media (--widescreen) {
+      padding: 0 80px 50px;
+    }
     &__wrapper {
       height: 63px;
       display: flex;
       flex-flow: row;
     }
     &__button_rebuild {
-      margin-right: 60px;
+      margin-right: 30px;
+      @media (--widescreen) {
+        margin-right: 60px;
+      }
     }
     &__right_nav {
       width: 100%;
