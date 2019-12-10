@@ -25,7 +25,7 @@
         target="_blank"
         class="text-2"
       >
-        Cms
+        CMS
       </a>
       <a
         class="text-2"

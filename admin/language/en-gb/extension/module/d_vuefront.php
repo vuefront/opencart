@@ -4,9 +4,9 @@
  */
 
 //heading
-$_['heading_title'] = '<span style="color:#449DD0; font-weight:bold">Vuefront</span><span style="font-size:12px; color:#999"> by <a href="https://www.opencart.com/index.php?route=marketplace/extension&filter_member=Dreamvention" style="font-size:1em; color:#999" target="_blank">Dreamvention</a></span>';
-$_['heading_title_main'] = 'Vuefront';
-$_['text_edit'] = 'Edit Vuefront settings';
+$_['heading_title'] = '<span style="color:#449DD0; font-weight:bold">VueFront</span><span style="font-size:12px; color:#999"> by <a href="https://www.opencart.com/index.php?route=marketplace/extension&filter_member=Dreamvention" style="font-size:1em; color:#999" target="_blank">Dreamvention</a></span>';
+$_['heading_title_main'] = 'VueFront';
+$_['text_edit'] = 'Edit VueFront settings';
 $_['text_module'] = 'Modules';
 $_['text_copy'] = 'copy';
 

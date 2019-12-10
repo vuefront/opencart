@@ -127,13 +127,13 @@ class ControllerExtensionModuleDVuefront extends Controller
 
     public function vf_update()
     {
+
         try {
             $rootFolder = realpath(DIR_APPLICATION . '../');
             $tmpFile = tempnam(sys_get_temp_dir(), 'TMP_');
             rename($tmpFile, $tmpFile .= '.tar');
             file_put_contents($tmpFile, file_get_contents($this->request->post['url']));
             $this->removeDir($rootFolder . '/vuefront');
-
             $phar = new PharData($tmpFile);
             $phar->extractTo($rootFolder . '/vuefront');
 
@@ -175,7 +175,7 @@ class ControllerExtensionModuleDVuefront extends Controller
 
                     $content = file_get_contents($rootFolder . '/.htaccess');
 
-                    if(!is_dir(DIR_APPLICATION . 'controller/extension/module/d_vuefront')) {
+                    if (!is_dir(DIR_APPLICATION . 'controller/extension/module/d_vuefront')) {
                         mkdir(DIR_APPLICATION . 'controller/extension/module/d_vuefront');
                     }
 
@@ -257,16 +257,24 @@ class ControllerExtensionModuleDVuefront extends Controller
             ];
         }
 
+        $is_apache = strpos($this->request->server["SERVER_SOFTWARE"], "Apache") !== false;
 
-        $status = file_exists(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt') && is_dir(realpath(DIR_APPLICATION . '../vuefront'));
+        $status = false;
+        if($is_apache && file_exists(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt')) {
+            $status = true;
+        }
+        if (is_dir(realpath(DIR_APPLICATION . '../') . '/vuefront')) {
+            $status = true;
+        }
 
         $this->response->setOutput(json_encode([
-            'apache' => strpos($this->request->server["SERVER_SOFTWARE"], "Apache") !== false,
+            'apache' => $is_apache,
             'status' => $status,
             'phpversion' => phpversion(),
             'plugin_version' => $this->extension['version'],
             'extensions' => $extensions,
-            'cmsConnect' => $catalog
+            'cmsConnect' => $catalog,
+            'server' => $this->request->server["SERVER_SOFTWARE"]
         ]));
     }
 
