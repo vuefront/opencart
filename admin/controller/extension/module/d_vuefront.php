@@ -54,10 +54,12 @@ class ControllerExtensionModuleDVuefront extends Controller
             $current_chunk = $current_chunk['next'];
         }
 
+        $data['baseUrl'] = HTTP_SERVER;
+
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-            $data['baseUrl'] = HTTPS_CATALOG;
+            $data['siteUrl'] = HTTPS_CATALOG;
         } else {
-            $data['baseUrl'] = HTTP_CATALOG;
+            $data['siteUrl'] = HTTP_CATALOG;
         }
 
         $url_params = [];

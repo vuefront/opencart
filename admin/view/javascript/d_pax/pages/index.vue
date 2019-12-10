@@ -3,6 +3,7 @@
     <b-row>
       <b-col md="9">
         <b-alert
+          v-if="cms.builds.length > 0"
           show
           variant="success"
           class="vf-home__rebuild"
@@ -21,7 +22,6 @@
               align-self="center"
             >
               <b-button
-                v-if="cms.builds.length > 0"
                 :disabled="cms.generating || loading"
                 variant="success"
                 @click="handleGenerate"
