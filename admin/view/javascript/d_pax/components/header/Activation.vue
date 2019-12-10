@@ -1,6 +1,8 @@
 <template>
   <div class="cms-activation">
-    <div class="cms-activation__title">
+    <div
+      class="cms-activation__title"
+    >
       {{ $t('textTitle') }}
     </div>
     <div
@@ -51,7 +53,7 @@ export default {
 </script>
 <i18n locale="en">
 {
-  "textTitle":"Auto-activation",
+  "textTitle":"Frontend Web App status",
   "textOn":"On",
   "textOff":"Off"
 }
@@ -62,7 +64,7 @@ export default {
     flex-flow: row;
     align-items: center;
     margin-right: 20px;
-    @media (--widescreen) {
+    @media (min-width: 1920px) {
       margin-right: 40px;
     }
     &__title {

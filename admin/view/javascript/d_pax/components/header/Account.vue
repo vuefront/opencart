@@ -172,7 +172,7 @@ export default {
       letter-spacing: 0.18px;
       color: #1a1a1a;
       padding-right: 10px;
-      @media (--widescreen) {
+      @media (min-width: 1920px) {
         padding-right: 100px;
       }
     }

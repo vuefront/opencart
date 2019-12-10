@@ -5,19 +5,6 @@
         <header-logo />
         <b-navbar-nav class="align-items-center vf-header__right_nav">
           <header-activation v-if="cms.builds.length > 0" />
-          <b-button
-            v-if="cms.builds.length > 0"
-            :disabled="cms.generating || loading"
-            variant="success"
-            class="vf-header__button_rebuild"
-            @click="handleGenerate"
-          >
-            <b-spinner
-              v-if="cms.generating || loading"
-              type="grow"
-            />
-            {{ $t('buttonRebuild') }}
-          </b-button>
           <header-account />
         </b-navbar-nav>
       </div>
@@ -35,41 +22,13 @@ export default {
     HeaderLogo,
     HeaderActivation
   },
-  data() {
-    return {
-      loading: false
-    }
-  },
+
   computed: {
     ...mapGetters({
       cms: 'cms/get'
     })
   },
-  mounted() {
-    if(this.cms.generating) {
-      const interval = setInterval(async () => {
-        await this.$store.dispatch('cms/load', {id: this.cms.id})
-        this.$apolloClient.defaultClient.clearStore()
-        if(!this.cms.generating) {
-          clearInterval(interval)
-        }
-      }, 3000)
-    }
-  },
-  methods: {
-    async handleGenerate() {
-      this.loading = true
-      await this.$store.dispatch('cms/generate', {id: this.cms.id})
-      const interval = setInterval(async () => {
-        await this.$store.dispatch('cms/load', {id: this.cms.id})
-        this.$apolloClient.defaultClient.clearStore()
-        if(!this.cms.generating) {
-          this.loading = false
-          clearInterval(interval)
-        }
-      }, 3000)
-    }
-  }
+
 }
 </script>
 <style lang="scss">
@@ -77,7 +36,7 @@ export default {
     border-bottom: 1px solid #D9D9D9;
     margin-bottom: 70px;
     padding: 0 40px 25px;
-    @media (--widescreen) {
+    @media (min-width: 1920px) {
       padding: 0 80px 50px;
     }
     &__wrapper {
@@ -87,7 +46,7 @@ export default {
     }
     &__button_rebuild {
       margin-right: 30px;
-      @media (--widescreen) {
+      @media (min-width: 1920px) {
         margin-right: 60px;
       }
     }
@@ -113,7 +72,6 @@ export default {
 </style>
 <i18n locale="en">
 {
-  "text_vuefront": "VueFront",
-  "buttonRebuild": "Rebuild"
+  "text_vuefront": "VueFront"
 }
 </i18n>

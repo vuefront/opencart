@@ -14,7 +14,7 @@
     align-items: center;
     &__image {
       height: 50px;
-      @media (--widescreen) {
+      @media (min-width: 1920px) {
         height: 100%;
       }
       width: auto;
@@ -30,7 +30,7 @@
       letter-spacing: 0.4px;
       text-align: left;
       color: $black;
-      @media (--widescreen) {
+      @media (min-width: 1920px) {
         font-size: 40px;
       }
     }
