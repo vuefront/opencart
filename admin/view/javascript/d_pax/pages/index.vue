@@ -111,7 +111,7 @@ export default {
 .vf-home {
 
   &__rebuild {
-    margin-bottom: 20px;
+    margin-bottom: 30px !important;
     padding: 20px !important;
     &_description {
       font-size: 1.3rem;

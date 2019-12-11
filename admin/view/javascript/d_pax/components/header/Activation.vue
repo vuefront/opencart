@@ -1,7 +1,7 @@
 <template>
   <div class="cms-activation">
     <div
-      class="cms-activation__title"
+      class="cms-activation__title d-none d-md-block"
     >
       {{ $t('textTitle') }}
     </div>
@@ -64,6 +64,9 @@ export default {
     flex-flow: row;
     align-items: center;
     margin-right: 20px;
+    @media (--phone-and-tablet) {
+      margin-right: auto;
+    }
     @media (min-width: 1920px) {
       margin-right: 40px;
     }

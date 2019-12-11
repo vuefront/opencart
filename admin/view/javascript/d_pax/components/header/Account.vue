@@ -14,7 +14,7 @@
           height-amp="24"
           layout="fixed"
         >
-        <span class="header-account__full_name">{{ account.firstName }} {{ account.lastName }}</span>
+        <span class="header-account__full_name d-none d-md-block">{{ account.firstName }} {{ account.lastName }}</span>
         <font-awesome-icon
           :icon="faAngleDown"
           class="header-account__icon"

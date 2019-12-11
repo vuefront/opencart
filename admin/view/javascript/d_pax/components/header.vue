@@ -2,11 +2,20 @@
   <b-navbar class="header">
     <div class="vf-header">
       <div class="vf-header__wrapper">
-        <header-logo />
-        <b-navbar-nav class="align-items-center vf-header__right_nav">
-          <header-activation v-if="cms.builds.length > 0" />
-          <header-account />
-        </b-navbar-nav>
+        <b-row>
+          <b-col
+            md="auto"
+            sm="12"
+          >
+            <header-logo />
+          </b-col>
+          <b-col>
+            <b-navbar-nav class="align-items-center vf-header__right_nav">
+              <header-activation v-if="cms.builds.length > 0" />
+              <header-account />
+            </b-navbar-nav>
+          </b-col>
+        </b-row>
       </div>
     </div>
   </b-navbar>
@@ -34,15 +43,18 @@ export default {
 <style lang="scss">
   .vf-header {
     border-bottom: 1px solid #D9D9D9;
-    margin-bottom: 70px;
+    margin-bottom: 50px;
     padding: 0 40px 25px;
     @media (min-width: 1920px) {
       padding: 0 80px 50px;
     }
     &__wrapper {
-      height: 63px;
+      min-height: 63px;
       display: flex;
       flex-flow: row;
+      > .row {
+        flex:1;
+      }
     }
     &__button_rebuild {
       margin-right: 30px;
@@ -57,6 +69,11 @@ export default {
       justify-content: flex-end;
       align-items: center;
       margin: 0;
+      @media (--phone-and-tablet) {
+        padding: 0;
+        margin-top: 15px;
+        justify-content: center;
+      }
     }
     &__logo {
       display: flex;

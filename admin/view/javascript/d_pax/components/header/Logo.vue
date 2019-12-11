@@ -12,6 +12,9 @@
     display: flex;
     flex-flow: row;
     align-items: center;
+    @media (--phone-and-tablet) {
+      justify-content: center;
+    }
     &__image {
       height: 50px;
       @media (min-width: 1920px) {

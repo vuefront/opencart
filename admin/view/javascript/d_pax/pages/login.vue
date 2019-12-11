@@ -144,7 +144,7 @@ export default {
 {
   "text_password": "Password",
   "button_sign_in": "Sign In",
-  "incorrect_email_or_password": "Incorrent Email or Password",
+  "incorrect_email_or_password                                                                                                            ": "Incorrent Email or Password",
   "buttonLogout": "Try another email"
 }
 </i18n>

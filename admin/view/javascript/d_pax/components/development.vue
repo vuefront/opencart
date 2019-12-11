@@ -120,6 +120,9 @@ export default {
       color: $black;
       border: none!important;
       flex: 1;
+      @media (--phone-and-tablet) {
+        overflow: hidden;
+      }
       &_wrapper {
         margin-bottom: 20px;
         width: 100%;
@@ -158,6 +161,9 @@ export default {
       background-color: $white;
       padding: 50px 55px;
       margin-bottom: 60px;
+      @media (--phone-and-tablet) {
+        padding: 20px 25px;
+      }
       pre {
         border-radius: 3px;
         background-color: #efeff1;
@@ -184,6 +190,9 @@ export default {
         text-align: left;
         color: $black;
         margin-bottom: 20px;
+        @media(--phone-and-tablet) {
+          font-size: 24px;
+        }
       }
     }
   }

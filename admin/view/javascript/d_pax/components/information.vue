@@ -33,7 +33,7 @@
         {{ value.name }}
       </div>
       <div class="vf-information__item_value">
-        {{ value.status ? $t('textActive') : $t('text_no_active') }}
+        {{ value.status ? $t('textActive') : $t('textNoActive') }}
       </div>
     </div>
     <div class="vf-information__item">
@@ -70,6 +70,7 @@ export default {
   "textPHPVersion": "PHP",
   "textServer": "Server",
   "textActive": "Active",
+  "textNoActive": "Not active",
   "textBuildMin": "Build min."
 }
 </i18n>

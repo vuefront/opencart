@@ -90,6 +90,9 @@
         outline: 0;
         box-shadow: none;
         background-color: transparent;
+        @media (--phone-and-tablet) {
+          margin-left: 15px;
+        }
         &:focus, &:active {
           border: 0;
           outline: 0;

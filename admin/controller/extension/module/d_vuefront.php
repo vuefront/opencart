@@ -304,7 +304,10 @@ class ControllerExtensionModuleDVuefront extends Controller
         $cHeaders = ['Content-Type: application/json'];
 
         if (!empty($headers['Token'])) {
-            $cHeaders[] = 'token: ' . $headers['Token'];
+          $cHeaders[] = 'token: ' . $headers['Token'];
+        }
+        if (!empty($headers['token'])) {
+            $cHeaders[] = 'token: ' . $headers['token'];
         }
         $rawInput = file_get_contents('php://input');
         $ch = curl_init();
