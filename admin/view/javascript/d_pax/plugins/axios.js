@@ -18,7 +18,6 @@ export default ({ tokenUrl, baseURL, app, store }, inject) => {
    * @returns {string} Transformed URL
    */
   const parseUrl = url => {
-    console.log(url)
     url = url.replace(/^(\/api)/g, 'index.php?route=extension/module/d_vuefront')
     url = url.replace(/^(\/opencart\/)/g, 'index.php?route=')
     url += '&' + tokenUrl

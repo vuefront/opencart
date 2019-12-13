@@ -131,17 +131,28 @@ class ControllerExtensionModuleDVuefront extends Controller
         $this->response->setOutput($this->model_extension_d_opencart_patch_load->view($this->route, $data));
     }
 
-    public function vf_update()
+    public function vf_update() {
+
+        try {
+          $rootFolder = realpath(DIR_APPLICATION . '../');
+          $tmpFile = tempnam(sys_get_temp_dir(), 'TMP_');
+          rename($tmpFile, $tmpFile .= '.tar');
+          file_put_contents($tmpFile, file_get_contents($this->request->post['url']));
+          $this->removeDir($rootFolder . '/vuefront');
+          $phar = new PharData($tmpFile);
+          $phar->extractTo($rootFolder . '/vuefront');
+      } catch (\Exception $e) {
+          echo $e->getMessage();
+      }
+
+      $this->vf_information();
+    }
+
+    public function vf_turn_on()
     {
 
         try {
             $rootFolder = realpath(DIR_APPLICATION . '../');
-            $tmpFile = tempnam(sys_get_temp_dir(), 'TMP_');
-            rename($tmpFile, $tmpFile .= '.tar');
-            file_put_contents($tmpFile, file_get_contents($this->request->post['url']));
-            $this->removeDir($rootFolder . '/vuefront');
-            $phar = new PharData($tmpFile);
-            $phar->extractTo($rootFolder . '/vuefront');
 
             if (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") !== false) {
                 if (file_exists($rootFolder . '/.htaccess')) {
@@ -215,7 +226,6 @@ class ControllerExtensionModuleDVuefront extends Controller
                 unlink(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt');
             }
         }
-        $this->removeDir($rootFolder . '/vuefront');
 
         $this->vf_information();
     }
@@ -239,6 +249,7 @@ class ControllerExtensionModuleDVuefront extends Controller
 
     public function vf_information()
     {
+        $root = realpath(DIR_APPLICATION . '../');
         $catalog = '';
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
             $catalog = HTTPS_CATALOG . 'index.php?route=extension/module/d_vuefront/graphql';
@@ -266,15 +277,12 @@ class ControllerExtensionModuleDVuefront extends Controller
         $is_apache = strpos($this->request->server["SERVER_SOFTWARE"], "Apache") !== false;
 
         $status = false;
-        if($is_apache && file_exists(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt')) {
+        if(file_exists(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt')) {
             $status = true;
         }
-        if (is_dir(realpath(DIR_APPLICATION . '../') . '/vuefront')) {
-            $status = true;
-        }
-
         $this->response->setOutput(json_encode([
             'apache' => $is_apache,
+            'htaccess' => file_exists($root . '/.htaccess'),
             'status' => $status,
             'phpversion' => phpversion(),
             'plugin_version' => $this->extension['version'],
