@@ -31,6 +31,7 @@
         <img
           :src="require('~/assets/img/rocket.png')"
           class="cms-activation__modal__image"
+          width="200"
           alt=""
         >
       </div>
@@ -38,14 +39,16 @@
         {{ $t('popupTitle') }}
       </div>
       <div class="cms-activation__modal__subtitle">
-        {{ $t('subTitlePopup') }}
+        {{ $t('subTitlePopup') }} <a
+          @click.prevent.stop="handleSearch"
+        >{{ $t('text_bellow') }}</a>.
       </div>
+      <!-- eslint-disable vue/no-v-html -->
       <div
         v-if="information.htaccess"
         class="cms-activation__modal__description"
-      >
-        {{ $t('descriptionPopup') }}
-      </div>
+        v-html="$t('descriptionPopup').replace('[path]', `${information.backup}`)"
+      />
       <div
         class="cms-activation__modal__footer_title"
       >
@@ -117,6 +120,12 @@ export default {
       }
       this.loading = false
     },
+    async handleSearch() {
+      this.popup = false
+      this.$nextTick(() => {
+        this.$scrollTo('#vf-apache-configure')
+      })
+    },
     async handleConfirm() {
       this.loading = true
       if(!this.information.status) {
@@ -136,8 +145,9 @@ export default {
   "textOn":"On",
   "textOff":"Off",
   "popupTitle": "Confirm launch!",
-  "subTitlePopup": "You are about to activate your new Frontend Web App. To do this, we will update your .htaccess to add VueFront related apache rules. If you have a custom .htaccess file, we strongly advise your to add the rules manually by following the instructions bellow.",
-  "descriptionPopup": "To ensure your security, we have made a copy of your .htaccess file here [admin/controller/extension/module/d_vuefront/.htaccess.txt]. In case of unexpected situations or even site failure, please restore your old .htaccess file via ftp or your Cpanel file manager.",
+  "subTitlePopup": "You are about to activate your new Frontend Web App. To do this, we will update your .htaccess to add VueFront related apache rules. If you have a custom .htaccess file, we strongly advise your to add the rules manually by following the instructions",
+  "text_bellow": "bellow",
+  "descriptionPopup": "To ensure your security, we will make a copy of your .htaccess file at <br>[path]. In case of unexpected situations or even site failure, please restore your old .htaccess file via ftp or your Cpanel file manager.",
   "buttonConfirm": "Confirm",
   "buttonAbort": "Abort",
   "footerTitlePopup": "Ready to turn your website into a PWA and SPA?"
@@ -160,18 +170,23 @@ export default {
         .vf-modal-dialog {
           .vf-modal-content {
             .vf-modal-body {
-              padding-top: 100px!important;
+              padding-top: 50px!important;
               padding-bottom: 0;
+              padding-left: 110px;
+              padding-right: 110px;
             }
           }
         }
+      }
+      a {
+        cursor: pointer;
       }
       &__image {
         margin-bottom: 30px;
       }
       &__title {
         font-family: 'Open Sans', sans-serif;
-        font-size: 40px;
+        font-size: 30px;
         font-weight: 600;
         font-stretch: normal;
         font-style: normal;
@@ -188,12 +203,14 @@ export default {
         margin-bottom: 20px;
       }
       &__footer_title {
-        margin-bottom: 60px;
+        margin-bottom: 30px;
+        font-weight: 600!important;
+        color: #333!important;
 
       }
       &__subtitle, &__description, &__footer_title {
         font-family: 'Open Sans', sans-serif;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: normal;
         font-stretch: normal;
         font-style: normal;
@@ -216,7 +233,7 @@ export default {
         display: inline-block;
       }
       &__footer_image {
-        margin-top: 100px;
+        margin-top: 50px;
       }
     }
     &__title {

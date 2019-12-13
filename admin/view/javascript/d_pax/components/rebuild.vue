@@ -82,3 +82,13 @@ export default {
   "buildDescription": "If you made any changes via the admin panel, you will need to rebuild your frontend Web App to see them."
 }
 </i18n>
+<style lang="scss">
+  .vf-home__rebuild {
+    h2, h4 {
+      margin-top: 0;
+    }
+    p {
+      margin: 0 0 9px;
+    }
+  }
+</style>
