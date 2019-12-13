@@ -160,7 +160,7 @@ export default {
         .vf-modal-dialog {
           .vf-modal-content {
             .vf-modal-body {
-              padding-top: 100px;
+              padding-top: 100px!important;
               padding-bottom: 0;
             }
           }
