@@ -282,6 +282,7 @@ class ControllerExtensionModuleDVuefront extends Controller
         }
         $this->response->setOutput(json_encode([
             'apache' => $is_apache,
+            'backup' => 'admin/extension/module/d_vuefront/.htaccess.txt',
             'htaccess' => file_exists($root . '/.htaccess'),
             'status' => $status,
             'phpversion' => phpversion(),
