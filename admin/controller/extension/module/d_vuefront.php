@@ -150,45 +150,72 @@ class ControllerExtensionModuleDVuefront extends Controller
 
     public function vf_turn_on()
     {
-
+        $catalog = '';
+        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+            $catalog = HTTPS_CATALOG;
+        } else {
+            $catalog = HTTP_CATALOG;
+        }
         try {
             $rootFolder = realpath(DIR_APPLICATION . '../');
 
+            $catalog_url_info = parse_url($catalog);
+
+            $catalog_path = $catalog_url_info['path'];
+
             if (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") !== false) {
+
+                if(!file_exists($rootFolder . '/.htaccess')) {
+                    file_put_contents($rootFolder.'/.htaccess', "Options +FollowSymlinks
+Options -Indexes
+<FilesMatch \"(?i)((\.tpl|\.ini|\.log|(?<!robots)\.txt))\">
+ Require all denied
+</FilesMatch>
+RewriteEngine On
+RewriteBase ".$catalog_path."
+RewriteRule ^sitemap.xml$ index.php?route=extension/feed/google_sitemap [L]
+RewriteRule ^googlebase.xml$ index.php?route=extension/feed/google_base [L]
+RewriteRule ^system/download/(.*) index.php?route=error/not_found [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
+RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]");
+                }
+
                 if (file_exists($rootFolder . '/.htaccess')) {
                     $inserting = "# VueFront scripts, styles and images
-    RewriteCond %{REQUEST_URI} .*(_nuxt)
-    RewriteCond %{REQUEST_URI} !.*vuefront/_nuxt
-    RewriteRule ^([^?]*) vuefront/$1
-    
-    # VueFront pages
-    
-    # VueFront home page
-    RewriteCond %{REQUEST_URI} !.*(images|index.php|.html|admin|.js|.css|.png|.jpeg|.ico|wp-json|wp-admin|checkout)
-    RewriteCond %{QUERY_STRING} !.*(rest_route)
-    RewriteCond %{DOCUMENT_ROOT}/vuefront/index.html -f
-    RewriteRule ^$ vuefront/index.html [L]
-    
-    RewriteCond %{REQUEST_URI} !.*(images|index.php|.html|admin|.js|.css|.png|.jpeg|.ico|wp-json|wp-admin|checkout)
-    RewriteCond %{QUERY_STRING} !.*(rest_route)
-    RewriteCond %{DOCUMENT_ROOT}/vuefront/index.html !-f
-    RewriteRule ^$ vuefront/200.html [L]
-    
-    # VueFront page if exists html file
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} !.*(images|index.php|.html|admin|.js|.css|.png|.jpeg|.ico|wp-json|wp-admin|checkout)
-    RewriteCond %{QUERY_STRING} !.*(rest_route)
-    RewriteCond %{DOCUMENT_ROOT}/vuefront/$1.html -f
-    RewriteRule ^([^?]*) vuefront/$1.html [L,QSA]
-    
-    # VueFront page if not exists html file
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} !.*(images|index.php|.html|admin|.js|.css|.png|.jpeg|.ico|wp-json|wp-admin|checkout)
-    RewriteCond %{QUERY_STRING} !.*(rest_route)
-    RewriteCond %{DOCUMENT_ROOT}/vuefront/$1.html !-f
-    RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
+RewriteCond %{REQUEST_URI} .*(_nuxt)
+RewriteCond %{REQUEST_URI} !.*/vuefront/_nuxt
+RewriteRule ^([^?]*) vuefront/$1
+
+# VueFront pages
+
+# VueFront home page
+RewriteCond %{REQUEST_URI} !.*(images|index.php|.html|admin|.js|.css|.png|.jpeg|.ico|wp-json|wp-admin|checkout)
+RewriteCond %{QUERY_STRING} !.*(rest_route)
+RewriteCond %{DOCUMENT_ROOT}".$catalog_path."vuefront/index.html -f
+RewriteRule ^$ vuefront/index.html [L]
+
+RewriteCond %{REQUEST_URI} !.*(images|index.php|.html|admin|.js|.css|.png|.jpeg|.ico|wp-json|wp-admin|checkout)
+RewriteCond %{QUERY_STRING} !.*(rest_route)
+RewriteCond %{DOCUMENT_ROOT}".$catalog_path."vuefront/index.html !-f
+RewriteRule ^$ vuefront/200.html [L]
+
+# VueFront page if exists html file
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*(images|index.php|.html|admin|.js|.css|.png|.jpeg|.ico|wp-json|wp-admin|checkout)
+RewriteCond %{QUERY_STRING} !.*(rest_route)
+RewriteCond %{DOCUMENT_ROOT}".$catalog_path."vuefront/$1.html -f
+RewriteRule ^([^?]*) vuefront/$1.html [L,QSA]
+
+# VueFront page if not exists html file
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*(images|index.php|.html|admin|.js|.css|.png|.jpeg|.ico|wp-json|wp-admin|checkout)
+RewriteCond %{QUERY_STRING} !.*(rest_route)
+RewriteCond %{DOCUMENT_ROOT}".$catalog_path."vuefront/$1.html !-f
+RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
 
                     $content = file_get_contents($rootFolder . '/.htaccess');
 
