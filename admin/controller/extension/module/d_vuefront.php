@@ -156,6 +156,7 @@ class ControllerExtensionModuleDVuefront extends Controller
         } else {
             $catalog = HTTP_CATALOG;
         }
+
         try {
             $rootFolder = realpath(DIR_APPLICATION . '../');
 
@@ -164,6 +165,14 @@ class ControllerExtensionModuleDVuefront extends Controller
             $catalog_path = $catalog_url_info['path'];
 
             if (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") !== false) {
+
+                if(!is_writable($rootFolder . '/.htaccess')) {
+                    http_response_code(500);
+                    $this->response->setOutput(json_encode(array(
+                        'error' => 'not_writable_htaccess'
+                    )));
+                    return;
+                }
 
                 if(!file_exists($rootFolder . '/.htaccess')) {
                     file_put_contents($rootFolder.'/.htaccess', "Options +FollowSymlinks

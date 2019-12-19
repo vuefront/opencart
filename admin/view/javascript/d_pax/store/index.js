@@ -14,6 +14,8 @@ export const mutations = {
       state.error = e.graphQLErrors[0].message.error
     } else if (e.graphQLErrors) {
       state.error = e.graphQLErrors
+    } else if (e.response){
+      state.error = e.response.data.error
     } else {
       state.error = e
     }
