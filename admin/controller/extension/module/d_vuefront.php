@@ -166,14 +166,6 @@ class ControllerExtensionModuleDVuefront extends Controller
 
             if (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") !== false) {
 
-                if(!is_writable($rootFolder . '/.htaccess')) {
-                    http_response_code(500);
-                    $this->response->setOutput(json_encode(array(
-                        'error' => 'not_writable_htaccess'
-                    )));
-                    return;
-                }
-
                 if(!file_exists($rootFolder . '/.htaccess')) {
                     file_put_contents($rootFolder.'/.htaccess', "Options +FollowSymlinks
 Options -Indexes
@@ -189,6 +181,14 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
 RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]");
+                }
+
+                if(!is_writable($rootFolder . '/.htaccess')) {
+                    http_response_code(500);
+                    $this->response->setOutput(json_encode(array(
+                        'error' => 'not_writable_htaccess'
+                    )));
+                    return;
                 }
 
                 if (file_exists($rootFolder . '/.htaccess')) {
@@ -257,11 +257,19 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
         $rootFolder = realpath(DIR_APPLICATION . '../');
         if (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") !== false) {
             if (file_exists(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt')) {
+                if(!is_writable($rootFolder . '/.htaccess') || !is_writable(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt')) {
+                    http_response_code(500);
+                    $this->response->setOutput(json_encode(array(
+                        'error' => 'not_writable_htaccess'
+                    )));
+                    return;
+                }
                 $content = file_get_contents(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt');
                 file_put_contents($rootFolder . '/.htaccess', $content);
                 unlink(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt');
             }
         }
+
 
         $this->vf_information();
     }
