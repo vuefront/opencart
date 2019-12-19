@@ -3113,3 +3113,8 @@ catalog/view/theme/default/image/blog_arrow.gif
 image/data/blog_avatar.jpg
 catalog/controller/feed/blog-sitemap-style.xsl
 image/data/
+/vuefront/
+/admin/view/javascript/d_pax/node_modules/
+/admin/view/javascript/d_pax/.vscode/
+/admin/view/javascript/d_pax/.env
+/admin/view/javascript/d_pax/.npmrc

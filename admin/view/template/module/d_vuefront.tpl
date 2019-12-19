@@ -16,160 +16,20 @@
       </div>
     </div>
     <div class="content">
-        <div class="module-content">
-            <div class="module-content__image text-center">
-                <img src="view/image/d_vuefront/logo.png"/>
-            </div>
-            <div class="module-content__form">
-                <div class="module-content__row">
-                    <h3 class="text-center mb-1"><?php echo $text_title; ?></h3>
-                    <div class="input-group  mb-2">
-                        <input id="connect_url" class="form-control" type="text" value="<?php echo $catalog; ?>" readonly>
-                        <div class="input-group-btn">
-                            <button class="clipboard" data-clipboard-target="#connect_url"><?php echo $text_copy; ?></button>
-                        </div>
-                    </div>
-                    <p class="module-content__description"><?php echo $text_description; ?></p>
-                </div>
-                <hr/>
-                <div class="module-content__row">
-
-                    <h3 class="text-center mb-1"><?php echo $text_blog_module; ?></h3>
-                    <div class="text-center">
-                    <?php if($blog) { ?>
-                        <button><?php echo $text_blog_enabled; ?></button>
-                        <p class="module-content__description"><?php echo $text_blog_description; ?></p>
-                    <?php } else { ?>
-                        <button onclick="window.location.href='https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=2419'" target="_blank"><?php echo $text_blog_disabled; ?></button>
-                        <p class="module-content__description"><?php echo $text_blog_description; ?></p>
-                    <?php } ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div style="text-align: center; padding: 30px;"><?php echo $text_powered_by; ?></div>
+        <vf-app class="vuefront-app"></vf-app>
     </div>
   </div>
 </div>
-<style>
-    .module-content
-    {
-        padding: 60px 0;
-    }
-    .module-content__form
-    {
-        max-width: 45%;
-        margin: 0 auto;
-    }
-    .module-content__row
-    {
-        padding-top: 30px;
-        padding-bottom: 30px;
-    }
-    .mb-1
-    {
-        margin-bottom: 15px;
-    }
-    .mb-2
-    {
-        margin-bottom: 25px;
-    }
-    @media(max-width: 767px)
-    {
-        .module-content__form
-        {
-            max-width: 100%;
-        }
-    }
-    .module-content__description
-    {
-        font-size: 12px;
-        line-height: 20px;
-
-        padding-top: 20px;
-
-        text-align: center;
-
-        color: #777;
-    }
-    .module-content__image img
-    {
-        width: 200px;
-    }
-    .text-center
-    {
-        text-align: center;
-    }
-
-    .module-content__form input
-    {
-        width: 100%;
-    }
-    .mb-1
-    {
-        margin-bottom: 15px;
-    }
-    .mb-2
-    {
-        margin-bottom: 25px;
-    }
-    .input-group
-    {
-        position: relative;
-
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-
-        width: 100%;
-
-        border-collapse: separate;
-
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-        -ms-flex-flow: row;
-            flex-flow: row;
-    }
-
-    .input-group .form-control:first-child
-    {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-
-        -webkit-box-flex: 1;
-        -ms-flex: 1;
-            flex: 1;
-    }
-
-    .input-group-btn
-    {
-        font-size: 0;
-
-        position: relative;
-
-        white-space: nowrap;
-    }
-    .input-group-addon,
-    .input-group-btn
-    {
-        margin: 0;
-
-        white-space: nowrap;
-    }
-    .input-group-addon button,
-    .input-group-btn button
-    {
-        height: 100%;
-    }
-</style>
 <script>
-    
-    var clipboard = new ClipboardJS('.clipboard');
-
-    clipboard.on('success', function(e) {
-        $(e.trigger).text('copied!');
-
-        e.clearSelection();
-    });
+document.addEventListener('DOMContentLoaded', function (event) {
+  d_vuefront({
+    selector: '.vuefront-app',
+    baseURL: '<?php echo $baseUrl; ?>',
+    siteUrl: '<?php echo $siteUrl; ?>',
+    tokenUrl: '<?php echo $tokenUrl; ?>',
+    apiURL: '',
+    type: 'opencart'
+  })
+})
 </script>
 <?php echo $footer; ?>
