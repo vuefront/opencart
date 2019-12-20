@@ -3118,3 +3118,4 @@ image/data/
 /admin/view/javascript/d_pax/.vscode/
 /admin/view/javascript/d_pax/.env
 /admin/view/javascript/d_pax/.npmrc
+.htaccess
