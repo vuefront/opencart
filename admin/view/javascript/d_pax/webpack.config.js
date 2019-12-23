@@ -128,11 +128,13 @@ module.exports = (env, argv) => {
                   body = body
                     .split(currentUrl.replace(/http[s]?:/g, ''))
                     .join(proxyUrl.replace(/http[s]?:/g, ''))
-
+                  fs.appendFileSync('./test.html', `${body}\r\n`)
                   let newBuffer = new Buffer.from(body)
 
                   const gzipRes =  isZipped ? zlib.gzipSync(newBuffer) : newBuffer
-                  res.setHeader('content-length', gzipRes.length);
+                  if(isZipped) {
+                    res.setHeader('content-length', gzipRes.length);
+                  }
                   _write.call(res, gzipRes)
                 } catch (e) {
                   _write.call(res, buffer)
