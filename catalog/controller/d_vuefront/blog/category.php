@@ -56,6 +56,8 @@ class ControllerDVuefrontBlogCategory extends Controller
                     'keyword' => $category_info['meta_keyword']
                 )
             );
+        } else {
+          return array();
         }
     }
 
@@ -96,6 +98,17 @@ class ControllerDVuefrontBlogCategory extends Controller
                 'totalPages' => (int) ceil($category_total / $args['size']),
                 'totalElements' => (int) $category_total,
             );
+        } else {
+          return array(
+            'content' => array(),
+            'first' => true,
+            'last' => true,
+            'number' => 1,
+            'numberOfElements' => 0,
+            'size' => 0,
+            'totalPages' => 0,
+            'totalElements' => 0
+          );
         }
     }
 
@@ -112,6 +125,8 @@ class ControllerDVuefrontBlogCategory extends Controller
             }
 
             return $categories;
+        } else {
+          return array();
         }
     }
 
@@ -129,6 +144,8 @@ class ControllerDVuefrontBlogCategory extends Controller
             }
 
             return $result;
+        } else {
+          return '';
         }
     }
 }

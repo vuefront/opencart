@@ -32,6 +32,8 @@ class ControllerDVuefrontBlogReview extends Controller
             $this->model_blog->addReview($args['id'], $reviewData);
 
             return $this->vfload->data('blog/post/get', $args);
+        } else {
+          return array();
         }
     }
 
@@ -59,6 +61,11 @@ class ControllerDVuefrontBlogReview extends Controller
                 'content' => $reviews,
                 'totalElements' => count($reviews)
             );
+        } else {
+          return array(
+            'content' => array(),
+            'totalElements' => 0
+          );
         }
     }
 }

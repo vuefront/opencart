@@ -67,6 +67,8 @@ class ControllerDVuefrontBlogPost extends Controller
                     'keyword' => $post_info['meta_keyword']
                 )
             );
+        } else {
+          return array();
         }
     }
 
@@ -106,6 +108,17 @@ class ControllerDVuefrontBlogPost extends Controller
                 'totalPages' => (int) ceil($post_total / $args['size']),
                 'totalElements' => (int) $post_total,
             );
+        } else {
+          return array(
+            'content' => array(),
+            'first' => true,
+            'last' => true,
+            'number' => 1,
+            'numberOfElements' => 0,
+            'size' => 0,
+            'totalPages' => 0,
+            'totalElements' => 0
+          );
         }
     }
 
