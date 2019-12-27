@@ -68,6 +68,74 @@ If you have shopunity module installed, you can use that for a super quick insta
 
 You can also install the d_blog_module via Shopunity as well. 
 
+## Deploy to hosting (static website)
+### via VueFront Deploy service (recommended)
+1. Install the VueFront CMS Connect App from this repo.
+2. Log in or register an account with VueFront.com
+3. Build your first Web App
+4. Activate the new Frontend Web App (only avalible for Apache servers)
+ > For Nginx you need to add this code to your nginx.config file right after the index rule
+ ```
+location ~ ^((?!image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content|checkout|rest|static|order|themes\/|modules\/|js\/|\/vuefront\/).)*$ {
+    try_files /vuefront/$uri /vuefront/$uri "/vuefront${uri}index.html" /vuefront$uri.html /vuefront/200.html;
+}
+ ```
+ 
+
+### via ftp manually
+1. Via Ftp create a new folder `vuefront` in the root of your OpenCart site on your hosting. 
+2. Build your VueFront Web App on you local computer ([read more](https://vuefront.com/guide/setup.html)) 
+```
+yarn generate
+```
+3. Copy all files from folder `dist` to the newly created `vuefront` folder
+4. modify you .htaccess file by adding after RewriteBase rule the following rules:
+```htaccess
+# VueFront scripts, styles and images
+RewriteCond %{REQUEST_URI} .*(_nuxt)
+RewriteCond %{REQUEST_URI} !.*/vuefront/_nuxt
+RewriteRule ^([^?]*) vuefront/$1
+# VueFront sw.js
+RewriteCond %{REQUEST_URI} .*(sw.js)
+RewriteCond %{REQUEST_URI} !.*/vuefront/sw.js
+RewriteRule ^([^?]*) vuefront/$1
+# VueFront favicon.ico
+RewriteCond %{REQUEST_URI} .*(favicon.ico)
+RewriteCond %{REQUEST_URI} !.*/vuefront/favicon.ico
+RewriteRule ^([^?]*) vuefront/$1
+# VueFront pages
+# VueFront home page
+RewriteCond %{REQUEST_URI} !.*(image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content|checkout|rest|static|order|themes\/|modules\/|js\/|\/vuefront\/)
+RewriteCond %{QUERY_STRING} !.*(rest_route)
+RewriteCond %{DOCUMENT_ROOT}".$document_path."vuefront/index.html -f
+RewriteRule ^$ vuefront/index.html [L]
+RewriteCond %{REQUEST_URI} !.*(image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content|checkout|rest|static|order|themes\/|modules\/|js\/|\/vuefront\/)
+RewriteCond %{QUERY_STRING} !.*(rest_route)
+RewriteCond %{DOCUMENT_ROOT}".$document_path."vuefront/index.html !-f
+RewriteRule ^$ vuefront/200.html [L]
+# VueFront page if exists html file
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*(image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content|checkout|rest|static|order|themes\/|modules\/|js\/|\/vuefront\/)
+RewriteCond %{QUERY_STRING} !.*(rest_route)
+RewriteCond %{DOCUMENT_ROOT}".$document_path."vuefront/$1.html -f
+RewriteRule ^([^?]*) vuefront/$1.html [L,QSA]
+# VueFront page if not exists html file
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*(image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content|checkout|rest|static|order|themes\/|modules\/|js\/|\/vuefront\/)
+RewriteCond %{QUERY_STRING} !.*(rest_route)
+RewriteCond %{DOCUMENT_ROOT}".$document_path."vuefront/$1.html !-f
+RewriteRule ^([^?]*) vuefront/200.html [L,QSA]
+```
+
+ > For Nginx you need to add this code to your nginx.config file right after the index rule
+ ```
+location ~ ^((?!image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content|checkout|rest|static|order|themes\/|modules\/|js\/|\/vuefront\/).)*$ {
+    try_files /vuefront/$uri /vuefront/$uri "/vuefront${uri}index.html" /vuefront$uri.html /vuefront/200.html;
+}
+ ```
+ 
 ## Support
 For support please contact us at [Discord](https://discord.gg/C9vcTCQ)
 
