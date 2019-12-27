@@ -74,7 +74,7 @@ You can also install the d_blog_module via Shopunity as well.
 2. Log in or register an account with VueFront.com
 3. Build your first Web App
 4. Activate the new Frontend Web App (only avalible for Apache servers)
- > For Nginx you need to add this code to your nginx.config file right after the index rule
+ > For Nginx you need to add this code to your `nginx.config` file right after the `index` directive
  ```
 location ~ ^((?!image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content|checkout|rest|static|order|themes\/|modules\/|js\/|\/vuefront\/).)*$ {
     try_files /vuefront/$uri /vuefront/$uri "/vuefront${uri}index.html" /vuefront$uri.html /vuefront/200.html;
@@ -89,7 +89,7 @@ location ~ ^((?!image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content
 yarn generate
 ```
 3. Copy all files from folder `dist` to the newly created `vuefront` folder
-4. modify you .htaccess file by adding after RewriteBase rule the following rules:
+4. modify you `.htaccess` file by adding after `RewriteBase` rule the following rules:
 ```htaccess
 # VueFront scripts, styles and images
 RewriteCond %{REQUEST_URI} .*(_nuxt)
