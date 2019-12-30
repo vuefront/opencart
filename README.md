@@ -95,8 +95,8 @@ yarn create vuefront-app
 # When promote, provide the CMS Connect URL, which you coppied at step 3.
 yarn generate
 ```
-3. Copy all files from folder `dist` to the newly created `vuefront` folder
-4. modify you `.htaccess` file by adding after `RewriteBase` rule the following rules:
+6. Copy all files from folder `dist` to the newly created `vuefront` folder
+7. modify you `.htaccess` file by adding after `RewriteBase` rule the following rules:
 ```htaccess
 # VueFront scripts, styles and images
 RewriteCond %{REQUEST_URI} .*(_nuxt)
