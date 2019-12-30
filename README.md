@@ -42,10 +42,12 @@ This repo stores the codebase for the CMS Connect App for OpenCart. Because of O
 ### OpenCart Blog 
 Since OpenCart does not have a built-in Blog, we use the [Free Blog Module](https://github.com/Dreamvention/2_d_blog_module) by Dreamvention for version 2.x-3.x
 
-## How to install?
+# Installation
+
+## Install VueFront CMS Connect App
 Php version required >= 5.5, <= 7.2 (this limitation will be removed in the future)
 
-### Quick Install
+### Quick Install (recommended)
 1. [Download](https://github.com/vuefront/opencart/releases) the **compiled** Extensions from the latest releases. 
 2. Upload via OpenCart Admin -> Extension Installer
 3. Go to Extensions -> Modules -> VueFront and click install
@@ -68,7 +70,7 @@ If you have shopunity module installed, you can use that for a super quick insta
 
 You can also install the d_blog_module via Shopunity as well. 
 
-## Deploy to hosting (static website)
+## Deploy VueFront Web App to hosting (static website)
 ### via VueFront Deploy service (recommended)
 1. Install the VueFront CMS Connect App from this repo.
 2. Log in or register an account with VueFront.com
@@ -83,9 +85,14 @@ location ~ ^((?!image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content
  
 
 ### via ftp manually
-1. Via Ftp create a new folder `vuefront` in the root of your OpenCart site on your hosting. 
-2. Build your VueFront Web App on you local computer ([read more](https://vuefront.com/guide/setup.html)) 
+1. Install the VueFront CMS Connect App from this repo.
+2. Log in or register an account with VueFront.com
+3. Copy the CMS Connect URL 
+4. Via Ftp create a new folder `vuefront` in the root of your OpenCart site on your hosting. 
+5. Via command line build your VueFront Web App ([read more](https://vuefront.com/guide/setup.html)) 
 ```
+yarn create vuefront-app
+# When promote, provide the CMS Connect URL, which you coppied at step 3.
 yarn generate
 ```
 3. Copy all files from folder `dist` to the newly created `vuefront` folder
