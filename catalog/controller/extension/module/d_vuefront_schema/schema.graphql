@@ -352,6 +352,20 @@ type LoginResult {
   customer: Customer
 }
 
+type FieldValue {
+    text: String
+    value: String
+}
+
+type AddressField {
+  type: String
+  name: String
+  label: String
+  required: Boolean
+  values: [FieldValue]
+}
+
+
 type RootMutationType {
   uploadFile(file: Upload): FileResult
   accountLogin(email: String, password: String): LoginResult
@@ -377,6 +391,8 @@ type RootMutationType {
 }
 
 type RootQueryType {
+  paymentAddress: [AddressField]
+  shippingAddress: [AddressField]
   home: HomeResult
   zone(id: Int): Zone
   zonesList(page: Int = 1, size: Int = 10, search: String, country_id: String, sort: String = "name", order: String = "ASC"): ZonesResult
