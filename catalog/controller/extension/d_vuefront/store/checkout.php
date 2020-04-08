@@ -7,6 +7,54 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         );
     }
 
+    public function paymentMethods() {
+        $methods = array();
+
+        $methods[] = array(
+            'id' => 'paypal_id',
+            'codename' => "paypal",
+            "name" => "PayPal"
+        );
+
+        $methods[] = array(
+            'id' => 'credit_card',
+            'codename' => "credit_card",
+            "name" => "Crefit Card"
+        );
+
+        $methods[] = array(
+            'id' => 'free',
+            'codename' => "free",
+            "name" => "Free"
+        );
+
+        return $methods;
+    }
+
+    public function shippingMethods() {
+        $methods = array();
+        
+        $methods[] = array(
+            'id' => 'shipping_1',
+            'codename' => "shipping_1",
+            "name" => "Shipping method 1"
+        );
+
+        $methods[] = array(
+            'id' => 'shipping_2',
+            'codename' => "shipping_2",
+            "name" => "Shipping method 2"
+        );
+
+        $methods[] = array(
+            'id' => 'shipping_3',
+            'codename' => "shipping_3",
+            "name" => "Shipping method 3"
+        );
+
+        return $methods;
+    }
+
     public function paymentAddress() {
         $fields = array();
 
@@ -100,8 +148,25 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
 			}
 		}
 
+        $agree = null;
 
-        return $fields;
+        $this->load->language('checkout/checkout');
+        if ($this->config->get('config_checkout_id')) {
+			$this->load->model('catalog/information');
+
+			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_checkout_id'));
+
+			if ($information_info) {
+				$agree = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_checkout_id'), true), $information_info['title'], $information_info['title']);
+			}
+		}
+        
+        
+
+        return array(
+            'fields' => $fields,
+            'agree' => $agree
+        );
     }
 
     public function shippingAddress() {

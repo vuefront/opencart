@@ -31,6 +31,8 @@
     "checkoutLink": "store/checkout/link",
     "paymentAddress": "store/checkout/paymentAddress",
     "shippingAddress": "store/checkout/shippingAddress",
+    "paymentMethods": "store/checkout/paymentMethods",
+    "shippingMethods": "store/checkout/shippingMethods",
 
     "cart": "store/cart/get",
     "addToCart": "store/cart/add",

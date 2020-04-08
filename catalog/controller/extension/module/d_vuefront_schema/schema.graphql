@@ -365,6 +365,17 @@ type AddressField {
   values: [FieldValue]
 }
 
+type ShippingMethod {
+  id: String
+  codename: String
+  name: String
+}
+
+type PaymentMethod {
+  id: String
+  codename: String
+  name: String
+}
 
 type RootMutationType {
   uploadFile(file: Upload): FileResult
@@ -390,8 +401,15 @@ type RootMutationType {
   contactSend(name: String, email: String, message: String): ContactResult
 }
 
+type PaymentAddressResult {
+  fields: [AddressField]
+  agree: String
+}
+
 type RootQueryType {
-  paymentAddress: [AddressField]
+  shippingMethods: [ShippingMethod]
+  paymentMethods: [PaymentMethod]
+  paymentAddress: PaymentAddressResult
   shippingAddress: [AddressField]
   home: HomeResult
   zone(id: Int): Zone
