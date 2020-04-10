@@ -33,6 +33,7 @@
     "shippingAddress": "store/checkout/shippingAddress",
     "paymentMethods": "store/checkout/paymentMethods",
     "shippingMethods": "store/checkout/shippingMethods",
+    "createOrder": "store/checkout/createOrder",
 
     "cart": "store/cart/get",
     "addToCart": "store/cart/add",

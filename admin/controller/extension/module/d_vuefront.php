@@ -305,6 +305,44 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
         }
     }
 
+    public function vf_apps()
+    {
+        $this->load->model('extension/d_opencart_patch/setting');
+        $result = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');
+
+        $this->response->setOutput(json_encode($result));
+    }
+
+    public function vf_apps_create() {
+        $this->load->model('extension/d_opencart_patch/setting');
+        $setting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');
+        $d = new DateTime();
+        
+        $setting[] = array(
+            'codename' => $this->request->post['codename'],
+            'jwt' => $this->request->post['jwt'],
+            'dateAdded' => $d->format('Y-m-d\TH:i:s.u')
+        );
+
+        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, array(
+            $this->codename.'_apps' => $setting
+        ));
+
+        $this->response->setOutput(json_encode(array('success' => 'success')));
+    }
+
+    public function vf_apps_remove() {
+        $this->load->model('extension/d_opencart_patch/setting');
+        $setting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');
+        unset($setting[$this->request->post['key']]);
+
+        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, array(
+            $this->codename.'_apps' => $setting
+        ));
+
+        $this->response->setOutput(json_encode(array('success' => 'success')));
+    }
+
     public function vf_information()
     {
         $root = realpath(DIR_APPLICATION . '../');

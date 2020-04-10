@@ -377,6 +377,11 @@ type PaymentMethod {
   name: String
 }
 
+input InputField {
+  name: String
+  value: String
+}
+
 type RootMutationType {
   uploadFile(file: Upload): FileResult
   accountLogin(email: String, password: String): LoginResult
@@ -399,6 +404,16 @@ type RootMutationType {
   addToWishlist(id: Int): [Product]
   removeWishlist(id: String): [Product]
   contactSend(name: String, email: String, message: String): ContactResult
+  createOrder(paymentAddress: [InputField], shippingAddress: [InputField], paymentMethod: String, shippingMethod: String): CreateOrderResult
+}
+
+type CreateOrderResult {
+  order:Order,
+  url: String
+}
+
+type Order {
+  id: String
 }
 
 type PaymentAddressResult {
