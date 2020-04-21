@@ -37,34 +37,52 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         return $methods;
     }
 
-    public function shippingMethods() {
-        $this->load->model('extension/module/d_vuefront');
+    public function shippingMethods($args) {
+        $method_data = array();
 
-        $response = $this->model_extension_module_d_vuefront->requestCheckout(
-            '{
-                shippings {
-                    setting
-                    codename
-                    status
-                    name
-              }
-            }',
-            array()
-        );
+        $this->load->model('setting/extension');
 
-        $methods = array();
+        $results = $this->model_setting_extension->getExtensions('shipping');
 
-        foreach($response['shippings'] as $key => $value) {
-            if($value['status']) {
-                $methods[] = array(
-                    'id' => $value['codename'],
-                    'codename' => $value['codename'],
-                    "name" => $value['name']
-                );    
+        foreach ($results as $result) {
+            if ($this->config->get('shipping_' . $result['code'] . '_status')) {
+                    $this->load->model('extension/shipping/' . $result['code']);
+
+                    $quote = $this->{'model_extension_shipping_' . $result['code']}->getQuote($this->session->data['shipping_address']);
+
+                    if ($quote) {
+                        $method_data[$result['code']] = array(
+                        'id' => $quote['code'],
+                        'name'      => $quote['title'],
+                        'codename'      => $quote['code'],
+                        'sort_order' => $quote['sort_order'],
+                        'quote' => $quote['quote']
+                    );
+                    }
             }
         }
 
-        return $methods;
+        $sort_order = array();
+
+        foreach ($method_data as $key => $value) {
+            $sort_order[$key] = $value['sort_order'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $method_data);
+
+        $result = array();
+
+        foreach ($method_data as $quote) {
+            foreach ($quote['quote'] as $value) {
+                $result[] = array(
+                    'id' => $value['code'],
+                    'name'      => $value['title'] . " - " . $value['text'],
+                    'codename'      => $value['code']
+                );
+            }
+        }
+        
+        return $result;
     }
 
     public function paymentAddress() {
@@ -115,13 +133,13 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
 
         $fields[] = array(
             'type' => 'country',
-            'name' => 'country',
+            'name' => 'country_id',
             'required' => true
         );
 
         $fields[] = array(
             'type' => 'zone',
-            'name' => 'zone',
+            'name' => 'zone_id',
             'required' => true
         );
 
@@ -223,14 +241,13 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
 
         $fields[] = array(
             'type' => 'country',
-            'name' => 'country',
+            'name' => 'country_id',
             'required' => true
         );
 
-
         $fields[] = array(
           'type' => 'zone',
-          'name' => 'zone',
+          'name' => 'zone_id',
           'required' => true
       );
 
@@ -238,40 +255,79 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
     }
 
     public function createOrder($args) {
-        $this->load->model('extension/module/d_vuefront');
+        $this->session->data['shipping_address'] = array();
 
-        $paymentAddress = array();
-
-        foreach ($args['paymentAddress'] as $value) {
-            $paymentAddress[$value['name']] = $value['value'];
+        foreach ($this->shippingAddress() as $value) {
+            $this->session->data['shipping_address'][$value['name']] = '';
         }
 
-        $shippingAddress = array();
+        $this->session->data['payment_address'] = array();
+
+        $paymentAddress = $this->paymentAddress();
+        foreach ($paymentAddress['fields'] as $value) {
+            $this->session->data['payment_address'][$value['name']] = '';
+        }
+
+        $this->session->data['payment_method'] = null;
+        $this->session->data['shipping_method'] = null;
+        return array('success'=> 'success');
+    }
+
+    public function updateOrder($args) {
+        foreach ($args['paymentAddress'] as $value) {
+            if ($value['value']) {
+                $this->session->data['payment_address'][$value['name']] = $value['value'];
+            }
+        }
 
         foreach ($args['shippingAddress'] as $value) {
-            $shippingAddress[$value['name']] = $value['value'];
+            if ($value['value']) {
+                $this->session->data['shipping_address'][$value['name']] = $value['value'];
+            }
         }
 
+        if (!empty($args['shippingMethod'])) {
+            $shipping = explode('.', $args['shippingMethod']);
+
+            $this->load->model('extension/shipping/'.$shipping[0]);
+
+            $quote = $this->{'model_extension_shipping_' . $shipping[0]}->getQuote($this->session->data['shipping_address']);
+            if ($quote) {
+                $this->session->data['shipping_method'] = $quote['quote'][$shipping[1]];
+            }
+        }
+
+        $this->session->data['payment_method'] = $args['paymentMethod'];
+
+        return array(
+            'paymentMethods' => $this->vfload->resolver('store/checkout/paymentMethods'),
+            'shippingMethods' => $this->vfload->resolver('store/checkout/shippingMethods'),
+            'totals' => $this->vfload->resolver('store/checkout/totals'),
+        );
+    }
+
+    public function confirmOrder() {
+        $this->load->model('extension/module/d_vuefront');
 
         $response = $this->model_extension_module_d_vuefront->requestCheckout(
-            'query($pCodename: String, $sCodename: String){
-                payment(codename: $pCodename) {
-                    codename
-                    name
-                }
-                shipping(codename: $sCodename) {
+            'query($codename: String){
+                payment(codename: $codename) {
                     codename
                     name
                 }
             }',
             array(
-                'pCodename' => $args['paymentMethod'],
-                'sCodename' => $args['shippingMethod']
+                'codename' =>  $this->session->data['payment_method']
             )
         );
 
-        $shippingMethod = $response['shipping'];
         $paymentMethod = $response['payment'];
+
+        $shippingAddress = $this->session->data['shipping_address'];
+        $paymentAddress = $this->session->data['payment_address'];
+
+        $shippingMethod = $this->session->data['shipping_method'];
+
 
         $order_data = array();
 
@@ -346,8 +402,8 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         $this->load->model('localisation/country');
         $this->load->model('localisation/zone');
         
-        $country_payment = $this->model_localisation_country->getCountry($paymentAddress['country']);
-        $zone_payment = $this->model_localisation_zone->getZone($paymentAddress['zone']);
+        $country_payment = $this->model_localisation_country->getCountry($paymentAddress['country_id']);
+        $zone_payment = $this->model_localisation_zone->getZone($paymentAddress['zone_id']);
 
         $order_data['payment_firstname'] = $paymentAddress['firstName'];
         $order_data['payment_lastname'] = $paymentAddress['lastName'];
@@ -357,17 +413,17 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         $order_data['payment_city'] = $paymentAddress['city'];
         $order_data['payment_postcode'] = $paymentAddress['postcode'];
         $order_data['payment_zone'] = $zone_payment['name'];
-        $order_data['payment_zone_id'] = $paymentAddress['zone'];
+        $order_data['payment_zone_id'] = $paymentAddress['zone_id'];
         $order_data['payment_country'] = $country_payment['name'];
-        $order_data['payment_country_id'] = $paymentAddress['country'];
+        $order_data['payment_country_id'] = $paymentAddress['country_id'];
         $order_data['payment_address_format'] = (isset($paymentAddress['address_format']) ? $paymentAddress['address_format'] : '');
         $order_data['payment_custom_field'] = (isset($paymentAddress['custom_field']) ? $paymentAddress['custom_field'] : array());
 
         $order_data['payment_method'] = $paymentMethod['name'];
         $order_data['payment_code'] = $paymentMethod['codename'];
 
-        $country_shipping = $this->model_localisation_country->getCountry($shippingAddress['country']);
-        $zone_shipping = $this->model_localisation_zone->getZone($shippingAddress['zone']);
+        $country_shipping = $this->model_localisation_country->getCountry($shippingAddress['country_id']);
+        $zone_shipping = $this->model_localisation_zone->getZone($shippingAddress['zone_id']);
 
         if ($this->cart->hasShipping()) {
             
@@ -379,14 +435,23 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
             $order_data['shipping_city'] = $shippingAddress['city'];
             $order_data['shipping_postcode'] = $shippingAddress['postcode'];
             $order_data['shipping_zone'] = $zone_shipping['name'];
-            $order_data['shipping_zone_id'] = $shippingAddress['zone'];
+            $order_data['shipping_zone_id'] = $shippingAddress['zone_id'];
             $order_data['shipping_country'] = $country_shipping['name'];
-            $order_data['shipping_country_id'] = $shippingAddress['country'];
+            $order_data['shipping_country_id'] = $shippingAddress['country_id'];
             $order_data['shipping_address_format'] = (isset($shippingAddress['address_format']) ? $shippingAddress['address_format'] : '');
             $order_data['shipping_custom_field'] = (isset($shippingAddress['custom_field']) ? $shippingAddress['custom_field'] : array());
 
-            $order_data['shipping_method'] = $shippingMethod['name'];
-            $order_data['shipping_code'] = $shippingMethod['codename'];
+            if (isset($this->session->data['shipping_method']['title'])) {
+                $order_data['shipping_method'] = $this->session->data['shipping_method']['title'];
+            } else {
+                $order_data['shipping_method'] = '';
+            }
+
+            if (isset($this->session->data['shipping_method']['code'])) {
+                $order_data['shipping_code'] = $this->session->data['shipping_method']['code'];
+            } else {
+                $order_data['shipping_code'] = '';
+            }
         } else {
             $order_data['shipping_firstname'] = '';
             $order_data['shipping_lastname'] = '';
@@ -456,7 +521,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
             }
         }
 
-        $order_data['comment'] = '';//$this->session->data['comment'];
+        $order_data['comment'] = '';
         $order_data['total'] = $total_data['total'];
 
         if (isset($this->request->cookie['tracking'])) {
@@ -523,14 +588,13 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         $this->session->data['order_id'] = $this->model_checkout_order->addOrder($order_data);
 
         $response = $this->model_extension_module_d_vuefront->requestCheckout(
-            'mutation($paymentMethod: String, $shippingMethod: String, $total: Float, $callback: String) {
-                createOrder(paymentMethod: $paymentMethod, shippingMethod: $shippingMethod, total: $total, callback: $callback) {
+            'mutation($paymentMethod: String, $total: Float, $callback: String) {
+                createOrder(paymentMethod: $paymentMethod, total: $total, callback: $callback) {
                     url
                 }
             }',
             array(
                 'paymentMethod' => $paymentMethod['codename'],
-                'shippingMethod' => $shippingMethod['codename'],
                 'total' => floatval($total_data['total']),
                 'callback' => $this->url->link('extension/d_vuefront/store/checkout/callback', 'order_id='.$this->session->data['order_id'], true)
             )
@@ -544,14 +608,65 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
     public function callback() {
         $this->load->model('checkout/order');
 
-        $rawInput       = file_get_contents('php://input');
+        $rawInput = file_get_contents('php://input');
 
-        $input          = json_decode($rawInput, true);
-        if($input['status'] == 'PENDING') {
+        $input = json_decode($rawInput, true);
+        if($input['status'] == 'COMPLETE') {
             $order_status_id = $this->config->get('config_order_status_id');
 
             $this->model_checkout_order->addOrderHistory($this->request->get['order_id'], $order_status_id);
         }
     }
 
+    public function totals() {
+        $totals = array();
+        $taxes = $this->cart->getTaxes();
+        $total = 0;
+
+        // Because __call can not keep var references so we put them into an array.
+        $total_data = array(
+            'totals' => &$totals,
+            'taxes'  => &$taxes,
+            'total'  => &$total
+        );
+
+        $this->load->model('setting/extension');
+
+        $sort_order = array();
+
+        $results = $this->model_setting_extension->getExtensions('total');
+
+        foreach ($results as $key => $value) {
+            $sort_order[$key] = $this->config->get('total_' . $value['code'] . '_sort_order');
+        }
+
+        array_multisort($sort_order, SORT_ASC, $results);
+
+        foreach ($results as $result) {
+            if ($this->config->get('total_' . $result['code'] . '_status')) {
+                $this->load->model('extension/total/' . $result['code']);
+                // We have to put the totals in an array so that they pass by reference.
+                $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
+            }
+        }
+
+        $sort_order = array();
+
+        foreach ($totals as $key => $value) {
+            $sort_order[$key] = $value['sort_order'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $totals);
+
+        $result = array();
+
+        foreach ($totals as $total) {
+            $result[] = array(
+                'title' => $total['title'],
+                'text'  => $this->currency->format($total['value'], $this->session->data['currency'])
+            );
+        }
+
+        return $result;
+    }
 }
