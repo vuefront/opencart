@@ -361,7 +361,6 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
         }
 
         $this->session->data['payment_method'] = $args['paymentMethod'];
-        echo '<pre>'; print_r($this->session->data); echo '</pre>';
 
         return array(
             'paymentMethods' => $this->vfload->resolver('store/checkout/paymentMethods'),
