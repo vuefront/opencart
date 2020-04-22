@@ -481,9 +481,6 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
         $order_data['payment_address_format'] = (isset($paymentAddress['address_format']) ? $paymentAddress['address_format'] : '');
         $order_data['payment_custom_field'] = (isset($paymentAddress['custom_field']) ? $paymentAddress['custom_field'] : array());
 
-        echo json_encode($order_data);
-        exit;
-
         $order_data['payment_method'] = $paymentMethod['name'];
         $order_data['payment_code'] = $paymentMethod['codename'];
 
