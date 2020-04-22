@@ -176,7 +176,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
                 $fields[] = array(
                     'type' => $custom_field['type'],
                     'label' => html_entity_decode($custom_field['name'], ENT_QUOTES, 'UTF-8'),
-                    'name' => "vfCustomField-".$custom_field["location"].'.'.$custom_field["custom_field_id"],
+                    'name' => "vfCustomField-".$custom_field["location"].'-'.$custom_field["custom_field_id"],
                     'required' => $custom_field['required'],
                     'values' => $values
                 );
@@ -280,7 +280,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
                 $fields[] = array(
                     'type' => $custom_field['type'],
                     'label' => html_entity_decode($custom_field['name'], ENT_QUOTES, 'UTF-8'),
-                    'name' => "vfCustomField-".$custom_field["location"].'.'.$custom_field["custom_field_id"],
+                    'name' => "vfCustomField-".$custom_field["location"].'-'.$custom_field["custom_field_id"],
                     'required' => $custom_field['required'],
                     'values' => $values
                 );
@@ -319,7 +319,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
             if (strpos($value['name'], "vfCustomField-") !== false) {
                 if ($value['value']) {
                     $field_name = str_replace("vfCustomField-", "", $value['name']);
-                    $field_name = explode('.', $field_name);
+                    $field_name = explode('-', $field_name);
                     if (!isset($this->session->data['payment_address']['custom_field'][$field_name[0]])) {
                         $this->session->data['payment_address']['custom_field'][$field_name[0]] = array();
                     }
@@ -336,7 +336,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
             if (strpos($value['name'], "vfCustomField-") !== false) {
                 if ($value['value']) {
                     $field_name = str_replace("vfCustomField-", "", $value['name']);
-                    $field_name = explode('.', $field_name);
+                    $field_name = explode('-', $field_name);
                     if (!isset($this->session->data['shipping_address']['custom_field'][$field_name[0]])) {
                         $this->session->data['shipping_address']['custom_field'][$field_name[0]] = array();
                     }
