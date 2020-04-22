@@ -662,7 +662,10 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
         );
 
         return array(
-            'url' => $response['createOrder']['url']
+            'url' => $response['createOrder']['url'],
+            'order' => array(
+                'id' => $this->session->data['order_id']
+            )
         );
     }
 
