@@ -1,13 +1,16 @@
 <?php
 
-class ControllerExtensionDVuefrontStoreCheckout extends Controller {
-    public function link() {
+class ControllerExtensionDVuefrontStoreCheckout extends Controller
+{
+    public function link()
+    {
         return array(
             'link' => $this->url->link('checkout/checkout')
         );
     }
 
-    public function paymentMethods() {
+    public function paymentMethods()
+    {
         $this->load->model('extension/module/d_vuefront');
 
         $response = $this->model_extension_module_d_vuefront->requestCheckout(
@@ -24,20 +27,21 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
 
         $methods = array();
 
-        foreach($response['payments'] as $key => $value) {
-            if($value['status']) {
+        foreach ($response['payments'] as $key => $value) {
+            if ($value['status']) {
                 $methods[] = array(
                     'id' => $value['codename'],
                     'codename' => $value['codename'],
                     "name" => $value['name']
-                );    
+                );
             }
         }
 
         return $methods;
     }
 
-    public function shippingMethods($args) {
+    public function shippingMethods($args)
+    {
         $method_data = array();
 
         $this->load->model('setting/extension');
@@ -46,19 +50,19 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
 
         foreach ($results as $result) {
             if ($this->config->get('shipping_' . $result['code'] . '_status')) {
-                    $this->load->model('extension/shipping/' . $result['code']);
+                $this->load->model('extension/shipping/' . $result['code']);
 
-                    $quote = $this->{'model_extension_shipping_' . $result['code']}->getQuote($this->session->data['shipping_address']);
+                $quote = $this->{'model_extension_shipping_' . $result['code']}->getQuote($this->session->data['shipping_address']);
 
-                    if ($quote) {
-                        $method_data[$result['code']] = array(
+                if ($quote) {
+                    $method_data[$result['code']] = array(
                         'id' => $quote['code'],
                         'name'      => $quote['title'],
                         'codename'      => $quote['code'],
                         'sort_order' => $quote['sort_order'],
                         'quote' => $quote['quote']
                     );
-                    }
+                }
             }
         }
 
@@ -85,7 +89,8 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         return $result;
     }
 
-    public function paymentAddress() {
+    public function paymentAddress()
+    {
         $fields = array();
 
         $fields[] = array(
@@ -144,16 +149,16 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         );
 
         // Custom Fields
-		$data['custom_fields'] = array();
+        $data['custom_fields'] = array();
 
-		$this->load->model('account/custom_field');
+        $this->load->model('account/custom_field');
 
-		$custom_fields = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
+        $custom_fields = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
 
-		foreach ($custom_fields as $custom_field) {
-			if ($custom_field['location'] == 'address') {
+        foreach ($custom_fields as $custom_field) {
+            if ($custom_field['location'] == 'address') {
                 $values = array();
-                if(!empty($custom_field['custom_field_value'])) {
+                if (!empty($custom_field['custom_field_value'])) {
                     foreach ($custom_field['custom_field_value'] as $custom_field_value) {
                         $values[] = array(
                             'text' => html_entity_decode($custom_field_value['name'], ENT_QUOTES, 'UTF-8'),
@@ -171,35 +176,34 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
                 $fields[] = array(
                     'type' => $custom_field['type'],
                     'label' => html_entity_decode($custom_field['name'], ENT_QUOTES, 'UTF-8'),
-                    'name' => $name,
+                    'name' => "vfCustomField-".$custom_field["location"].'.'.$custom_field["custom_field_id"],
                     'required' => $custom_field['required'],
                     'values' => $values
                 );
-			}
-		}
+            }
+        }
 
         $agree = null;
 
         $this->load->language('checkout/checkout');
         if ($this->config->get('config_checkout_id')) {
-			$this->load->model('catalog/information');
+            $this->load->model('catalog/information');
 
-			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_checkout_id'));
+            $information_info = $this->model_catalog_information->getInformation($this->config->get('config_checkout_id'));
 
-			if ($information_info) {
-				$agree = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_checkout_id'), true), $information_info['title'], $information_info['title']);
-			}
-		}
+            if ($information_info) {
+                $agree = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_checkout_id'), true), $information_info['title'], $information_info['title']);
+            }
+        }
         
-        
-
         return array(
             'fields' => $fields,
             'agree' => $agree
         );
     }
 
-    public function shippingAddress() {
+    public function shippingAddress()
+    {
         $fields = array();
 
         $fields[] = array(
@@ -249,19 +253,55 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
           'type' => 'zone',
           'name' => 'zone_id',
           'required' => true
-      );
+        );
+
+        $this->load->model('account/custom_field');
+
+        $custom_fields = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
+
+        foreach ($custom_fields as $custom_field) {
+            if ($custom_field['location'] == 'address') {
+                $values = array();
+                if (!empty($custom_field['custom_field_value'])) {
+                    foreach ($custom_field['custom_field_value'] as $custom_field_value) {
+                        $values[] = array(
+                            'text' => html_entity_decode($custom_field_value['name'], ENT_QUOTES, 'UTF-8'),
+                            'value' => $custom_field_value['custom_field_value_id']
+                        );
+                    }
+                }
+                $name = explode(' ', html_entity_decode($custom_field['name'], ENT_QUOTES, 'UTF-8'));
+                foreach ($name as $key => $value) {
+                    $name[$key] = ucfirst($value);
+                }
+
+                $name = implode('', $name);
+                $name = str_replace('&', '', $name);
+                $fields[] = array(
+                    'type' => $custom_field['type'],
+                    'label' => html_entity_decode($custom_field['name'], ENT_QUOTES, 'UTF-8'),
+                    'name' => "vfCustomField-".$custom_field["location"].'.'.$custom_field["custom_field_id"],
+                    'required' => $custom_field['required'],
+                    'values' => $values
+                );
+            }
+        }
+      
 
         return $fields;
     }
 
-    public function createOrder($args) {
+    public function createOrder($args)
+    {
         $this->session->data['shipping_address'] = array();
 
         foreach ($this->shippingAddress() as $value) {
             $this->session->data['shipping_address'][$value['name']] = '';
         }
 
-        $this->session->data['payment_address'] = array();
+        $this->session->data['payment_address'] = array(
+            'custom_field' => array()
+        );
 
         $paymentAddress = $this->paymentAddress();
         foreach ($paymentAddress['fields'] as $value) {
@@ -273,16 +313,39 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         return array('success'=> 'success');
     }
 
-    public function updateOrder($args) {
+    public function updateOrder($args)
+    {
         foreach ($args['paymentAddress'] as $value) {
-            if ($value['value']) {
-                $this->session->data['payment_address'][$value['name']] = $value['value'];
+            if (strpos($value['name'], "vfCustomField-") !== false) {
+                if ($value['value']) {
+                    $field_name = str_replace("vfCustomField-", "", $value['name']);
+                    $field_name = explode('.', $field_name);
+                    if (!isset($this->session->data['payment_address']['custom_field'][$field_name[0]])) {
+                        $this->session->data['payment_address']['custom_field'][$field_name[0]] = array();
+                    }
+                    $this->session->data['payment_address']['custom_field'][$field_name[0]][$field_name[1]] = $value['value'];
+                }
+            } else {
+                if ($value['value']) {
+                    $this->session->data['payment_address'][$value['name']] = $value['value'];
+                }
             }
         }
 
         foreach ($args['shippingAddress'] as $value) {
-            if ($value['value']) {
-                $this->session->data['shipping_address'][$value['name']] = $value['value'];
+            if (strpos($value['name'], "vfCustomField-") !== false) {
+                if ($value['value']) {
+                    $field_name = str_replace("vfCustomField-", "", $value['name']);
+                    $field_name = explode('.', $field_name);
+                    if (!isset($this->session->data['shipping_address']['custom_field'][$field_name[0]])) {
+                        $this->session->data['shipping_address']['custom_field'][$field_name[0]] = array();
+                    }
+                    $this->session->data['shipping_address']['custom_field'][$field_name[0]][$field_name[1]] = $value['value'];
+                }
+            } else {
+                if ($value['value']) {
+                    $this->session->data['shipping_address'][$value['name']] = $value['value'];
+                }
             }
         }
 
@@ -298,6 +361,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         }
 
         $this->session->data['payment_method'] = $args['paymentMethod'];
+        echo '<pre>'; print_r($this->session->data); echo '</pre>';
 
         return array(
             'paymentMethods' => $this->vfload->resolver('store/checkout/paymentMethods'),
@@ -306,7 +370,8 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         );
     }
 
-    public function confirmOrder() {
+    public function confirmOrder()
+    {
         $this->load->model('extension/module/d_vuefront');
 
         $response = $this->model_extension_module_d_vuefront->requestCheckout(
@@ -320,7 +385,6 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
                 'codename' =>  $this->session->data['payment_method']
             )
         );
-
         $paymentMethod = $response['payment'];
 
         $shippingAddress = $this->session->data['shipping_address'];
@@ -358,7 +422,6 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
             if ($this->config->get('total_' . $result['code'] . '_status')) {
                 $this->load->model('extension/total/' . $result['code']);
 
-                // We have to put the totals in an array so that they pass by reference.
                 $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
             }
         }
@@ -419,6 +482,9 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         $order_data['payment_address_format'] = (isset($paymentAddress['address_format']) ? $paymentAddress['address_format'] : '');
         $order_data['payment_custom_field'] = (isset($paymentAddress['custom_field']) ? $paymentAddress['custom_field'] : array());
 
+        echo json_encode($order_data);
+        exit;
+
         $order_data['payment_method'] = $paymentMethod['name'];
         $order_data['payment_code'] = $paymentMethod['codename'];
 
@@ -426,7 +492,6 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         $zone_shipping = $this->model_localisation_zone->getZone($shippingAddress['zone_id']);
 
         if ($this->cart->hasShipping()) {
-            
             $order_data['shipping_firstname'] = $shippingAddress['firstName'];
             $order_data['shipping_lastname'] = $shippingAddress['lastName'];
             $order_data['shipping_company'] = $shippingAddress['company'];
@@ -605,20 +670,22 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller {
         );
     }
 
-    public function callback() {
+    public function callback()
+    {
         $this->load->model('checkout/order');
 
         $rawInput = file_get_contents('php://input');
 
         $input = json_decode($rawInput, true);
-        if($input['status'] == 'COMPLETE') {
+        if ($input['status'] == 'COMPLETE') {
             $order_status_id = $this->config->get('config_order_status_id');
 
             $this->model_checkout_order->addOrderHistory($this->request->get['order_id'], $order_status_id);
         }
     }
 
-    public function totals() {
+    public function totals()
+    {
         $totals = array();
         $taxes = $this->cart->getTaxes();
         $total = 0;
