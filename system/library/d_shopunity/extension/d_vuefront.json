@@ -9,24 +9,7 @@
     "email": "info@dreamvention.com",
     "url": "https://vuefront.com/"
   },
-  "opencart_version": [
-    "2.0.0.0",
-    "2.0.1.0",
-    "2.0.1.1",
-    "2.0.2.0",
-    "2.0.3.1",
-    "2.1.0.1",
-    "2.1.0.2",
-    "2.2.0.0",
-    "2.3.0.0",
-    "2.3.0.1",
-    "2.3.0.2",
-    "3.0.0.0",
-    "3.0.1.1",
-    "3.0.1.2",
-    "3.0.2.0",
-    "3.0.3.1"
-  ],
+  "opencart_version": "2-4",
   "type": "module",
   "license": {
     "type": "free",
@@ -52,7 +35,8 @@
     "admin/language/en-gb/extension/module/d_vuefront.php",
     "admin/view/template/extension/module/d_vuefront.twig",
     "catalog/controller/extension/module/d_vuefront.php",
-    "catalog/model/extension/module/d_vuefront.php"
+    "catalog/model/extension/module/d_vuefront.php",
+    "catalog/view/theme/default/template/extension/module/d_vuefront.twig"
   ],
   "dirs": [
     "admin/view/image/d_vuefront",
@@ -60,6 +44,7 @@
     "catalog/controller/extension/d_vuefront",
     "catalog/controller/extension/module/d_vuefront_schema",
     "catalog/model/extension/d_vuefront",
+    "catalog/view/javascript/d_vuefront"
     "system/library/d_graphql"
   ],
   "changelog": [
