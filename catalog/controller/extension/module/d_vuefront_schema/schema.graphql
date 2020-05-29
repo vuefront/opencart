@@ -361,6 +361,7 @@ type AddressField {
   type: String
   name: String
   label: String
+  defaultValue: String
   required: Boolean
   values: [FieldValue]
 }
