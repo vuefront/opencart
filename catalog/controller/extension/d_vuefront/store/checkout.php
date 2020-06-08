@@ -295,9 +295,13 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
     {
         $this->session->data['shipping_address'] = array();
 
+        $this->session->data['shipping_address_id'] = '';
+
         foreach ($this->shippingAddress() as $value) {
             $this->session->data['shipping_address'][$value['name']] = '';
         }
+
+        $this->session->data['shipping_address_id'] = '';
 
         $this->session->data['payment_address'] = array(
             'custom_field' => array()
@@ -349,6 +353,9 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
             }
         }
 
+        $this->session->data['shipping_address_id'] = $args['shippingAddressId'];
+        $this->session->data['payment_address_id'] = $args['paymentAddressId'];
+
         if (!empty($args['shippingMethod'])) {
             $shipping = explode('.', $args['shippingMethod']);
 
@@ -388,6 +395,8 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
 
         $shippingAddress = $this->session->data['shipping_address'];
         $paymentAddress = $this->session->data['payment_address'];
+        $shippingAddressId = $this->session->data['shipping_address_id'];
+        $paymentAddressId = $this->session->data['payment_address_id'];
 
         $shippingMethod = $this->session->data['shipping_method'];
 
@@ -452,6 +461,20 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
         }
         
         $this->load->model('account/customer');
+        $this->load->model('account/address');
+
+        if($paymentAddressId !== "") {
+            $paymentAddress = $this->model_account_address->getAddress($paymentAddressId);
+            var_dump($paymentAddress);
+            $paymentAddress['firstName'] = $paymentAddress['first_name'];
+            $paymentAddress['lastName'] = $paymentAddress['first_name'];
+        }
+
+        if($shippingAddressId !== "") {
+            $shippingAddress = $this->model_account_address->getAddress($shippingAddressId);
+            $shippingAddress['firstName'] = $shippingAddress['first_name'];
+            $shippingAddress['lastName'] = $shippingAddress['first_name'];
+        }
 
         $order_data['customer_id'] = 0;
         $order_data['customer_group_id'] = '';
