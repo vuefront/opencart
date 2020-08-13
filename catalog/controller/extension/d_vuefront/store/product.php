@@ -105,7 +105,7 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             $popup_height = $this->config->get('config_image_popup_height');
             $description_length = $this->config->get('config_product_description_length');
         }
-        
+
         if ($product_info['image']) {
             $image = $this->model_tool_image->resize($product_info['image'], $width, $height);
             $imageLazy = $this->model_tool_image->resize($product_info['image'], 10, ceil(10 * $height / $width));
@@ -160,6 +160,7 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             'attributes' => $this->vfload->resolver('store/product/attribute'),
             'reviews' => $this->vfload->resolver('store/review/get'),
             'options' => $this->vfload->resolver('store/product/option'),
+            'url' => $this->vfload->resolver('store/product/url'),
             'keyword' => $keyword,
             'meta' => array(
                 'title' => html_entity_decode($product_info['meta_title'], ENT_QUOTES, 'UTF-8'),
@@ -281,5 +282,21 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
         }
 
         return $images;
+    }
+
+    public function url($data)
+    {
+        $product_info = $data['parent'];
+        $result = $data['args']['url'];
+
+        $result = str_replace("_id", $product_info['id'], $result);
+        $result = str_replace("_name", $product_info['name'], $result);
+
+
+        if ($product_info['keyword']) {
+            $result = '/'.$product_info['keyword'];
+        }
+
+        return $result;
     }
 }

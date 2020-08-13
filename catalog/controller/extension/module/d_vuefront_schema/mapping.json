@@ -13,6 +13,8 @@
 
     "home": "common/home/get",
 
+    "searchUrl": "common/home/searchUrl",
+
     "uploadFile": "common/file/upload",
 
     "countriesList": "common/country/getList",

@@ -10,4 +10,13 @@ class ControllerExtensionDVuefrontCommonHome extends Controller {
             )
         );
     }
+
+    public function searchUrl($args) {
+        $this->load->model('extension/d_vuefront/seo');
+
+        $result = $this->model_extension_d_vuefront_seo->searchKeyword($args['url']);
+
+
+        return $result;
+    }
 }

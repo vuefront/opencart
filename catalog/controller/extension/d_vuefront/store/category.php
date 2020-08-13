@@ -10,6 +10,10 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
         $this->load->model('extension/'.$this->codename.'/category');
         $this->load->model('tool/image');
         $category_info = $this->model_catalog_category->getCategory($args['id']);
+        if (empty($category_info)) {
+            return array();
+        }
+
         $category_keyword = $this->model_extension_d_vuefront_category->getCategoryKeyword($args['id']);
 
         if (!empty($category_keyword['keyword'])) {
@@ -114,13 +118,13 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
 
         $result = str_replace("_id", $category_info['id'], $result);
         $result = str_replace("_name", $category_info['name'], $result);
-        
+
 
         if ($category_info['keyword']) {
             $result = '/'.$category_info['keyword'];
         }
 
-        
+
         return $result;
     }
 }

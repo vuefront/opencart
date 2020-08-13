@@ -63,6 +63,7 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
                 'prev' => $this->vfload->resolver('blog/post/prev'),
                 'reviews' => $this->vfload->resolver('blog/review/get'),
                 'categories' => $this->vfload->resolver('blog/post/categories'),
+                'url' => $this->vfload->resolver('blog/post/url'),
                 'keyword' => $keyword,
                 'meta' => array(
                     'title' => html_entity_decode($post_info['meta_title'], ENT_QUOTES, 'UTF-8'),
@@ -178,5 +179,21 @@ class ControllerExtensionDVuefrontBlogPost extends Controller
         } else {
             return array();
         }
+    }
+
+    public function url($data)
+    {
+        $post_info = $data['parent'];
+        $result = $data['args']['url'];
+
+        $result = str_replace("_id", $post_info['id'], $result);
+        $result = str_replace("_name", $post_info['name'], $result);
+
+
+        if ($post_info['keyword']) {
+            $result = '/'.$post_info['keyword'];
+        }
+
+        return $result;
     }
 }

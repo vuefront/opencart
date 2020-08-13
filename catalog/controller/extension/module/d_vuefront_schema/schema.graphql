@@ -126,6 +126,7 @@ type Page {
   title: String @deprecated(reason: "Changed to name!")
   name: String
   description: String
+  url(url: String): String
   keyword: String
   meta: Meta
   sort_order: Int
@@ -163,6 +164,7 @@ type Post {
   next: Post
   prev: Post
   meta: Meta
+  url(url: String): String
 }
 
 type PostResult {
@@ -216,6 +218,7 @@ type Product {
   images(limit: Int = 3): [productImage]
   keyword: String
   meta: Meta
+  url(url: String): String
 }
 
 type productAttribute {
@@ -412,6 +415,12 @@ type Total {
   text: String
 }
 
+type SearchUrlResult {
+  url: String
+  type: String
+  id: String
+}
+
 type RootMutationType {
   uploadFile(file: Upload): FileResult
   accountLogin(email: String, password: String): LoginResult
@@ -471,5 +480,6 @@ type RootQueryType {
   accountAddressList: [AccountAddress]
   accountAddress(id: String): AccountAddress
   checkoutLink: CheckoutLinkResult
+  searchUrl(url: String): SearchUrlResult
 }
 

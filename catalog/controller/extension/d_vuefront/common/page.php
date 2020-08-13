@@ -27,7 +27,8 @@ class ControllerExtensionDVuefrontCommonPage extends Controller
                 'description' =>  html_entity_decode($information_info['meta_description'], ENT_QUOTES, 'UTF-8'),
                 'keyword' =>  html_entity_decode($information_info['meta_keyword'], ENT_QUOTES, 'UTF-8')
             ),
-            'keyword' => $keyword
+            'keyword' => $keyword,
+            'url' => $this->vfload->resolver('common/page/url')
         );
     }
 
@@ -54,7 +55,7 @@ class ControllerExtensionDVuefrontCommonPage extends Controller
             $filter_data['filter_title'] = $args['search'];
             $filter_data['filter_description'] = $args['search'];
         }
-        
+
         $page_total = $this->model_extension_d_vuefront_page->getTotalPages($filter_data);
 
         $results = $this->model_extension_d_vuefront_page->getPages($filter_data);
@@ -73,5 +74,21 @@ class ControllerExtensionDVuefrontCommonPage extends Controller
             'totalPages' => (int)ceil($page_total / $args['size']),
             'totalElements' => (int)$page_total,
         );
+    }
+
+    public function url($data)
+    {
+        $page_info = $data['parent'];
+        $result = $data['args']['url'];
+
+        $result = str_replace("_id", $page_info['id'], $result);
+        $result = str_replace("_name", $page_info['name'], $result);
+
+
+        if ($page_info['keyword']) {
+            $result = '/'.$page_info['keyword'];
+        }
+
+        return $result;
     }
 }
