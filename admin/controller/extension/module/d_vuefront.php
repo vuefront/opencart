@@ -37,10 +37,10 @@ class ControllerExtensionModuleDVuefront extends Controller
             $this->model_extension_module_d_twig_manager->installCompatibility();
         }
 
-        if ($this->d_admin_style) {
-            $this->load->model('extension/d_admin_style/style');
-            $this->model_extension_d_admin_style_style->getStyles('light');
-        }
+        // if ($this->d_admin_style) {
+        //     $this->load->model('extension/d_admin_style/style');
+        //     $this->model_extension_d_admin_style_style->getStyles('light');
+        // }
 
         $app = json_decode(file_get_contents(DIR_APPLICATION . 'view/javascript/d_vuefront/manifest.json'), true);
         $current_chunk = $app['files'];
@@ -317,7 +317,7 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
         $this->load->model('extension/d_opencart_patch/setting');
         $setting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');
         $d = new DateTime();
-        
+
         $setting[] = array(
             'codename' => $this->request->post['codename'],
             'jwt' => $this->request->post['jwt'],

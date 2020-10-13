@@ -2,11 +2,9 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
-const WebpackManifestGeneratorPlugin = require('webpack-manifest-generator-plugin')
+const WebpackManifestGeneratorPlugin = require('./webpack-manifest')
 const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
 const webpack = require('webpack')
-const WebpackBar = require('webpackbar')
 const url = require('url')
 const zlib = require('zlib')
 const _ = require('lodash')
@@ -32,6 +30,7 @@ module.exports = (env, argv) => {
 
   const rewriteUrl = url.parse(currentUrl)
   const proxyUrl = 'http://' + host + ':' + port + rewriteUrl.path
+
   const publicPath = isDev
     ? 'http://' +
       host +
@@ -66,12 +65,11 @@ module.exports = (env, argv) => {
   if(polyfill) {
     entry = [...entry, '@babel/polyfill']
   }
-
   return {
     entry: [...entry, path.resolve(__dirname, './core/main.js')],
     output: {
       path: path.resolve(__dirname, `../${paxConfig.codename}/`),
-      filename: '[hash].bundle.js',
+      filename: '[fullhash].bundle.js',
       publicPath: publicPath
     },
     resolve: {
@@ -87,6 +85,8 @@ module.exports = (env, argv) => {
     },
     devServer: {
       index: '',
+      publicPath,
+      // noInfo: true,
       open: true,
       host: host,
       port: port,
@@ -94,8 +94,14 @@ module.exports = (env, argv) => {
         errors: true,
         warnings: false
       },
+      // stats: 'errors-only',
       open: false,
       hotOnly: true,
+      stats: {
+        preset: 'minimal',
+        moduleTrace: true,
+        errorDetails: true
+      },
       historyApiFallback: true,
       compress: false,
       proxy: {
@@ -122,13 +128,14 @@ module.exports = (env, argv) => {
                     : buffer
                   ).toString('utf8')
                   body = _.replace(body, new RegExp(currentUrl, 'g'), proxyUrl)
+
                   body = body
                     .split(currentUrl.replace(/\//g, '\\/'))
                     .join(proxyUrl.replace(/\//g, '\\/'))
                   body = body
                     .split(currentUrl.replace(/http[s]?:/g, ''))
                     .join(proxyUrl.replace(/http[s]?:/g, ''))
-                  fs.appendFileSync('./test.html', `${body}\r\n`)
+
                   let newBuffer = new Buffer.from(body)
 
                   const gzipRes =  isZipped ? zlib.gzipSync(newBuffer) : newBuffer
@@ -146,22 +153,25 @@ module.exports = (env, argv) => {
       }
     },
     stats: {
-      colors: true,
-      hash: false,
-      version: true,
-      timings: true,
-      assets: true,
-      chunks: false,
-      modules: false,
-      reasons: false,
-      children: false,
-      source: false,
-      errors: true,
-      errorDetails: false,
-      warnings: true,
-      publicPath: false
+      // colors: true,
+      // hash: false,
+      // version: true,
+      // timings: true,
+      // assets: true,
+      // chunks: false,
+      // modules: false,
+      // reasons: false,
+      // children: false,
+      // source: false,
+      // errors: true,
+      // errorDetails: false,
+      // warnings: true,
+      // publicPath: false
+      preset: 'minimal',
+      moduleTrace: true,
+      errorDetails: true
     },
-    watch: argv.mode === 'development',
+    devtool: 'eval-source-map',
     module: {
       rules: [
         {
@@ -188,18 +198,24 @@ module.exports = (env, argv) => {
         {
           test: /\.css$/,
           use: [
-            argv.mode === 'development'
-              ? 'vue-style-loader'
-              : MiniCssExtractPlugin.loader,
+            {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                esModule: false,
+              },
+            },
             'css-loader'
           ]
         },
         {
           test: /\.(pcss|postcss)$/,
           use: [
-            argv.mode === 'development'
-              ? 'vue-style-loader'
-              : MiniCssExtractPlugin.loader,
+              {
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                  esModule: false,
+                },
+              },
             'css-loader',
             'postcss-loader'
           ]
@@ -207,9 +223,12 @@ module.exports = (env, argv) => {
         {
           test: /\.scss$/,
           use: [
-            argv.mode === 'development'
-              ? 'vue-style-loader'
-              : MiniCssExtractPlugin.loader,
+              {
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                  esModule: false,
+                },
+              },
             'css-loader',
             'postcss-loader',
             'sass-loader',
@@ -254,17 +273,19 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: '[name].[hash].css',
-        chunkFilename: '[id].[hash].css'
+        filename: '[name].[fullhash].css',
+        chunkFilename: '[id].[fullhash].css',
+        esModule: false
       }),
       new VueLoaderPlugin(),
       new WebpackManifestGeneratorPlugin({
         filename: 'manifest.json'
       }),
-      new WebpackBar(),
+      new webpack.ProgressPlugin(),
       new CleanWebpackPlugin({
+        cleanStaleWebpackAssets: false,
         root: path.resolve(__dirname, '../'),
-        verbose: true,
+        verbose: false,
         dry: false,
         watch: false
       }),
@@ -272,15 +293,21 @@ module.exports = (env, argv) => {
       ...plugins
     ],
     optimization: {
-      runtimeChunk: true,
       splitChunks: {
+        chunks: 'async',
         cacheGroups: {
-          vendor: {
-            test: /node_modules/, // you may add "vendor.js" here if you want to
+          defaultVendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
             maxSize: 200000,
             name: 'vendor',
-            chunks: 'initial',
+            // chunks: 'initial',
             enforce: true
+          },
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true
           }
         }
       }

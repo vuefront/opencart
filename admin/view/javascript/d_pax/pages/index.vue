@@ -40,11 +40,11 @@ export default {
     FirstBuild,
     Apps
   },
+  middleware: ['authenticated', 'confirmed', 'noBanned', 'noAlien'],
   async fetch(ctx) {
     await ctx.store.dispatch('information/load')
     await ctx.store.dispatch('apps/list')
   },
-  middleware: ['authenticated', 'confirmed', 'noBanned', 'noAlien'],
   computed: {
     ...mapGetters({account: 'account/get' ,information: 'information/get', cms: 'cms/get', firstBuild: 'cms/firstBuild'})
   }
