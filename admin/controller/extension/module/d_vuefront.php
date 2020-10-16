@@ -331,6 +331,23 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
         $this->response->setOutput(json_encode(array('success' => 'success')));
     }
 
+    public function vf_apps_edit() {
+        $this->load->model('extension/d_opencart_patch/setting');
+        $setting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');
+
+        $app = json_decode(html_entity_decode($this->request->post['app'], ENT_QUOTES, 'UTF-8'), true);
+
+        foreach ($app as $key => $value) {
+            $setting[$this->request->post['key']][$key] = $value;
+        }
+
+        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, array(
+            $this->codename.'_apps' => $setting
+        ));
+
+        $this->response->setOutput(json_encode(array('success' => 'success')));
+    }
+
     public function vf_apps_remove() {
         $this->load->model('extension/d_opencart_patch/setting');
         $setting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');

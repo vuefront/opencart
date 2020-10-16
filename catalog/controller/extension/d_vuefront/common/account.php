@@ -18,7 +18,7 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
             'telephone' => '',
             'password'  => $customer_info['password'],
         );
-        
+
         if (VERSION < '3.0.0.0') {
             $customerData['fax'] = '';
             $customerData['company'] = '';
@@ -33,6 +33,10 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
         $customer_id = $this->model_account_customer->addCustomer($customerData);
 
         $customer_info = $this->model_account_customer->getCustomer($customer_id);
+
+        $this->load->model('extension/module/d_vuefront');
+
+        $this->model_extension_module_d_vuefront->pushEvent("create_customer", $customer_info);
 
         $this->customer->login($customer_info['email'], $customer_info['password']);
 
@@ -88,7 +92,7 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
             'email'     => $customer_info['email'],
             'telephone' => ''
         );
-        
+
         if (VERSION < '3.0.0.0') {
             $customerData['fax'] = '';
         }
@@ -182,7 +186,7 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
             'zipcode'   => $result['postcode'],
         );
     }
-    
+
     public function country($args)
     {
         return $this->vfload->data('common/country/get', array('id' => $args['parent']['countryId']));
@@ -209,7 +213,7 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
         return $this->address(array('id' => $args['id']));
     }
-    
+
     public function removeAddress($args)
     {
         $this->load->model('extension/d_vuefront/address');

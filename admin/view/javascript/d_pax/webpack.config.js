@@ -175,6 +175,10 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
+          test: /\.pug$/,
+          loader: 'pug-plain-loader'
+        },
+        {
           resourceQuery: /blockType=i18n/,
           type: 'javascript/auto',
           loader: '@kazupon/vue-i18n-loader',
