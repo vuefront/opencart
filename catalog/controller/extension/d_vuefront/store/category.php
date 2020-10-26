@@ -75,6 +75,10 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
             $filter_data['parent'] = $args['parent'];
         }
 
+        if (!empty($args['search'])) {
+            $filter_data['filter_name'] = $args['search'];
+        }
+
         $results = $this->model_extension_d_vuefront_category->getCategories($filter_data);
         $category_total = $this->model_extension_d_vuefront_category->getTotalCategories($filter_data);
 

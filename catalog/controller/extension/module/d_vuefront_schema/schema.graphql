@@ -466,7 +466,7 @@ type RootQueryType {
   postsList(page: Int = 1, size: Int = 10, filter: String, search: String, category_id: String = "", sort: String = "sort_order", order: String = "ASC"): PostResult
   cart: Cart
   category(id: String): Category
-  categoriesList(page: Int = 1, size: Int = 10, filter: String, parent: Int = -1, sort: String = "sort_order", order: String = "ASC"): CategoryResult
+  categoriesList(page: Int = 1, size: Int = 10, filter: String, search: String, parent: Int = -1, sort: String = "sort_order", order: String = "ASC"): CategoryResult
   compare: [Product]
   currency: [Currency]
   language: [Language]
