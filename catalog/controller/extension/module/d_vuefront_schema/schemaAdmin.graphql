@@ -1,0 +1,17 @@
+type CustomerResult {
+  content: [Customer]
+  first: Boolean
+  last: Boolean
+  number: Int
+  numberOfElements: Int
+  size: Int
+  totalPages: Int
+  totalElements: Int
+}
+
+type RootQueryType {
+   customersList(page: Int = 1, size: Int = 10, search: String, sort: String = "email", order: String = "ASC"): CustomerResult
+}
+type RootMutationType {
+
+}

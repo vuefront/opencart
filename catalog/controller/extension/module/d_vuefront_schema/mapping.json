@@ -11,6 +11,8 @@
     "accountEditAddress": "common/account/editAddress",
     "accountRemoveAddress": "common/account/removeAddress",
 
+    "customersList": "common/account/customerList",
+
     "home": "common/home/get",
 
     "searchUrl": "common/home/searchUrl",

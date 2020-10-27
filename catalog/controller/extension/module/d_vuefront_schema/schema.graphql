@@ -421,33 +421,6 @@ type SearchUrlResult {
   id: String
 }
 
-type RootMutationType {
-  uploadFile(file: Upload): FileResult
-  accountLogin(email: String, password: String): LoginResult
-  accountLogout: LogoutResult
-  accountRegister(customer: CustomerInput): Customer
-  accountEdit(customer: CustomerInput): Customer
-  accountEditPassword(password: String): Customer
-  accountAddAddress(address: AccountAddressInput): AccountAddress
-  accountEditAddress(id: String, address: AccountAddressInput): AccountAddress
-  accountRemoveAddress(id: String, page: Int = 1, size: Int = 10): [AccountAddress]
-  addBlogPostReview(id: String, rating: Float, author: String, content: String): Post
-  addToCart(id: String, quantity: Int = 1, options: [CartOption] = []): Cart
-  updateCart(key: String, quantity: Int = 1): Cart
-  removeCart(key: String): Cart
-  addToCompare(id: Int): [Product]
-  removeCompare(id: String): [Product]
-  editCurrency(code: String): [Currency]
-  editLanguage(code: String): [Language]
-  addReview(id: String, rating: Float, author: String, content: String): Product
-  addToWishlist(id: Int): [Product]
-  removeWishlist(id: String): [Product]
-  contactSend(name: String, email: String, message: String): ContactResult
-  createOrder: CreateOrderResult
-  updateOrder(paymentAddress: [InputField], paymentAddressId: String, shippingAddress: [InputField], shippingAddressId: String, paymentMethod: String, shippingMethod: String): UpdateOrderResult
-  confirmOrder: ConfirmOrderResult
-
-}
 
 type RootQueryType {
   shippingMethods: [ShippingMethod]
@@ -483,3 +456,30 @@ type RootQueryType {
   searchUrl(url: String): SearchUrlResult
 }
 
+type RootMutationType {
+  uploadFile(file: Upload): FileResult
+  accountLogin(email: String, password: String): LoginResult
+  accountLogout: LogoutResult
+  accountRegister(customer: CustomerInput): Customer
+  accountEdit(customer: CustomerInput): Customer
+  accountEditPassword(password: String): Customer
+  accountAddAddress(address: AccountAddressInput): AccountAddress
+  accountEditAddress(id: String, address: AccountAddressInput): AccountAddress
+  accountRemoveAddress(id: String, page: Int = 1, size: Int = 10): [AccountAddress]
+  addBlogPostReview(id: String, rating: Float, author: String, content: String): Post
+  addToCart(id: String, quantity: Int = 1, options: [CartOption] = []): Cart
+  updateCart(key: String, quantity: Int = 1): Cart
+  removeCart(key: String): Cart
+  addToCompare(id: Int): [Product]
+  removeCompare(id: String): [Product]
+  editCurrency(code: String): [Currency]
+  editLanguage(code: String): [Language]
+  addReview(id: String, rating: Float, author: String, content: String): Product
+  addToWishlist(id: Int): [Product]
+  removeWishlist(id: String): [Product]
+  contactSend(name: String, email: String, message: String): ContactResult
+  createOrder: CreateOrderResult
+  updateOrder(paymentAddress: [InputField], paymentAddressId: String, shippingAddress: [InputField], shippingAddressId: String, paymentMethod: String, shippingMethod: String): UpdateOrderResult
+  confirmOrder: ConfirmOrderResult
+
+}

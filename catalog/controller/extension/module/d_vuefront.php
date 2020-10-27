@@ -46,7 +46,14 @@ class ControllerExtensionModuleDVuefront extends Controller
             };
 
             try {
-                $schema = BuildSchema::build(file_get_contents(__DIR__ . '/' . $this->codename . '_schema/schema.graphql'), $typeConfigDecorator);
+                $files = array(__DIR__ . '/' . $this->codename . '_schema/schema.graphql');
+                if ($this->model_extension_module_d_vuefront->checkAccess()) {
+                    $files[] = __DIR__ . '/' . $this->codename . '_schema/schemaAdmin.graphql';
+                }
+                $sources = array_map('file_get_contents', $files);
+
+                $source = $this->model_extension_module_d_vuefront->mergeSchemas($sources);
+                $schema = BuildSchema::build($source, $typeConfigDecorator);
 
                 if (!empty($this->request->server['CONTENT_TYPE']) && strpos($this->request->server['CONTENT_TYPE'], 'multipart/form-data') !== false) {
                     $rawInput       = html_entity_decode($this->request->post['operations'], ENT_QUOTES, 'UTF-8');

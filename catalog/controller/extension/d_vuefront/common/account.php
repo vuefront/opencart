@@ -2,6 +2,57 @@
 
 class ControllerExtensionDVuefrontCommonAccount extends Controller
 {
+    private $codename = "d_vuefront";
+
+    public function customerList($args)
+    {
+        $this->load->model('extension/' . $this->codename . '/customer');
+
+        $filter_data = array(
+            'start' => ($args['page'] - 1) * $args['size'],
+            'limit' => $args['size'],
+            'sort' => $args['sort'],
+            'order' => $args['order'],
+        );
+
+        if (!empty($args['search'])) {
+            $filter_data['filter_name'] = $args['search'];
+        }
+
+        $results = $this->model_extension_d_vuefront_customer->getCustomers($filter_data);
+        $customer_total = $this->model_extension_d_vuefront_customer->getTotalCustomers($filter_data);
+
+        $customers = array();
+
+        foreach ($results as $result) {
+            $customers[] = $this->getCustomer(array('id' => $result['customer_id']));
+        }
+
+        return array(
+            'content' => $customers,
+            'first' => $args['page'] === 1,
+            'last' => $args['page'] === ceil($customer_total / $args['size']),
+            'number' => (int) $args['page'],
+            'numberOfElements' => count($customers),
+            'size' => (int) $args['size'],
+            'totalPages' => (int) ceil($customer_total / $args['size']),
+            'totalElements' => (int) $customer_total,
+        );
+    }
+
+    public function getCustomer($args) {
+        $this->load->model('account/customer');
+
+        $customer_info = $this->model_account_customer->getCustomer($args['id']);
+
+        return array(
+            'id'        => $customer_info['customer_id'],
+            'firstName' => $customer_info['firstname'],
+            'lastName'  => $customer_info['lastname'],
+            'email'     => $customer_info['email'],
+        );
+    }
+
     public function register($args)
     {
         $this->load->model('account/customer');

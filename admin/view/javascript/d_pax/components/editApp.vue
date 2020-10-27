@@ -3,12 +3,12 @@
     div(class="edit-app__title") {{$t('text_title')}}
     validation-observer(v-slot="{validate}")
       b-form(class="edit-app__form" @submit.stop.prevent="validate().then(onSubmit)")
-        //- validation-provider(v-slot="{errors, valid}" :name="$t('text_url')" rules="required")
-        //-   b-form-group(:label="$t('text_url')" label-for="input-url")
-        //-     b-form-input(id="input-url")
         validation-provider(v-slot="{errors, valid}" :name="$t('text_url')" rules="required")
           b-form-group(:label="$t('text_callback_url')" label-for="input-callback-url")
             b-form-input(id="input-callback-url" v-model="form.eventUrl")
+        validation-provider(v-slot="{errors, valid}" :name="$t('text_access_key')" rules="required")
+          b-form-group(:label="$t('text_access_key')" label-for="input-access-key")
+            b-form-input(id="input-access-key" v-model="form.accessKey")
         div(class="edit-app__submit_button")
           b-button(type="submit" size="lg" variant="success") {{$t('text_save')}}
 </template>
@@ -34,11 +34,10 @@ export default {
     }
   },
   data() {
-    console.log('data')
-    console.log(this.app)
     return {
       form: {
-        eventUrl: this.app.eventUrl || ''
+        eventUrl: this.app.eventUrl || '',
+        accessKey: this.app.accessKey || ''
       }
     }
   },
@@ -54,7 +53,8 @@ export default {
     async onSubmit(valid) {
       if (valid) {
         await this.$store.dispatch('apps/edit', {key: this.id, app: {
-          eventUrl: this.form.eventUrl
+          eventUrl: this.form.eventUrl,
+          accessKey: this.form.accessKey
         }})
         await this.$store.dispatch('apps/list')
         this.$store.commit('apps/setEdit', false)
@@ -68,6 +68,7 @@ export default {
   "text_title": "Edit app",
   "text_url": "URL Site",
   "text_callback_url": "Url for event",
+  "text_access_key": "Key for access to admin api",
   "text_save": "Save"
 }
 </i18n>

@@ -91,6 +91,26 @@ class ModelExtensionModuleDVuefront extends Model
         }
     }
 
+    public function checkAccess() {
+        $this->load->model('setting/setting');
+
+        if (!isset($this->request->get['accessKey'])) {
+            return false;
+        }
+
+        $setting = $this->model_setting_setting->getSetting('d_vuefront');
+
+        $result = false;
+
+        foreach ($setting['d_vuefront_apps'] as $value) {
+            if(!empty($value['accessKey']) && $this->request->get['accessKey'] == $value['accessKey']) {
+                $result = true;
+            }
+        }
+
+        return $result;
+    }
+
     public function getAppsForEvent() {
         $this->load->model('setting/setting');
 
@@ -153,5 +173,26 @@ class ModelExtensionModuleDVuefront extends Model
         $result = json_decode($result, true);
 
         return $result['data'];
+    }
+    public function mergeSchemas($files) {
+        $rootQueryType = '';
+        $types = '';
+        $rootMutationType = '';
+        foreach ($files as $value) {
+            preg_match('/type\s+RootQueryType\s\{\s*\n([^\}]+)/', $value, $matched);
+            if (!empty($matched[1])) {
+                $rootQueryType = $rootQueryType.PHP_EOL.$matched[1];
+            }
+            preg_match('/type\s+RootMutationType\s\{\s*\n([^\}]+)/', $value, $mutationMatched);
+            if (!empty($mutationMatched[1])) {
+                $rootMutationType = $rootMutationType.PHP_EOL.$mutationMatched[1];
+            }
+            preg_match('/([a-zA-Z0-9\=\s\}\_\-\@\{\:\[\]\(\)\!\"]+)type RootQueryType/', $value, $typesMatched);
+            if (!empty($typesMatched[1])) {
+                $types = $types.PHP_EOL.$typesMatched[1];
+            }
+        }
+
+        return "${types}".PHP_EOL."type RootQueryType {".PHP_EOL."${rootQueryType}".PHP_EOL."}".PHP_EOL."type RootMutationType {".PHP_EOL."${rootMutationType}".PHP_EOL."}";
     }
 }
