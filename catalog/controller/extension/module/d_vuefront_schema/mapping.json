@@ -12,6 +12,7 @@
     "accountRemoveAddress": "common/account/removeAddress",
 
     "customersList": "common/account/customerList",
+    "customer": "common/account/getCustomer",
 
     "home": "common/home/get",
 

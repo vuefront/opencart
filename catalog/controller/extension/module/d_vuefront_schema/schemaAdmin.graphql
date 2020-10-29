@@ -11,6 +11,7 @@ type CustomerResult {
 
 type RootQueryType {
    customersList(page: Int = 1, size: Int = 10, search: String, sort: String = "email", order: String = "ASC"): CustomerResult
+   customer(id: String): Customer
 }
 type RootMutationType {
 
