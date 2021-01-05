@@ -22,7 +22,7 @@ class ControllerExtensionModuleDVuefront extends Controller
                 }
                 header('Access-Control-Allow-Methods: POST, OPTIONS');
                 header('Access-Control-Allow-Credentials: true');
-                header('Access-Control-Allow-Headers: DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Token,token,Cookie,cookie,content-type');
+                header('Access-Control-Allow-Headers: accept,Referer,content-type,x-forwarded-for,DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Token,token,Cookie,cookie,content-type');
             } catch (Exception $e) {
             }
         }
