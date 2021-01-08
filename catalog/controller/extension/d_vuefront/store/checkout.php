@@ -354,8 +354,16 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
             }
         }
 
-        $this->session->data['shipping_address_id'] = $args['shippingAddressId'];
-        $this->session->data['payment_address_id'] = $args['paymentAddressId'];
+        if (!empty($args['shippingAddressId'])) {
+            $this->session->data['shipping_address_id'] = $args['shippingAddressId'];
+        } else {
+            $this->session->data['shipping_address_id'] = "";
+        }
+        if (!empty($args['paymentAddressId'])) {
+            $this->session->data['payment_address_id'] = $args['paymentAddressId'];
+        } else {
+            $this->session->data['payment_address_id'] = "";
+        }
 
         if (!empty($args['shippingMethod'])) {
             $shipping = explode('.', $args['shippingMethod']);
@@ -477,7 +485,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
             $shippingAddress['lastName'] = $shippingAddress['first_name'];
         }
 
-        $order_data['customer_id'] = 0;
+        $order_data['customer_id'] = "0";
         $order_data['customer_group_id'] = '';
         $order_data['firstname'] = $paymentAddress['firstName'];
         $order_data['lastname'] = $paymentAddress['lastName'];
@@ -487,6 +495,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
 
         if ($this->customer->isLogged()) {
             $order_data['customer_id'] = $this->customer->getId();
+            $order_data['customer_email'] = $this->customer->getEmail();
         }
 
         $this->load->model('localisation/country');
@@ -677,14 +686,15 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
         $this->session->data['order_id'] = $this->model_checkout_order->addOrder($order_data);
 
         $response = $this->model_extension_module_d_vuefront->requestCheckout(
-            'mutation($paymentMethod: String, $total: Float, $callback: String, $customerId: String) {
-                createOrder(paymentMethod: $paymentMethod, total: $total, callback: $callback, customerId: $customerId) {
+            'mutation($paymentMethod: String, $total: Float, $callback: String, $customerId: String, $customerEmail: String) {
+                createOrder(paymentMethod: $paymentMethod, total: $total, callback: $callback, customerId: $customerId, customerEmail: $customerEmail) {
                     url
                 }
             }',
             array(
                 'paymentMethod' => $paymentMethod['codename'],
                 'customerId' => $order_data['customer_id'],
+                'customerEmail' => $order_data['customer_email'],
                 'total' => floatval($total_data['total']),
                 'callback' => $this->url->link('extension/d_vuefront/store/checkout/callback', 'order_id='.$this->session->data['order_id'], true)
             )
