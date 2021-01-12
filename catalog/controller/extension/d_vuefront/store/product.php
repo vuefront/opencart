@@ -77,6 +77,10 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
         $this->load->model('extension/'.$this->codename.'/product');
         $this->load->model('tool/image');
         $product_info = $this->model_catalog_product->getProduct($args['id']);
+
+        if (!$product_info) {
+            return array();
+        }
         $product_keyword = $this->model_extension_d_vuefront_product->getProductKeyword($args['id']);
 
         if(!empty($product_keyword['keyword'])) {
