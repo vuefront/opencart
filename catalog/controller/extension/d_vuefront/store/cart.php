@@ -75,6 +75,10 @@ class ControllerExtensionDVuefrontStoreCart extends Controller
         foreach ($args['options'] as $option) {
             $this->request->post['option'][$option['id']] = strpos( $option['value'], '|') == false ? $option['value'] : explode('|', $option['value']);
         }
+
+        $this->load->model('extension/module/d_vuefront');
+
+        $this->model_extension_module_d_vuefront->pushEvent("add_to_cart",  array( "cart" => $this->request->post, "customer_id" => $this->customer->getId(), "guest" => $this->customer->isLogged() ? false : true));
         
         $this->load->controller('checkout/cart/add');
 
@@ -96,12 +100,19 @@ class ControllerExtensionDVuefrontStoreCart extends Controller
     {
         $this->cart->update($args['key'], $args['quantity']);
 
+        $this->load->model('extension/module/d_vuefront');
+        $this->model_extension_module_d_vuefront->pushEvent("update_cart",  array( "cart" => $args, "customer_id" => $this->customer->getId(), "guest" => $this->customer->isLogged() ? false : true));
+
         return $this->get(array());
     }
 
     public function remove($args)
     {
         $this->cart->remove($args['key']);
+
+        $this->load->model('extension/module/d_vuefront');
+
+        $this->model_extension_module_d_vuefront->pushEvent("remove_cart",  array( "cart" => $args, "customer_id" => $this->customer->getId(), "guest" => $this->customer->isLogged() ? false : true));
 
         return $this->get(array());
     }
