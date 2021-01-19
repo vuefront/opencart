@@ -108,6 +108,10 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
         if ($this->customer->login($args['email'], $args['password'])) {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 
+            $this->load->model('extension/module/d_vuefront');
+
+            $this->model_extension_module_d_vuefront->pushEvent("login_customer", $customer_info);
+
             return array(
                 'token' => null,
                 'customer'=> array(
@@ -124,6 +128,10 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
     public function logout()
     {
+        $this->load->model('extension/module/d_vuefront');
+
+        $this->model_extension_module_d_vuefront->pushEvent("logout_customer", array("customer_id" => $this->customer->getId()));
+
         $this->customer->logout();
 
         $logged = $this->customer->isLogged();
