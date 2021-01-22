@@ -165,8 +165,8 @@ class ModelExtensionModuleDVuefront extends Model
         curl_setopt($ch, CURLOPT_HTTPHEADER,$headr);
         curl_setopt($ch, CURLOPT_POST,true);
         curl_setopt($ch, CURLOPT_POSTFIELDS,     json_encode($requestData, JSON_FORCE_OBJECT) );
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost:3005/graphql');
-        // curl_setopt($ch, CURLOPT_URL, 'https://api.checkout.vuefront.com/graphql');
+        // curl_setopt($ch, CURLOPT_URL, 'http://localhost:3005/graphql');
+        curl_setopt($ch, CURLOPT_URL, 'https://api.checkout.vuefront.com/graphql');
 
         $result = curl_exec($ch);
 
