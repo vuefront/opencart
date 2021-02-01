@@ -11,6 +11,9 @@
     "accountEditAddress": "common/account/editAddress",
     "accountRemoveAddress": "common/account/removeAddress",
 
+    "manufacturerList": "store/manufacturer/getList",
+    "manufacturer": "store/manufacturer/get",
+
     "customersList": "common/account/customerList",
     "customer": "common/account/getCustomer",
 

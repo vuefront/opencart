@@ -269,6 +269,23 @@ type ZonesResult {
   totalPages: Int
   totalElements: Int
 }
+type Manufacturer {
+    id: String
+    name: String
+    image: String
+    imageLazy: String
+    sort_order: Int
+}
+type ManufacturerResult {
+  content: [Manufacturer]
+  first: Boolean
+  last: Boolean
+  number: Int
+  numberOfElements: Int
+  size: Int
+  totalPages: Int
+  totalElements: Int
+}
 
 type ProductReview {
   author: String
@@ -454,6 +471,8 @@ type RootQueryType {
   accountAddress(id: String): AccountAddress
   checkoutLink: CheckoutLinkResult
   searchUrl(url: String): SearchUrlResult
+  manufacturerList(page: Int = 1, size: Int = 10, search: String = "", sort: String = "name", order: String = "ASC"): ManufacturerResult
+  manufacturer(id: String): Manufacturer
 }
 
 type RootMutationType {
