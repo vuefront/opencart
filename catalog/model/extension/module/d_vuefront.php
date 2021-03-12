@@ -136,10 +136,17 @@ class ModelExtensionModuleDVuefront extends Model
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headr);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_FORCE_OBJECT));
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_URL, $url);
 
         $result = curl_exec($ch);
+
+        $error = curl_error($ch);
+
+        if ($error) {
+            throw new Exception($error);
+        }
 
         $result = json_decode($result, true);
         return $result;
