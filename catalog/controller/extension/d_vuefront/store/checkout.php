@@ -86,7 +86,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
                 );
             }
         }
-        
+
         return $result;
     }
 
@@ -196,7 +196,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
                 $agree = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_checkout_id'), true), $information_info['title'], $information_info['title']);
             }
         }
-        
+
         return array(
             'fields' => $fields,
             'agree' => $agree
@@ -287,7 +287,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
                 );
             }
         }
-      
+
 
         return $fields;
     }
@@ -468,21 +468,31 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
                 $order_data['store_url'] = HTTP_SERVER;
             }
         }
-        
+
         $this->load->model('account/customer');
         $this->load->model('account/address');
 
         if($paymentAddressId !== "") {
             $paymentAddress = $this->model_account_address->getAddress($paymentAddressId);
-            var_dump($paymentAddress);
-            $paymentAddress['firstName'] = $paymentAddress['first_name'];
-            $paymentAddress['lastName'] = $paymentAddress['first_name'];
+
+            $paymentAddress['firstName'] = $paymentAddress['firstname'];
+            $paymentAddress['lastName'] = $paymentAddress['lastname'];
+            $paymentAddress['address1'] = $paymentAddress['address_1'];
+            $paymentAddress['address2'] = $paymentAddress['address_2'];
+            if ($this->customer->isLogged()) {
+              $paymentAddress['email'] = $this->customer->getEmail();
+          }
         }
 
         if($shippingAddressId !== "") {
             $shippingAddress = $this->model_account_address->getAddress($shippingAddressId);
-            $shippingAddress['firstName'] = $shippingAddress['first_name'];
-            $shippingAddress['lastName'] = $shippingAddress['first_name'];
+            $shippingAddress['firstName'] = $shippingAddress['firstname'];
+            $shippingAddress['lastName'] = $shippingAddress['lastname'];
+            $shippingAddress['address1'] = $shippingAddress['address_1'];
+            $shippingAddress['address2'] = $shippingAddress['address_2'];
+            if ($this->customer->isLogged()) {
+              $shippingAddress['email'] = $this->customer->getEmail();
+          }
         }
 
         $order_data['customer_id'] = "0";
@@ -500,7 +510,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
 
         $this->load->model('localisation/country');
         $this->load->model('localisation/zone');
-        
+
         $country_payment = $this->model_localisation_country->getCountry($paymentAddress['country_id']);
         $zone_payment = $this->model_localisation_zone->getZone($paymentAddress['zone_id']);
 
