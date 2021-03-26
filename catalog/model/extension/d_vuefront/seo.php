@@ -6,6 +6,7 @@ class ModelExtensionDVuefrontSeo extends Model
     {
         $type = '';
         $id = 0;
+
         if (VERSION >= '3.0.0.0') {
             $parts = explode('/', preg_replace("/^\//", "", $keyword));
 
@@ -19,6 +20,16 @@ class ModelExtensionDVuefrontSeo extends Model
 
                 if ($query->num_rows) {
                     $url = explode('=', $query->row['query']);
+
+                    if ($url[0] == 'bm_category_id') {
+                        $type = 'blog-category';
+                        $id = $url[1];
+                    }
+
+                    if ($url[0] == 'bm_post_id') {
+                        $type = 'blog-post';
+                        $id = $url[1];
+                    }
 
                     if ($url[0] == 'product_id') {
                         $type = 'product';
@@ -51,11 +62,21 @@ class ModelExtensionDVuefrontSeo extends Model
               array_pop($parts);
           }
 
-          foreach ($parts as $part) {
+        foreach ($parts as $part) {
               $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE keyword = '" . $this->db->escape($part) . "'");
 
               if ($query->num_rows) {
-                  $url = explode('=', $query->row['query']);
+                $url = explode('=', $query->row['query']);
+
+                  if ($url[0] == 'bm_category_id') {
+                    $type = 'blog-category';
+                    $id = $url[1];
+}
+
+                if ($url[0] == 'bm_post_id') {
+                    $type = 'blog-post';
+                    $id = $url[1];
+                }
 
                   if ($url[0] == 'product_id') {
                       $type = 'product';
