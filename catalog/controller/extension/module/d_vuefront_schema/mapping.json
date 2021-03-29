@@ -47,6 +47,7 @@
     "createOrder": "store/checkout/createOrder",
     "updateOrder": "store/checkout/updateOrder",
     "confirmOrder": "store/checkout/confirmOrder",
+    "orderData": "store/checkout/orderData",
     "totals": "store/checkout/totals",
 
     "cart": "store/cart/get",

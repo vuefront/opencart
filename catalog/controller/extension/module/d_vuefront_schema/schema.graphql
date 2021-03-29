@@ -438,6 +438,11 @@ type SearchUrlResult {
   id: String
 }
 
+type OrderData {
+    paymentMethod: String
+    shippingMethod: String
+}
+
 
 type RootQueryType {
   shippingMethods: [ShippingMethod]
@@ -466,6 +471,7 @@ type RootQueryType {
   product(id: String): Product
   wishlist: [Product]
   contact: Contact
+  orderData: OrderData
   accountCheckLogged: LoggedResult
   accountAddressList: [AccountAddress]
   accountAddress(id: String): AccountAddress
