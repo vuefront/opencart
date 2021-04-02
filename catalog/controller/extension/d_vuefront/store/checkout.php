@@ -385,63 +385,6 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
         );
     }
 
-    public function orderData()
-    {
-        $this->load->model('extension/module/d_vuefront');
-
-
-        var_dump($this->session->data);
-
-        $shippingAddress = $this->session->data['shipping_address'];
-        $paymentAddress = $this->session->data['payment_address'];
-        $shippingAddressId = $this->session->data['shipping_address_id'];
-        $paymentAddressId = $this->session->data['payment_address_id'];
-
-        $shippingMethod = $this->session->data['shipping_method'];
-
-        $order_data = array();
-
-        if($paymentAddressId !== "") {
-            $paymentAddress = $this->model_account_address->getAddress($paymentAddressId);
-
-            $paymentAddress['firstName'] = $paymentAddress['firstname'];
-            $paymentAddress['lastName'] = $paymentAddress['lastname'];
-            $paymentAddress['address1'] = $paymentAddress['address_1'];
-            $paymentAddress['address2'] = $paymentAddress['address_2'];
-            if ($this->customer->isLogged()) {
-              $paymentAddress['email'] = $this->customer->getEmail();
-          }
-        }
-
-        if($shippingAddressId !== "") {
-            $shippingAddress = $this->model_account_address->getAddress($shippingAddressId);
-            $shippingAddress['firstName'] = $shippingAddress['firstname'];
-            $shippingAddress['lastName'] = $shippingAddress['lastname'];
-            $shippingAddress['address1'] = $shippingAddress['address_1'];
-            $shippingAddress['address2'] = $shippingAddress['address_2'];
-            if ($this->customer->isLogged()) {
-              $shippingAddress['email'] = $this->customer->getEmail();
-          }
-        }
-
-        $order_data['customer_id'] = "0";
-        $order_data['customer_group_id'] = '';
-        $order_data['firstname'] = $paymentAddress['firstName'];
-        $order_data['lastname'] = $paymentAddress['lastName'];
-        $order_data['email'] = $paymentAddress['email'];
-        $order_data['telephone'] = '';
-        $order_data['custom_field'] = array();
-
-        if ($this->customer->isLogged()) {
-            $order_data['customer_id'] = $this->customer->getId();
-            $order_data['customer_email'] = $this->customer->getEmail();
-        }
-
-        $order_data['payment_custom_field'] = (isset($paymentAddress['custom_field']) ? $paymentAddress['custom_field'] : array());
-
-        return $order_data;
-    }
-
     public function confirmOrder()
     {
         $this->load->model('extension/module/d_vuefront');

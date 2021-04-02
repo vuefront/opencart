@@ -438,12 +438,6 @@ type SearchUrlResult {
   id: String
 }
 
-type OrderData {
-    paymentMethod: String
-    shippingMethod: String
-}
-
-
 type RootQueryType {
   shippingMethods: [ShippingMethod]
   paymentMethods: [PaymentMethod]
@@ -471,7 +465,6 @@ type RootQueryType {
   product(id: String): Product
   wishlist: [Product]
   contact: Contact
-  orderData: OrderData
   accountCheckLogged: LoggedResult
   accountAddressList: [AccountAddress]
   accountAddress(id: String): AccountAddress
@@ -479,6 +472,7 @@ type RootQueryType {
   searchUrl(url: String): SearchUrlResult
   manufacturerList(page: Int = 1, size: Int = 10, search: String = "", sort: String = "name", order: String = "ASC"): ManufacturerResult
   manufacturer(id: String): Manufacturer
+  authProxy(app: String): String
 }
 
 type RootMutationType {

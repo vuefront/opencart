@@ -11,7 +11,6 @@ const _ = require('lodash')
 const fs = require('fs')
 const paxConfig = require('./pax.config')
 require('dotenv').config()
-
 const polyfill =  !_.isUndefined(paxConfig.polyfill) ? paxConfig.polyfill : true
 
 const isWin = process.platform === "win32";

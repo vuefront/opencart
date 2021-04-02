@@ -10,6 +10,7 @@
         <activity v-if="cms.builds.length > 0 || cms.generating" />
         <first-build v-if="firstBuild" />
         <apps />
+        <access />
         <development />
       </b-col>
       <b-col md="3">
@@ -29,8 +30,10 @@ import Welcome from '~/components/welcome'
 import ReBuild from '~/components/rebuild'
 import FirstBuild from '~/components/firstBuild'
 import Apps from '~/components/apps'
+import Access from '~/components/access'
 export default {
   components: {
+    Access,
     Subscription,
     Information,
     Development,

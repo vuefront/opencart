@@ -1,7 +1,7 @@
 <?php
 
 /**
- * location: admin/controller
+ * location: admin/controller.
  */
 class ControllerExtensionModuleDVuefront extends Controller
 {
@@ -18,11 +18,11 @@ class ControllerExtensionModuleDVuefront extends Controller
         $this->load->model('extension/d_opencart_patch/user');
         $this->load->model('extension/d_opencart_patch/load');
 
-        $this->d_shopunity = (file_exists(DIR_SYSTEM . 'library/d_shopunity/extension/d_shopunity.json'));
-        $this->d_blog_module = (file_exists(DIR_SYSTEM . 'library/d_shopunity/extension/d_blog_module.json'));
-        $this->d_twig_manager = (file_exists(DIR_SYSTEM . 'library/d_shopunity/extension/d_twig_manager.json'));
-        $this->extension = json_decode(file_get_contents(DIR_SYSTEM . 'library/d_shopunity/extension/d_vuefront.json'), true);
-        $this->d_admin_style = (file_exists(DIR_SYSTEM . 'library/d_shopunity/extension/d_admin_style.json'));
+        $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
+        $this->d_blog_module = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module.json'));
+        $this->d_twig_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json'));
+        $this->extension = json_decode(file_get_contents(DIR_SYSTEM.'library/d_shopunity/extension/d_vuefront.json'), true);
+        $this->d_admin_style = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_admin_style.json'));
     }
 
     public function index()
@@ -42,14 +42,14 @@ class ControllerExtensionModuleDVuefront extends Controller
         //     $this->model_extension_d_admin_style_style->getStyles('light');
         // }
 
-        $app = json_decode(file_get_contents(DIR_APPLICATION . 'view/javascript/d_vuefront/manifest.json'), true);
+        $app = json_decode(file_get_contents(DIR_APPLICATION.'view/javascript/d_vuefront/manifest.json'), true);
         $current_chunk = $app['files'];
         while (!empty($current_chunk)) {
             foreach ($current_chunk['js'] as $value) {
-                $this->document->addScript('view/javascript/d_vuefront/' . basename($value));
+                $this->document->addScript('view/javascript/d_vuefront/'.basename($value));
             }
             foreach ($current_chunk['css'] as $value) {
-                $this->document->addStyle('view/javascript/d_vuefront/' . basename($value));
+                $this->document->addStyle('view/javascript/d_vuefront/'.basename($value));
             }
             $current_chunk = $current_chunk['next'];
         }
@@ -65,7 +65,7 @@ class ControllerExtensionModuleDVuefront extends Controller
         $url_params = [];
         $url = '';
 
-        $url = ((!empty($url_params)) ? '&' : '') . http_build_query($url_params);
+        $url = ((!empty($url_params)) ? '&' : '').http_build_query($url_params);
 
         $this->document->setTitle($this->language->get('heading_title_main'));
         $data['heading_title'] = $this->language->get('heading_title_main');
@@ -115,9 +115,9 @@ class ControllerExtensionModuleDVuefront extends Controller
         ];
 
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-            $data['catalog'] = HTTPS_CATALOG . 'index.php?route=extension/module/d_vuefront/graphql';
+            $data['catalog'] = HTTPS_CATALOG.'index.php?route=extension/module/d_vuefront/graphql';
         } else {
-            $data['catalog'] = HTTP_CATALOG . 'index.php?route=extension/module/d_vuefront/graphql';
+            $data['catalog'] = HTTP_CATALOG.'index.php?route=extension/module/d_vuefront/graphql';
         }
 
         //action
@@ -131,21 +131,21 @@ class ControllerExtensionModuleDVuefront extends Controller
         $this->response->setOutput($this->model_extension_d_opencart_patch_load->view($this->route, $data));
     }
 
-    public function vf_update() {
-
+    public function vf_update()
+    {
         try {
-          $rootFolder = realpath(DIR_APPLICATION . '../');
-          $tmpFile = tempnam(sys_get_temp_dir(), 'TMP_');
-          rename($tmpFile, $tmpFile .= '.tar');
-          file_put_contents($tmpFile, file_get_contents($this->request->post['url']));
-          $this->removeDir($rootFolder . '/vuefront');
-          $phar = new PharData($tmpFile);
-          $phar->extractTo($rootFolder . '/vuefront');
-      } catch (\Exception $e) {
-          echo $e->getMessage();
-      }
+            $rootFolder = realpath(DIR_APPLICATION.'../');
+            $tmpFile = tempnam(sys_get_temp_dir(), 'TMP_');
+            rename($tmpFile, $tmpFile .= '.tar');
+            file_put_contents($tmpFile, file_get_contents($this->request->post['url']));
+            $this->removeDir($rootFolder.'/vuefront');
+            $phar = new PharData($tmpFile);
+            $phar->extractTo($rootFolder.'/vuefront');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
 
-      $this->vf_information();
+        $this->vf_information();
     }
 
     public function vf_turn_on()
@@ -158,19 +158,18 @@ class ControllerExtensionModuleDVuefront extends Controller
         }
 
         try {
-            $rootFolder = realpath(DIR_APPLICATION . '../');
+            $rootFolder = realpath(DIR_APPLICATION.'../');
 
             $catalog_url_info = parse_url($catalog);
 
             $catalog_path = $catalog_url_info['path'];
             $document_path = $catalog_path;
-            if(!empty($this->request->server['DOCUMENT_ROOT'])) {
-              $document_path = str_replace(realpath($this->request->server['DOCUMENT_ROOT']), '', $rootFolder) . '/';
+            if (!empty($this->request->server['DOCUMENT_ROOT'])) {
+                $document_path = str_replace(realpath($this->request->server['DOCUMENT_ROOT']), '', $rootFolder).'/';
             }
 
-            if (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") !== false) {
-
-                if(!file_exists($rootFolder . '/.htaccess')) {
+            if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false) {
+                if (!file_exists($rootFolder.'/.htaccess')) {
                     file_put_contents($rootFolder.'/.htaccess', "Options +FollowSymlinks
 Options -Indexes
 <FilesMatch \"(?i)((\.tpl|\.ini|\.log|(?<!robots)\.txt))\">
@@ -187,15 +186,16 @@ RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
 RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]");
                 }
 
-                if(!is_writable($rootFolder . '/.htaccess')) {
+                if (!is_writable($rootFolder.'/.htaccess')) {
                     http_response_code(500);
-                    $this->response->setOutput(json_encode(array(
-                        'error' => 'not_writable_htaccess'
-                    )));
+                    $this->response->setOutput(json_encode([
+                        'error' => 'not_writable_htaccess',
+                    ]));
+
                     return;
                 }
 
-                if (file_exists($rootFolder . '/.htaccess')) {
+                if (file_exists($rootFolder.'/.htaccess')) {
                     $inserting = "# VueFront scripts, styles and images
 RewriteCond %{REQUEST_URI} .*(_nuxt)
 RewriteCond %{REQUEST_URI} !.*/vuefront/_nuxt
@@ -237,25 +237,25 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !.*(image|.php|admin|catalog|\/img\/.*\/|wp-json|wp-admin|wp-content|checkout|rest|static|order|themes\/|modules\/|js\/|\/vuefront\/)
 RewriteCond %{QUERY_STRING} !.*(rest_route)
-RewriteCond %{DOCUMENT_ROOT}".$document_path."vuefront/$1.html !-f
-RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
+RewriteCond %{DOCUMENT_ROOT}".$document_path.'vuefront/$1.html !-f
+RewriteRule ^([^?]*) vuefront/200.html [L,QSA]';
 
-                    $content = file_get_contents($rootFolder . '/.htaccess');
+                    $content = file_get_contents($rootFolder.'/.htaccess');
 
-                    if (!is_dir(DIR_APPLICATION . 'controller/extension/module/d_vuefront')) {
-                        mkdir(DIR_APPLICATION . 'controller/extension/module/d_vuefront');
+                    if (!is_dir(DIR_APPLICATION.'controller/extension/module/d_vuefront')) {
+                        mkdir(DIR_APPLICATION.'controller/extension/module/d_vuefront');
                     }
 
-                    file_put_contents(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt', $content);
+                    file_put_contents(DIR_APPLICATION.'controller/extension/module/d_vuefront/.htaccess.txt', $content);
 
                     preg_match('/# VueFront pages/m', $content, $matches);
 
                     if (count($matches) == 0) {
                         $content = preg_replace_callback('/RewriteBase\s.*$/m', function ($matches) use ($inserting) {
-                            return $matches[0] . PHP_EOL . $inserting . PHP_EOL;
+                            return $matches[0].PHP_EOL.$inserting.PHP_EOL;
                         }, $content);
 
-                        file_put_contents($rootFolder . '/.htaccess', $content);
+                        file_put_contents($rootFolder.'/.htaccess', $content);
                     }
                 }
             }
@@ -268,22 +268,22 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
 
     public function vf_turn_off()
     {
-        $rootFolder = realpath(DIR_APPLICATION . '../');
-        if (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") !== false) {
-            if (file_exists(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt')) {
-                if(!is_writable($rootFolder . '/.htaccess') || !is_writable(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt')) {
+        $rootFolder = realpath(DIR_APPLICATION.'../');
+        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false) {
+            if (file_exists(DIR_APPLICATION.'controller/extension/module/d_vuefront/.htaccess.txt')) {
+                if (!is_writable($rootFolder.'/.htaccess') || !is_writable(DIR_APPLICATION.'controller/extension/module/d_vuefront/.htaccess.txt')) {
                     http_response_code(500);
-                    $this->response->setOutput(json_encode(array(
-                        'error' => 'not_writable_htaccess'
-                    )));
+                    $this->response->setOutput(json_encode([
+                        'error' => 'not_writable_htaccess',
+                    ]));
+
                     return;
                 }
-                $content = file_get_contents(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt');
-                file_put_contents($rootFolder . '/.htaccess', $content);
-                unlink(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt');
+                $content = file_get_contents(DIR_APPLICATION.'controller/extension/module/d_vuefront/.htaccess.txt');
+                file_put_contents($rootFolder.'/.htaccess', $content);
+                unlink(DIR_APPLICATION.'controller/extension/module/d_vuefront/.htaccess.txt');
             }
         }
-
 
         $this->vf_information();
     }
@@ -293,16 +293,39 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (is_dir($dir . "/" . $object) && !is_link($dir . "/" . $object)) {
-                        $this->removeDir($dir . "/" . $object);
+                if ($object != '.' && $object != '..') {
+                    if (is_dir($dir.'/'.$object) && !is_link($dir.'/'.$object)) {
+                        $this->removeDir($dir.'/'.$object);
                     } else {
-                        unlink($dir . "/" . $object);
+                        unlink($dir.'/'.$object);
                     }
                 }
             }
             rmdir($dir);
         }
+    }
+
+    public function vf_settings()
+    {
+        $this->load->model('extension/d_opencart_patch/setting');
+        $result = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_settings');
+
+        $this->response->setOutput(json_encode($result));
+    }
+
+    public function vf_settings_edit()
+    {
+        $this->load->model('extension/d_opencart_patch/setting');
+        $setting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');
+
+        $vfSetting = json_decode(html_entity_decode($this->request->post['setting'], ENT_QUOTES, 'UTF-8'), true);
+
+        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, [
+            $this->codename.'_settings' => $vfSetting,
+            $this->codename.'_apps' => $setting,
+        ]);
+
+        $this->response->setOutput(json_encode(['success' => 'success']));
     }
 
     public function vf_apps()
@@ -313,27 +336,32 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
         $this->response->setOutput(json_encode($result));
     }
 
-    public function vf_apps_create() {
+    public function vf_apps_create()
+    {
         $this->load->model('extension/d_opencart_patch/setting');
         $setting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');
+        $vfSetting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_settings');
         $d = new DateTime();
 
-        $setting[] = array(
+        $setting[] = [
             'codename' => $this->request->post['codename'],
             'jwt' => $this->request->post['jwt'],
-            'dateAdded' => $d->format('Y-m-d\TH:i:s.u')
-        );
+            'dateAdded' => $d->format('Y-m-d\TH:i:s.u'),
+        ];
 
-        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, array(
-            $this->codename.'_apps' => $setting
-        ));
+        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, [
+            $this->codename.'_apps' => $setting,
+            $this->codename.'_settings' => $vfSetting,
+        ]);
 
-        $this->response->setOutput(json_encode(array('success' => 'success')));
+        $this->response->setOutput(json_encode(['success' => 'success']));
     }
 
-    public function vf_apps_edit() {
+    public function vf_apps_edit()
+    {
         $this->load->model('extension/d_opencart_patch/setting');
         $setting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');
+        $vfSetting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_settings');
 
         $app = json_decode(html_entity_decode($this->request->post['app'], ENT_QUOTES, 'UTF-8'), true);
 
@@ -341,68 +369,72 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
             $setting[$this->request->post['key']][$key] = $value;
         }
 
-        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, array(
-            $this->codename.'_apps' => $setting
-        ));
+        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, [
+            $this->codename.'_apps' => $setting,
+            $this->codename.'_settings' => $vfSetting,
+        ]);
 
-        $this->response->setOutput(json_encode(array('success' => 'success')));
+        $this->response->setOutput(json_encode(['success' => 'success']));
     }
 
-    public function vf_apps_remove() {
+    public function vf_apps_remove()
+    {
         $this->load->model('extension/d_opencart_patch/setting');
+        $vfSetting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_settings');
         $setting = $this->model_extension_d_opencart_patch_setting->getSettingValue($this->codename.'_apps');
         unset($setting[$this->request->post['key']]);
 
-        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, array(
-            $this->codename.'_apps' => $setting
-        ));
+        $this->model_extension_d_opencart_patch_setting->editSetting($this->codename, [
+            $this->codename.'_settings' => $vfSetting,
+            $this->codename.'_apps' => $setting,
+        ]);
 
-        $this->response->setOutput(json_encode(array('success' => 'success')));
+        $this->response->setOutput(json_encode(['success' => 'success']));
     }
 
     public function vf_information()
     {
-        $root = realpath(DIR_APPLICATION . '../');
+        $root = realpath(DIR_APPLICATION.'../');
         $catalog = '';
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-            $catalog = HTTPS_CATALOG . 'index.php?route=extension/module/d_vuefront/graphql';
+            $catalog = HTTPS_CATALOG.'index.php?route=extension/module/d_vuefront/graphql';
         } else {
-            $catalog = HTTP_CATALOG . 'index.php?route=extension/module/d_vuefront/graphql';
+            $catalog = HTTP_CATALOG.'index.php?route=extension/module/d_vuefront/graphql';
         }
 
         $extensions = [];
 
         if ($this->d_blog_module) {
-            $blog_config = json_decode(file_get_contents(DIR_SYSTEM . 'library/d_shopunity/extension/d_blog_module.json'), true);
+            $blog_config = json_decode(file_get_contents(DIR_SYSTEM.'library/d_shopunity/extension/d_blog_module.json'), true);
             $extensions[] = [
                 'name' => $this->language->get('text_blog_module'),
                 'version' => $blog_config['version'],
-                'status' => $this->d_blog_module
+                'status' => $this->d_blog_module,
             ];
         } else {
             $extensions[] = [
                 'name' => $this->language->get('text_blog_module'),
                 'version' => '',
-                'status' => $this->d_blog_module
+                'status' => $this->d_blog_module,
             ];
         }
 
-        $is_apache = strpos($this->request->server["SERVER_SOFTWARE"], "Apache") !== false;
+        $is_apache = strpos($this->request->server['SERVER_SOFTWARE'], 'Apache') !== false;
 
         $status = false;
-        if(file_exists(DIR_APPLICATION . 'controller/extension/module/d_vuefront/.htaccess.txt')) {
+        if (file_exists(DIR_APPLICATION.'controller/extension/module/d_vuefront/.htaccess.txt')) {
             $status = true;
         }
         $this->response->setOutput(json_encode([
             'apache' => $is_apache,
             'backup' => 'admin/extension/module/d_vuefront/.htaccess.txt',
-            'htaccess' => file_exists($root . '/.htaccess'),
+            'htaccess' => file_exists($root.'/.htaccess'),
             'status' => $status,
             'phpversion' => phpversion(),
             'plugin_version' => $this->extension['version'],
             'extensions' => $extensions,
             'cmsConnect' => $catalog,
-            'server' => $this->request->server["SERVER_SOFTWARE"]
+            'server' => $this->request->server['SERVER_SOFTWARE'],
         ]));
     }
 
@@ -418,6 +450,7 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
                         $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
                     }
                 }
+
                 return $headers;
             }
         }
@@ -426,10 +459,10 @@ RewriteRule ^([^?]*) vuefront/200.html [L,QSA]";
         $cHeaders = ['Content-Type: application/json'];
 
         if (!empty($headers['Token'])) {
-          $cHeaders[] = 'token: ' . $headers['Token'];
+            $cHeaders[] = 'token: '.$headers['Token'];
         }
         if (!empty($headers['token'])) {
-            $cHeaders[] = 'token: ' . $headers['token'];
+            $cHeaders[] = 'token: '.$headers['token'];
         }
         $rawInput = file_get_contents('php://input');
         $ch = curl_init();

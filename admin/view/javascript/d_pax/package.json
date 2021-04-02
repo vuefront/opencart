@@ -48,6 +48,7 @@
     "postcss-responsive-type": "^1.0.0",
     "postcss-scss": "^3.0.2",
     "postcss-simple-vars": "^6.0.1",
+    "pug": "^3.0.0",
     "pug-plain-loader": "^1.0.0",
     "sass-loader": "^10.0.4",
     "sass-resources-loader": "^2.1.1",
@@ -62,9 +63,7 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-manifest-generator-plugin": "^1.2.1",
     "webpack-manifest-plugin": "^2.2.0",
-    "webpackbar": "^4.0.0",
-    "zlib": "^1.0.5",
-    "pug": "^3.0.0"
+    "webpackbar": "^4.0.0"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -81,6 +80,7 @@
     "global": "^4.4.0",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
+    "jszip": "^3.6.0",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "omit-deep-lodash": "^1.1.5",

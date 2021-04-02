@@ -1,4 +1,5 @@
 <?php
+
 use GraphQL\Error\ClientAware;
 
 class MySafeException extends \Exception implements ClientAware
@@ -13,31 +14,36 @@ class MySafeException extends \Exception implements ClientAware
         return 'businessLogic';
     }
 }
-class VfLoad {
+class VfLoad
+{
     private $registry;
-    private $codename = "d_vuefront";
+    private $codename = 'd_vuefront';
+
     public function __construct($registry)
     {
         $this->registry = $registry;
     }
 
-    public function resolver($route) {
+    public function resolver($route)
+    {
         $that = $this;
-        return function($root, $args) use ($that, $route) {
-            return $that->registry->get('load')->controller('extension/'.$this->codename.'/'.$route, array(
+
+        return function ($root, $args) use ($that, $route) {
+            return $that->registry->get('load')->controller('extension/'.$this->codename.'/'.$route, [
                 'parent' => $root,
-                'args' => $args
-            ));
+                'args' => $args,
+            ]);
         };
     }
 
-    public function data($route, $data = array()) {
+    public function data($route, $data = [])
+    {
         return $this->registry->get('load')->controller('extension/'.$this->codename.'/'.$route, $data);
     }
 }
 class ModelExtensionModuleDVuefront extends Model
 {
-    private $codename = "d_vuefront";
+    private $codename = 'd_vuefront';
 
     public function __construct($registry)
     {
@@ -48,14 +54,14 @@ class ModelExtensionModuleDVuefront extends Model
     public function getResolvers()
     {
         $rawMapping = file_get_contents(DIR_APPLICATION.'controller/extension/module/'.$this->codename.'_schema/mapping.json');
-        $mapping = json_decode( $rawMapping, true );
-        $result = array();
+        $mapping = json_decode($rawMapping, true);
+        $result = [];
         foreach ($mapping as $key => $value) {
             $that = $this;
-            $result[$key] = function($root, $args, $context) use ($value, $that) {
+            $result[$key] = function ($root, $args, $context) use ($value, $that) {
                 try {
                     return $that->load->controller('extension/'.$this->codename.'/'.$value, $args);
-                } catch(Exception $e) {
+                } catch (Exception $e) {
                     throw new MySafeException($e->getMessage());
                 }
             };
@@ -64,7 +70,8 @@ class ModelExtensionModuleDVuefront extends Model
         return $result;
     }
 
-    public function getJwt($codename) {
+    public function getJwt($codename)
+    {
         $this->load->model('setting/setting');
 
         $setting = $this->model_setting_setting->getSetting('d_vuefront');
@@ -72,7 +79,7 @@ class ModelExtensionModuleDVuefront extends Model
         $result = false;
 
         foreach ($setting['d_vuefront_apps'] as $key => $value) {
-            if($value['codename'] == $codename) {
+            if ($value['codename'] == $codename) {
                 $result = $value['jwt'];
             }
         }
@@ -80,18 +87,20 @@ class ModelExtensionModuleDVuefront extends Model
         return $result;
     }
 
-    public function pushEvent($name, $data) {
+    public function pushEvent($name, $data)
+    {
         $apps = $this->getAppsForEvent();
 
         foreach ($apps as $key => $value) {
-            $this->request($value['eventUrl'], array(
+            $this->request($value['eventUrl'], [
                 'name' => $name,
-                'data' => $data
-            ));
+                'data' => $data,
+            ]);
         }
     }
 
-    public function checkAccess() {
+    public function checkAccess()
+    {
         $this->load->model('setting/setting');
 
         if (!isset($this->request->get['accessKey'])) {
@@ -103,7 +112,12 @@ class ModelExtensionModuleDVuefront extends Model
         $result = false;
 
         foreach ($setting['d_vuefront_apps'] as $value) {
-            if(!empty($value['accessKey']) && $this->request->get['accessKey'] == $value['accessKey']) {
+            if (!empty($value['accessKey']) && $this->request->get['accessKey'] == $value['accessKey']) {
+                $result = true;
+            }
+        }
+        if (!empty($setting['d_vuefront_settings']) && !empty($setting['d_vuefront_settings']['accessKey'])) {
+            if ($this->request->get['accessKey'] == $setting['d_vuefront_settings']['accessKey']) {
                 $result = true;
             }
         }
@@ -111,7 +125,67 @@ class ModelExtensionModuleDVuefront extends Model
         return $result;
     }
 
-    public function getAppsForEvent() {
+    public function editApp($name, $appSetting)
+    {
+        $appSetting['codename'] = $name;
+        $this->load->model('setting/setting');
+
+        $setting = $this->model_setting_setting->getSetting('d_vuefront');
+
+        $app = $this->getApp($name);
+
+        if (!empty($app)) {
+            foreach ($setting['d_vuefront_apps'] as $key => $value) {
+                if ($value['codename'] == $name) {
+                    $setting['d_vuefront_apps'][$key] = $appSetting;
+                }
+            }
+        } else {
+            $setting['d_vuefront_apps'][] = $appSetting;
+        }
+
+        $this->editSettingValue('d_vuefront', 'd_vuefront_apps', $setting['d_vuefront_apps']);
+    }
+
+    public function editSettingValue($code = '', $key = '', $value = '', $store_id = 0)
+    {
+        $this->db->query('DELETE FROM '.DB_PREFIX.'setting WHERE `code` = \''.$this->db->escape($code).'\' AND `key` = \''.$this->db->escape($key).'\' AND store_id = \''.(int) $store_id.'\'');
+        if (!is_array($value)) {
+            $this->db->query('INSERT INTO '.DB_PREFIX."setting SET `value` = '".$this->db->escape($value)."', serialized = '0'  , `code` = '".$this->db->escape($code)."', `key` = '".$this->db->escape($key)."', store_id = '".(int) $store_id."'");
+        } else {
+            $value = json_encode($value);
+            if (VERSION < '2.1.0.0') {
+                $value = serialize($value);
+            }
+            $this->db->query('INSERT INTO '.DB_PREFIX."setting SET `value` = '".$this->db->escape($value)."', serialized = '1' , `code` = '".$this->db->escape($code)."', `key` = '".$this->db->escape($key)."', store_id = '".(int) $store_id."'");
+        }
+    }
+
+    public function getSetting($name)
+    {
+        $this->load->model('setting/setting');
+
+        $setting = $this->model_setting_setting->getSetting('d_vuefront');
+
+        return !empty($setting['d_vuefront_settings']) ? $setting['d_vuefront_settings'] : [];
+    }
+
+    public function getApp($name)
+    {
+        $this->load->model('setting/setting');
+
+        $setting = $this->model_setting_setting->getSetting('d_vuefront');
+        foreach ($setting['d_vuefront_apps'] as $value) {
+            if ($value['codename'] == $name) {
+                return $value;
+            }
+        }
+
+        return false;
+    }
+
+    public function getAppsForEvent()
+    {
         $this->load->model('setting/setting');
 
         $setting = $this->model_setting_setting->getSetting('d_vuefront');
@@ -119,7 +193,7 @@ class ModelExtensionModuleDVuefront extends Model
         $result = [];
 
         foreach ($setting['d_vuefront_apps'] as $value) {
-            if(!empty($value['eventUrl'])) {
+            if (!empty($value['eventUrl'])) {
                 $result[] = $value;
             }
         }
@@ -127,11 +201,15 @@ class ModelExtensionModuleDVuefront extends Model
         return $result;
     }
 
-    public function request($url, $data) {
+    public function request($url, $data, $token = false)
+    {
         $ch = curl_init();
-        $headr = array();
+        $headr = [];
 
         $headr[] = 'Content-type: application/json';
+        if ($token) {
+            $headr[] = 'Authorization: Bearer '.$token;
+        }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headr);
@@ -149,29 +227,31 @@ class ModelExtensionModuleDVuefront extends Model
         }
 
         $result = json_decode($result, true);
+
         return $result;
     }
 
-    public function requestCheckout($query, $variables) {
+    public function requestCheckout($query, $variables)
+    {
         $jwt = $this->getJwt('vuefront-checkout-app');
 
         $ch = curl_init();
 
-        $requestData = array(
+        $requestData = [
             'operationName' => null,
             'variables' => $variables,
-            'query' => $query
-        );
+            'query' => $query,
+        ];
 
-        $headr = array();
+        $headr = [];
 
         $headr[] = 'Content-type: application/json';
         $headr[] = 'Authorization: '.$jwt;
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,$headr);
-        curl_setopt($ch, CURLOPT_POST,true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     json_encode($requestData, JSON_FORCE_OBJECT) );
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headr);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData, JSON_FORCE_OBJECT));
         // curl_setopt($ch, CURLOPT_URL, 'http://localhost:3005/graphql');
         curl_setopt($ch, CURLOPT_URL, 'https://api.checkout.vuefront.com/graphql');
 
@@ -181,7 +261,9 @@ class ModelExtensionModuleDVuefront extends Model
 
         return $result['data'];
     }
-    public function mergeSchemas($files) {
+
+    public function mergeSchemas($files)
+    {
         $rootQueryType = '';
         $types = '';
         $rootMutationType = '';
@@ -200,6 +282,6 @@ class ModelExtensionModuleDVuefront extends Model
             }
         }
 
-        return "${types}".PHP_EOL."type RootQueryType {".PHP_EOL."${rootQueryType}".PHP_EOL."}".PHP_EOL."type RootMutationType {".PHP_EOL."${rootMutationType}".PHP_EOL."}";
+        return "${types}".PHP_EOL.'type RootQueryType {'.PHP_EOL."${rootQueryType}".PHP_EOL.'}'.PHP_EOL.'type RootMutationType {'.PHP_EOL."${rootMutationType}".PHP_EOL.'}';
     }
 }

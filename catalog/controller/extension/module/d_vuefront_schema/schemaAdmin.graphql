@@ -27,6 +27,19 @@ type Option {
   values: [OptionValue]
 }
 
+input InputAppSetting {
+    eventUrl: String
+    jwt: String
+    authUrl: String
+}
+
+type AppSetting {
+    codename: String
+    authUrl: String
+    eventUrl: String
+    jwt: String
+}
+
 type RootQueryType {
    customersList(page: Int = 1, size: Int = 10, search: String, sort: String = "email", order: String = "ASC"): CustomerResult
    customer(id: String): Customer
@@ -34,5 +47,5 @@ type RootQueryType {
    optionsList(page: Int = 1, size: Int = 10, search: String, sort: String = "sort_order", order: String = "ASC"): OptionResult
 }
 type RootMutationType {
-
+   updateApp(name: String, settings: InputAppSetting): AppSetting
 }

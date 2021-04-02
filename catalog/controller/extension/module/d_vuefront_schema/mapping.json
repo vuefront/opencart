@@ -22,6 +22,8 @@
 
     "home": "common/home/get",
 
+    "updateApp": "common/home/updateApp",
+
     "searchUrl": "common/home/searchUrl",
 
     "uploadFile": "common/file/upload",
@@ -47,8 +49,9 @@
     "createOrder": "store/checkout/createOrder",
     "updateOrder": "store/checkout/updateOrder",
     "confirmOrder": "store/checkout/confirmOrder",
-    "orderData": "store/checkout/orderData",
     "totals": "store/checkout/totals",
+
+    "authProxy": "common/home/authProxy",
 
     "cart": "store/cart/get",
     "addToCart": "store/cart/add",
