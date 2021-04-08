@@ -6,9 +6,10 @@
         validation-provider(v-slot="{errors, valid}" :name="$t('text_url')" rules="required")
           b-form-group(:label="$t('text_callback_url')" label-for="input-callback-url")
             b-form-input(id="input-callback-url" v-model="form.eventUrl")
-        validation-provider(v-slot="{errors, valid}" :name="$t('text_access_key')" rules="required")
-          b-form-group(:label="$t('text_access_key')" label-for="input-access-key")
-            b-form-input(id="input-access-key" v-model="form.accessKey")
+        b-form-group(:label="$t('text_auth_url')" label-for="input-auth-url")
+          b-form-input(id="input-auth-url" v-model="form.authUrl")
+        b-form-group(:label="$t('text_jwt')" label-for="input-jwt")
+          b-form-input(id="input-jwt" v-model="form.jwt")
         div(class="edit-app__submit_button")
           b-button(type="submit" size="lg" variant="success") {{$t('text_save')}}
 </template>
@@ -37,7 +38,8 @@ export default {
     return {
       form: {
         eventUrl: this.app.eventUrl || '',
-        accessKey: this.app.accessKey || ''
+        authUrl: this.app.authUrl || '',
+        jwt: this.app.jwt || ''
       }
     }
   },
@@ -51,10 +53,12 @@ export default {
       this.$store.commit('apps/setEdit', false)
     },
     async onSubmit(valid) {
+      console.log(valid)
       if (valid) {
         await this.$store.dispatch('apps/edit', {key: this.id, app: {
           eventUrl: this.form.eventUrl,
-          accessKey: this.form.accessKey
+          authUrl: this.form.authUrl,
+          jwt: this.form.jwt,
         }})
         await this.$store.dispatch('apps/list')
         this.$store.commit('apps/setEdit', false)
@@ -69,6 +73,8 @@ export default {
   "text_url": "URL Site",
   "text_callback_url": "Url for event",
   "text_access_key": "Key for access to admin api",
+  "text_auth_url": "Auth url",
+  "text_jwt": "App JWT",
   "text_save": "Save"
 }
 </i18n>

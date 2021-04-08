@@ -204,15 +204,15 @@ class ModelExtensionModuleDVuefront extends Model
     public function request($url, $data, $token = false)
     {
         $ch = curl_init();
-        $headr = [];
+        $headers = [];
 
-        $headr[] = 'Content-type: application/json';
+        $headers[] = 'Content-type: application/json';
         if ($token) {
-            $headr[] = 'Authorization: Bearer '.$token;
+            $headers[] = 'Authorization: Bearer '.$token;
         }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headr);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));

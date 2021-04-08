@@ -172,7 +172,7 @@ export default {
       /\s?vf-modal-open/,
       ''
     )
-    document.querySelector('html').className += document
+    document.querySelector('html').className = document
       .querySelector('html')
       .className.replace(/\s?vf-modal-open/, '')
   },
