@@ -712,7 +712,9 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
             );
         } else {
             $response = array(
-                'url' => ''
+                'createOrder' => array(
+                    'url' => ''
+                )
             );
         }
 
