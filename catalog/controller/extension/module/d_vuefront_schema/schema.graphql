@@ -497,7 +497,7 @@ type RootMutationType {
   addToWishlist(id: Int): [Product]
   removeWishlist(id: String): [Product]
   contactSend(name: String, email: String, message: String): ContactResult
-  createOrder: CreateOrderResult
+  createOrder(withPayment: Boolean = true): CreateOrderResult
   updateOrder(paymentAddress: [InputField], paymentAddressId: String, shippingAddress: [InputField], shippingAddressId: String, paymentMethod: String, shippingMethod: String): UpdateOrderResult
   confirmOrder: ConfirmOrderResult
 

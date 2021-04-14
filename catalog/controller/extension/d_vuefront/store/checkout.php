@@ -385,7 +385,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
         );
     }
 
-    public function confirmOrder()
+    public function confirmOrder($args)
     {
         $this->load->model('extension/module/d_vuefront');
 
@@ -695,20 +695,27 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
 
         $this->session->data['order_id'] = $this->model_checkout_order->addOrder($order_data);
 
-        $response = $this->model_extension_module_d_vuefront->requestCheckout(
-            'mutation($paymentMethod: String, $total: Float, $callback: String, $customerId: String, $customerEmail: String) {
-                createOrder(paymentMethod: $paymentMethod, total: $total, callback: $callback, customerId: $customerId, customerEmail: $customerEmail) {
-                    url
-                }
-            }',
-            array(
-                'paymentMethod' => $paymentMethod['codename'],
-                'customerId' => $order_data['customer_id'],
-                'customerEmail' => $order_data['customer_email'],
-                'total' => floatval($total_data['total']),
-                'callback' => $this->url->link('extension/d_vuefront/store/checkout/callback', 'order_id='.$this->session->data['order_id'], true)
-            )
-        );
+        if ($args['withPayment']) {
+            $response = $this->model_extension_module_d_vuefront->requestCheckout(
+                'mutation($paymentMethod: String, $total: Float, $callback: String, $customerId: String, $customerEmail: String) {
+                    createOrder(paymentMethod: $paymentMethod, total: $total, callback: $callback, customerId: $customerId, customerEmail: $customerEmail) {
+                        url
+                    }
+                }',
+                array(
+                    'paymentMethod' => $paymentMethod['codename'],
+                    'customerId' => $order_data['customer_id'],
+                    'customerEmail' => $order_data['customer_email'],
+                    'total' => floatval($total_data['total']),
+                    'callback' => $this->url->link('extension/d_vuefront/store/checkout/callback', 'order_id='.$this->session->data['order_id'], true)
+                )
+            );
+        } else {
+            $response = array(
+                'url' => ''
+            );
+        }
+
 
         return array(
             'url' => $response['createOrder']['url'],
