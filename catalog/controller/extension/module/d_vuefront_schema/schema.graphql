@@ -416,6 +416,7 @@ type UpdateOrderResult {
 type ConfirmOrderResult {
   order: Order
   url: String
+  callback: String
 }
 
 type Order {
@@ -497,8 +498,8 @@ type RootMutationType {
   addToWishlist(id: Int): [Product]
   removeWishlist(id: String): [Product]
   contactSend(name: String, email: String, message: String): ContactResult
-  createOrder(withPayment: Boolean = true): CreateOrderResult
+  createOrder: CreateOrderResult
   updateOrder(paymentAddress: [InputField], paymentAddressId: String, shippingAddress: [InputField], shippingAddressId: String, paymentMethod: String, shippingMethod: String): UpdateOrderResult
-  confirmOrder: ConfirmOrderResult
+  confirmOrder(withPayment: Boolean = true): ConfirmOrderResult
 
 }

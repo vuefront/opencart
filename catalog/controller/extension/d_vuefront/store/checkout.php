@@ -719,6 +719,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
 
         return array(
             'url' => $response['createOrder']['url'],
+            'callback' => $this->url->link('extension/d_vuefront/store/checkout/callback', 'order_id='.$this->session->data['order_id'], true),
             'order' => array(
                 'id' => $this->session->data['order_id']
             )
