@@ -99,4 +99,13 @@ class ModelExtensionDVuefrontManufacturer extends Model {
 
         return $query->row['total'];
 	}
+    public function getManufacturerKeyword($manufacturer_id) {
+        if(VERSION >= '3.0.0.0') {
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id='".(int)$this->config->get('config_language_id')."' AND `query` LIKE 'manufacturer_id=".(int)$manufacturer_id."'");
+        } else {
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` LIKE 'manufacturer_id=".(int)$manufacturer_id."'");
+        }
+        
+        return $query->row;
+    }
 }

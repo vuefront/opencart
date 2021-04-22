@@ -277,6 +277,7 @@ type Manufacturer {
     image: String
     imageLazy: String
     sort_order: Int
+    url(url: String): String
 }
 type ManufacturerResult {
   content: [Manufacturer]

@@ -9,10 +9,10 @@ class ControllerExtensionDVuefrontStoreManufacturer extends Controller
         $this->load->model('extension/'.$this->codename.'/manufacturer');
         $this->load->model('tool/image');
         $manufacturer_info = $this->model_extension_d_vuefront_manufacturer->getManufacturer($args['id']);
+
         if (empty($manufacturer_info)) {
             return array();
         }
-
 
         if(VERSION >= "3.0.0.0"){
             $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_width');
@@ -32,11 +32,21 @@ class ControllerExtensionDVuefrontStoreManufacturer extends Controller
             $imageLazy = '';
         }
 
+        $manufacturer_keyword = $this->model_extension_d_vuefront_manufacturer->getManufacturerKeyword($args['id']);
+
+        if(!empty($manufacturer_keyword['keyword'])) {
+            $keyword = $manufacturer_keyword['keyword'];
+        } else {
+            $keyword = '';
+        }
+
         return array(
             'id'          => $manufacturer_info['manufacturer_id'],
             'name'        => html_entity_decode($manufacturer_info['name'], ENT_QUOTES, 'UTF-8'),
             'image'       => $image,
             'imageLazy'   => $imageLazy,
+            'url' => $this->vfload->resolver('store/manufacturer/url'),
+            'keyword' => $keyword,
             'sort_order'  => $manufacturer_info['sort_order']
         );
     }
