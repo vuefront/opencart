@@ -159,6 +159,8 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             'imageBig' => $imageBig,
             'stock' => $stock,
             'rating' => (float)$rating,
+            'manufacturerId' => $product_info['manufacturer_id'],
+            'manufacturer' => $this->vfload->resolver('store/product/manufacturer'),
             'images' => $this->vfload->resolver('store/product/images'),
             'products' => $this->vfload->resolver('store/product/relatedProducts'),
             'attributes' => $this->vfload->resolver('store/product/attribute'),
@@ -187,6 +189,15 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
         }
 
         return $products;
+    }
+
+    public function manufacturer($data)
+    {
+        $product_info = $data['parent'];
+        
+        return $this->vfload->data('store/manufacturer/get', array(
+            'id' => $product_info['manufacturerId']
+        ));
     }
 
     public function attribute($data)

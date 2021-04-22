@@ -207,6 +207,8 @@ type Product {
   description: String
   model: String
   price: String
+  manufacturerId: String
+  manufacturer: Manufacturer
   special: String
   tax: String
   minimum: Int
