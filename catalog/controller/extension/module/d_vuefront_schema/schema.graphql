@@ -465,7 +465,7 @@ type RootQueryType {
   language: [Language]
   page(id: String): Page
   pagesList(page: Int = 1, size: Int = 10, search: String = "", sort: String = "sort_order", order: String = "ASC"): PageResult
-  productsList(page: Int = 1, size: Int = 15, filter: String = "", special: Boolean = false, search: String = "", ids: [Int] = [], category_id: String = "", sort: String = "sort_order", order: String = "ASC"): ProductResult
+  productsList(page: Int = 1, size: Int = 15, filter: String = "", special: Boolean = false, search: String = "", ids: [Int] = [], category_id: String = "", manufacturer_id: String= "" sort: String = "sort_order", order: String = "ASC"): ProductResult
   product(id: String): Product
   wishlist: [Product]
   contact: Contact

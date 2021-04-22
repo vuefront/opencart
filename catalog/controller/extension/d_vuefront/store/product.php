@@ -21,6 +21,7 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
 
         $filter_data = array(
             'filter_category_id' => $args['category_id'],
+            'filter_manufacturer_id' => $args['manufacturer_id'],
             'filter_filter' => $args['filter'],
             'sort' => $args['sort'],
             'order' => $args['order']
