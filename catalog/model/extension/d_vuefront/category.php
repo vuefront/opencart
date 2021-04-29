@@ -19,6 +19,10 @@ class ModelExtensionDVuefrontCategory extends Model
             $sql .= " AND c1.parent_id = '" . (int)$data['parent'] . "'";
         }
 
+        if (isset($data['top'])) {
+            $sql .= " AND c1.top = '1'";
+        }
+
         if (!empty($data['filter_name'])) {
             $sql .= " AND cd2.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
@@ -72,6 +76,10 @@ class ModelExtensionDVuefrontCategory extends Model
 
         if (!empty($data['filter_name'])) {
             $sql .= " AND cd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (isset($data['top'])) {
+            $sql .= " AND c.top = '1'";
         }
 
         $query = $this->db->query($sql);

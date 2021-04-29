@@ -75,6 +75,10 @@ class ControllerExtensionDVuefrontStoreCategory extends Controller
             $filter_data['parent'] = $args['parent'];
         }
 
+        if ($args['top']) {
+            $filter_data['top'] = $args['top'];
+        }
+
         if (!empty($args['search'])) {
             $filter_data['filter_name'] = $args['search'];
         }
