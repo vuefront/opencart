@@ -14,22 +14,31 @@ class ControllerExtensionDVuefrontStoreManufacturer extends Controller
             return array();
         }
 
-        if(VERSION >= "3.0.0.0"){
+        if (VERSION >= "3.0.0.0") {
             $width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_width');
             $height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_height');
+            $popup_width = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
+            $popup_height = $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
         } else if (VERSION >= '2.2.0.0') {
             $width = $this->config->get($this->config->get('config_theme') . '_image_category_width');
             $height = $this->config->get($this->config->get('config_theme') . '_image_category_height');
+            $popup_width = $this->config->get($this->config->get('config_theme') . '_image_popup_width');
+            $popup_height = $this->config->get($this->config->get('config_theme') . '_image_popup_height');
         } else {
             $width = $this->config->get('config_image_category_width');
             $height = $this->config->get('config_image_category_height');
+            $popup_width = $this->config->get('config_image_popup_width');
+            $popup_height = $this->config->get('config_image_popup_height');
         }
         if ($manufacturer_info['image']) {
             $image = $this->model_tool_image->resize($manufacturer_info['image'], $width, $height);
             $imageLazy = $this->model_tool_image->resize($manufacturer_info['image'], 10, ceil(10 * $height / $width));
+            $imageBig = $this->model_tool_image->resize($manufacturer_info['image'], $popup_width, $popup_height);
+
         } else {
             $image = '';
             $imageLazy = '';
+            $imageBig = '';
         }
 
         $manufacturer_keyword = $this->model_extension_d_vuefront_manufacturer->getManufacturerKeyword($args['id']);
@@ -45,8 +54,9 @@ class ControllerExtensionDVuefrontStoreManufacturer extends Controller
             'name'        => html_entity_decode($manufacturer_info['name'], ENT_QUOTES, 'UTF-8'),
             'image'       => $image,
             'imageLazy'   => $imageLazy,
-            'url' => $this->vfload->resolver('store/manufacturer/url'),
-            'keyword' => $keyword,
+            'imageBig'    => $imageBig,
+            'url'         => $this->vfload->resolver('store/manufacturer/url'),
+            'keyword'     => $keyword,
             'sort_order'  => $manufacturer_info['sort_order']
         );
     }
