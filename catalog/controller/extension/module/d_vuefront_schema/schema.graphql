@@ -196,7 +196,13 @@ type Zone {
     countryId: String
 }
 
+type ExtraField {
+  name: String
+  value: String
+}
+
 type Product {
+  extra: [ExtraField]
   products(limit: Int = 3): [Product]
   id: ID
   image: String

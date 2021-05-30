@@ -45,6 +45,10 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
         $customer_info = $this->model_account_customer->getCustomer($args['id']);
 
+        if (!$customer_info) {
+            return array();
+        }
+
         return array(
             'id'        => $customer_info['customer_id'],
             'firstName' => $customer_info['firstname'],

@@ -121,6 +121,11 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             $imageBig = '';
         }
 
+        $resultEvent = array();
+
+        $this->load->model('extension/module/d_vuefront');
+        $resultEvent = $this->model_extension_module_d_vuefront->pushEvent("fetch_product",  array( "extra" => array(), "product_id" => $product_info['product_id']));
+
         if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
             $price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
         } else {
@@ -154,6 +159,7 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
             'shortDescription' => utf8_substr(trim(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'))), 0, $description_length) . '..',
             'price' => $price,
             'special' => $special,
+            'extra' => $resultEvent['extra'],
             'model' => $product_info['model'],
             'image' => $image,
             'imageLazy' => $imageLazy,

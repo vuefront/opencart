@@ -92,11 +92,16 @@ class ModelExtensionModuleDVuefront extends Model
         $apps = $this->getAppsForEvent();
 
         foreach ($apps as $key => $value) {
-            $this->request($value['eventUrl'], [
+            $output = $this->request($value['eventUrl'], [
                 'name' => $name,
                 'data' => $data,
             ]);
+            if ($output) {
+                $data = $output;
+            }
         }
+
+        return $data;
     }
 
     public function checkAccess()
