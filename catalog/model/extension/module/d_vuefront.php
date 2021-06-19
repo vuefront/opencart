@@ -77,10 +77,12 @@ class ModelExtensionModuleDVuefront extends Model
         $setting = $this->model_setting_setting->getSetting('d_vuefront');
 
         $result = false;
-
-        foreach ($setting['d_vuefront_apps'] as $key => $value) {
-            if ($value['codename'] == $codename) {
-                $result = $value['jwt'];
+        
+        if (!empty($setting['d_vuefront_apps'])) {
+            foreach ($setting['d_vuefront_apps'] as $key => $value) {
+                if ($value['codename'] == $codename) {
+                    $result = $value['jwt'];
+                }
             }
         }
 
@@ -115,10 +117,11 @@ class ModelExtensionModuleDVuefront extends Model
         $setting = $this->model_setting_setting->getSetting('d_vuefront');
 
         $result = false;
-
-        foreach ($setting['d_vuefront_apps'] as $value) {
-            if (!empty($value['accessKey']) && $this->request->get['accessKey'] == $value['accessKey']) {
-                $result = true;
+        if (!empty($setting['d_vuefront_apps'])) {
+            foreach ($setting['d_vuefront_apps'] as $value) {
+                if (!empty($value['accessKey']) && $this->request->get['accessKey'] == $value['accessKey']) {
+                    $result = true;
+                }
             }
         }
         if (!empty($setting['d_vuefront_settings']) && !empty($setting['d_vuefront_settings']['accessKey'])) {
@@ -138,6 +141,10 @@ class ModelExtensionModuleDVuefront extends Model
         $setting = $this->model_setting_setting->getSetting('d_vuefront');
 
         $app = $this->getApp($name);
+
+        if (!isset($setting['d_vuefront_apps'])) {
+            $setting['d_vuefront_apps'] = array();
+        }
 
         if (!empty($app)) {
             foreach ($setting['d_vuefront_apps'] as $key => $value) {
@@ -180,9 +187,11 @@ class ModelExtensionModuleDVuefront extends Model
         $this->load->model('setting/setting');
 
         $setting = $this->model_setting_setting->getSetting('d_vuefront');
-        foreach ($setting['d_vuefront_apps'] as $value) {
-            if ($value['codename'] == $name) {
-                return $value;
+        if (!empty($setting['d_vuefront_apps'])) {
+            foreach ($setting['d_vuefront_apps'] as $value) {
+                if ($value['codename'] == $name) {
+                    return $value;
+                }
             }
         }
 
@@ -196,10 +205,11 @@ class ModelExtensionModuleDVuefront extends Model
         $setting = $this->model_setting_setting->getSetting('d_vuefront');
 
         $result = [];
-
-        foreach ($setting['d_vuefront_apps'] as $value) {
-            if (!empty($value['eventUrl'])) {
-                $result[] = $value;
+        if (!empty($setting['d_vuefront_apps'])) {
+            foreach ($setting['d_vuefront_apps'] as $value) {
+                if (!empty($value['eventUrl'])) {
+                    $result[] = $value;
+                }
             }
         }
 
