@@ -145,7 +145,9 @@ class ModelExtensionModuleDVuefront extends Model
         if (!isset($setting['d_vuefront_apps'])) {
             $setting['d_vuefront_apps'] = array();
         }
-
+        if (!is_array($setting['d_vuefront_apps'])) {
+            $setting['d_vuefront_apps'] = array();
+        }
         if (!empty($app)) {
             foreach ($setting['d_vuefront_apps'] as $key => $value) {
                 if ($value['codename'] == $name) {
