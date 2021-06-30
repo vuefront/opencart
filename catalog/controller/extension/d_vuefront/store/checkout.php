@@ -140,13 +140,15 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
         $fields[] = array(
             'type' => 'country',
             'name' => 'country_id',
-            'required' => true
+            'required' => true,
+            'defaultValue' => $this->config->get('config_country_id')
         );
 
         $fields[] = array(
             'type' => 'zone',
             'name' => 'zone_id',
-            'required' => true
+            'required' => true,
+            'defaultValue' => $this->config->get('config_zone_id')
         );
 
         // Custom Fields
@@ -174,10 +176,12 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
 
                 $name = implode('', $name);
                 $name = str_replace('&', '', $name);
+
                 $fields[] = array(
                     'type' => $custom_field['type'],
                     'label' => html_entity_decode($custom_field['name'], ENT_QUOTES, 'UTF-8'),
                     'name' => "vfCustomField-".$custom_field["location"].'-'.$custom_field["custom_field_id"],
+                    'defaultValue' => $custom_field['value'],
                     'required' => $custom_field['required'],
                     'values' => $values
                 );
@@ -247,13 +251,15 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
         $fields[] = array(
             'type' => 'country',
             'name' => 'country_id',
-            'required' => true
+            'required' => true,
+            'defaultValue' => $this->config->get('config_country_id')
         );
 
         $fields[] = array(
-          'type' => 'zone',
-          'name' => 'zone_id',
-          'required' => true
+            'type' => 'zone',
+            'name' => 'zone_id',
+            'required' => true,
+            'defaultValue' => $this->config->get('config_zone_id')
         );
 
         $this->load->model('account/custom_field');
@@ -282,6 +288,7 @@ class ControllerExtensionDVuefrontStoreCheckout extends Controller
                     'type' => $custom_field['type'],
                     'label' => html_entity_decode($custom_field['name'], ENT_QUOTES, 'UTF-8'),
                     'name' => "vfCustomField-".$custom_field["location"].'-'.$custom_field["custom_field_id"],
+                    'defaultValue' => $custom_field['value'],
                     'required' => $custom_field['required'],
                     'values' => $values
                 );
