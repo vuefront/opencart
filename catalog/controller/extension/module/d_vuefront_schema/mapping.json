@@ -57,6 +57,7 @@
     "addToCart": "store/cart/add",
     "updateCart": "store/cart/update",
     "removeCart": "store/cart/remove",
+    "clearCart": "store/cart/clear",
 
     "category": "store/category/get",
     "categoriesList": "store/category/getList",

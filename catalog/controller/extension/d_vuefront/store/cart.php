@@ -107,6 +107,18 @@ class ControllerExtensionDVuefrontStoreCart extends Controller
         return $this->get(array());
     }
 
+    public function clear()
+    {
+        $this->cart->clear();
+
+        $this->load->model('extension/module/d_vuefront');
+        $this->load->model('extension/d_vuefront/cart');
+
+        $this->model_extension_module_d_vuefront->pushEvent("update_cart",  array( "cart" => $this->model_extension_d_vuefront_cart->prepareCart(), "customer_id" => $this->customer->getId(), "guest" => $this->customer->isLogged() ? false : true));
+
+        return $this->get(array());
+    }
+
     public function remove($args)
     {
         $this->cart->remove($args['key']);

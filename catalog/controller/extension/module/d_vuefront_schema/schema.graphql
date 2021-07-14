@@ -500,6 +500,7 @@ type RootMutationType {
   addToCart(id: String, quantity: Int = 1, options: [CartOption] = []): Cart
   updateCart(key: String, quantity: Int = 1): Cart
   removeCart(key: String): Cart
+  clearCart(): Cart
   addToCompare(id: Int): [Product]
   removeCompare(id: String): [Product]
   editCurrency(code: String): [Currency]
