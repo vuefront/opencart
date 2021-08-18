@@ -185,9 +185,9 @@ class ControllerExtensionDVuefrontStoreProduct extends Controller
 
     public function relatedProducts($data)
     {
-        $this->load->model('catalog/product');
+        $this->load->model('extension/'.$this->codename. '/product');
         $product_info = $data['parent'];
-        $results = $this->model_catalog_product->getProductRelated($product_info['id']);
+        $results = $this->model_extension_d_vuefront_product->getProductRelated($product_info['id'], $data['args']['limit']);
 
         $products = array();
 
