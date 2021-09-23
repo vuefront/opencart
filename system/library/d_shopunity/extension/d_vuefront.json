@@ -1,6 +1,6 @@
 {
   "codename": "d_vuefront",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "name": "Vuefront CMS Connect",
   "description": "Vuefront CMS Connect App for OpenCart. Adds GraphQL API to OpenCart to connect with VueFront Web App",
   "index": "extension/module/d_vuefront",
@@ -48,6 +48,10 @@
     "system/library/d_graphql"
   ],
   "changelog": [
+    {
+      "version": "2.1.0",
+      "change": "Extend API"
+    },
     {
       "version": "2.0.0",
       "change": "Added popup after first build"
