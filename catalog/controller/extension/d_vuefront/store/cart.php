@@ -75,11 +75,6 @@ class ControllerExtensionDVuefrontStoreCart extends Controller
             $this->request->post['option'][$option['id']] = strpos( $option['value'], '|') == false ? $option['value'] : explode('|', $option['value']);
         }
 
-        $this->load->model('extension/module/d_vuefront');
-        $this->load->model('extension/d_vuefront/cart');
-
-        $this->model_extension_module_d_vuefront->pushEvent("update_cart",  array( "cart" => $this->model_extension_d_vuefront_cart->prepareCart(), "customer_id" => $this->customer->getId(), "guest" => $this->customer->isLogged() ? false : true));
-
         $this->load->controller('checkout/cart/add');
 
         $result = json_decode($this->response->getOutput(), true);
@@ -92,7 +87,10 @@ class ControllerExtensionDVuefrontStoreCart extends Controller
                 throw new Exception('error cart');
             }
         }
+        $this->load->model('extension/module/d_vuefront');
+        $this->load->model('extension/d_vuefront/cart');
 
+        $this->model_extension_module_d_vuefront->pushEvent("update_cart",  array( "cart" => $this->model_extension_d_vuefront_cart->prepareCart(), "customer_id" => $this->customer->getId(), "guest" => $this->customer->isLogged() ? false : true));
         return $this->get(array());
     }
 
