@@ -91,12 +91,14 @@ type Customer {
   firstName: String
   lastName: String
   email: String
+  phone: String
 }
 
 input CustomerInput {
   firstName: String
   lastName: String
   email: String
+  phone: String
   password: String
 }
 

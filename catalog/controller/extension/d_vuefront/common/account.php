@@ -2,18 +2,18 @@
 
 class ControllerExtensionDVuefrontCommonAccount extends Controller
 {
-    private $codename = "d_vuefront";
+    private $codename = 'd_vuefront';
 
     public function customerList($args)
     {
-        $this->load->model('extension/' . $this->codename . '/customer');
+        $this->load->model('extension/'.$this->codename.'/customer');
 
-        $filter_data = array(
+        $filter_data = [
             'start' => ($args['page'] - 1) * $args['size'],
             'limit' => $args['size'],
             'sort' => $args['sort'],
             'order' => $args['order'],
-        );
+        ];
 
         if (!empty($args['search'])) {
             $filter_data['filter_name'] = $args['search'];
@@ -22,13 +22,13 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
         $results = $this->model_extension_d_vuefront_customer->getCustomers($filter_data);
         $customer_total = $this->model_extension_d_vuefront_customer->getTotalCustomers($filter_data);
 
-        $customers = array();
+        $customers = [];
 
         foreach ($results as $result) {
-            $customers[] = $this->getCustomer(array('id' => $result['customer_id']));
+            $customers[] = $this->getCustomer(['id' => $result['customer_id']]);
         }
 
-        return array(
+        return [
             'content' => $customers,
             'first' => $args['page'] === 1,
             'last' => $args['page'] === ceil($customer_total / $args['size']),
@@ -37,24 +37,26 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
             'size' => (int) $args['size'],
             'totalPages' => (int) ceil($customer_total / $args['size']),
             'totalElements' => (int) $customer_total,
-        );
+        ];
     }
 
-    public function getCustomer($args) {
+    public function getCustomer($args)
+    {
         $this->load->model('account/customer');
 
         $customer_info = $this->model_account_customer->getCustomer($args['id']);
 
         if (!$customer_info) {
-            return array();
+            return [];
         }
 
-        return array(
-            'id'        => $customer_info['customer_id'],
+        return [
+            'id' => $customer_info['customer_id'],
             'firstName' => $customer_info['firstname'],
-            'lastName'  => $customer_info['lastname'],
-            'email'     => $customer_info['email'],
-        );
+            'lastName' => $customer_info['lastname'],
+            'email' => $customer_info['email'],
+            'phone' => $customer_info['telephone'],
+        ];
     }
 
     public function register($args)
@@ -66,13 +68,13 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
         if ($this->model_account_customer->getTotalCustomersByEmail($customer_info['email'])) {
             throw new Exception($this->language->get('error_exists'));
         }
-        $customerData = array(
+        $customerData = [
             'firstname' => $customer_info['firstName'],
-            'lastname'  => $customer_info['lastName'],
-            'email'     => $customer_info['email'],
-            'telephone' => '',
-            'password'  => $customer_info['password'],
-        );
+            'lastname' => $customer_info['lastName'],
+            'email' => $customer_info['email'],
+            'phone' => $customer_info['telephone'],
+            'password' => $customer_info['password'],
+        ];
 
         if (VERSION < '3.0.0.0') {
             $customerData['fax'] = '';
@@ -91,18 +93,19 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
         $this->load->model('extension/module/d_vuefront');
 
-        $this->model_extension_module_d_vuefront->pushEvent("create_customer", $customer_info);
+        $this->model_extension_module_d_vuefront->pushEvent('create_customer', $customer_info);
 
         $this->customer->login($customer_info['email'], $customer_info['password']);
 
         unset($this->session->data['guest']);
 
-        return array(
-            'id'        => $customer_info['customer_id'],
+        return [
+            'id' => $customer_info['customer_id'],
             'firstName' => $customer_info['firstname'],
-            'lastName'  => $customer_info['lastname'],
-            'email'     => $customer_info['email'],
-        );
+            'lastName' => $customer_info['lastname'],
+            'email' => $customer_info['email'],
+            'phone' => $customer_info['telephone'],
+        ];
     }
 
     public function login($args)
@@ -114,17 +117,18 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
             $this->load->model('extension/module/d_vuefront');
 
-            $this->model_extension_module_d_vuefront->pushEvent("login_customer", $customer_info);
+            $this->model_extension_module_d_vuefront->pushEvent('login_customer', $customer_info);
 
-            return array(
+            return [
                 'token' => null,
-                'customer'=> array(
-                    'id'        => $customer_info['customer_id'],
+                'customer' => [
+                    'id' => $customer_info['customer_id'],
                     'firstName' => $customer_info['firstname'],
-                    'lastName'  => $customer_info['lastname'],
-                    'email'     => $customer_info['email'],
-                )
-            );
+                    'lastName' => $customer_info['lastname'],
+                    'email' => $customer_info['email'],
+                    'phone' => $customer_info['telephone'],
+                ],
+            ];
         } else {
             throw new Exception($this->language->get('error_login'));
         }
@@ -134,27 +138,27 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
     {
         $this->load->model('extension/module/d_vuefront');
 
-        $this->model_extension_module_d_vuefront->pushEvent("logout_customer", array("customer_id" => $this->customer->getId()));
+        $this->model_extension_module_d_vuefront->pushEvent('logout_customer', ['customer_id' => $this->customer->getId()]);
 
         $this->customer->logout();
 
         $logged = $this->customer->isLogged();
 
-        return array(
-            'status' => ! empty($logged)
-        );
+        return [
+            'status' => !empty($logged),
+        ];
     }
 
     public function edit($args)
     {
         $this->load->model('account/customer');
         $customer_info = $args['customer'];
-        $customerData  = array(
+        $customerData = [
             'firstname' => $customer_info['firstName'],
-            'lastname'  => $customer_info['lastName'],
-            'email'     => $customer_info['email'],
-            'telephone' => ''
-        );
+            'lastname' => $customer_info['lastName'],
+            'email' => $customer_info['email'],
+            'phone' => $customer_info['telephone'],
+        ];
 
         if (VERSION < '3.0.0.0') {
             $customerData['fax'] = '';
@@ -168,12 +172,13 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 
-        return array(
-            'id'        => $customer_info['customer_id'],
+        return [
+            'id' => $customer_info['customer_id'],
             'firstName' => $customer_info['firstname'],
-            'lastName'  => $customer_info['lastname'],
-            'email'     => $customer_info['email'],
-        );
+            'lastName' => $customer_info['lastname'],
+            'email' => $customer_info['email'],
+            'phone' => $customer_info['telephone'],
+        ];
     }
 
     public function editPassword($args)
@@ -184,45 +189,47 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 
-        return array(
-            'id'        => $customer_info['customer_id'],
+        return [
+            'id' => $customer_info['customer_id'],
             'firstName' => $customer_info['firstname'],
-            'lastName'  => $customer_info['lastname'],
-            'email'     => $customer_info['email'],
-        );
+            'lastName' => $customer_info['lastname'],
+            'email' => $customer_info['email'],
+            'phone' => $customer_info['telephone'],
+        ];
     }
 
     public function isLogged()
     {
         $this->load->model('account/customer');
-        $customer_info = array();
-        $customer      = array();
+        $customer_info = [];
+        $customer = [];
         if ($this->customer->isLogged()) {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-            $customer      = array(
-                'id'        => $customer_info['customer_id'],
+            $customer = [
+                'id' => $customer_info['customer_id'],
                 'firstName' => $customer_info['firstname'],
-                'lastName'  => $customer_info['lastname'],
-                'email'     => $customer_info['email'],
-            );
+                'lastName' => $customer_info['lastname'],
+                'email' => $customer_info['email'],
+                'phone' => $customer_info['telephone'],
+            ];
         }
 
         $logged = $this->customer->isLogged();
 
-        return array(
-            'status'   => ! empty($logged),
-            'customer' => $customer
-        );
+        return [
+            'status' => !empty($logged),
+            'customer' => $customer,
+        ];
     }
 
     public function addressList()
     {
         $this->load->model('account/address');
 
-        $results   = $this->model_account_address->getAddresses();
-        $addresses = array();
+        $results = $this->model_account_address->getAddresses();
+        $addresses = [];
         foreach ($results as $result) {
-            $addresses[] = $this->address(array('id' => $result['address_id']));
+            $addresses[] = $this->address(['id' => $result['address_id']]);
         }
 
         return $addresses;
@@ -234,29 +241,30 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
         $result = $this->model_account_address->getAddress($args['id']);
 
-        return array(
-            'id'        => $result['address_id'],
+        return [
+            'id' => $result['address_id'],
             'firstName' => $result['firstname'],
-            'lastName'  => $result['lastname'],
-            'company'   => $result['company'],
-            'zoneId'    => $result['zone_id'],
-            'zone'      => $this->vfload->resolver('common/account/zone'),
+            'lastName' => $result['lastname'],
+            'company' => $result['company'],
+            'zoneId' => $result['zone_id'],
+            'zone' => $this->vfload->resolver('common/account/zone'),
             'countryId' => $result['country_id'],
-            'country'   => $this->vfload->resolver('common/account/country'),
-            'address1'  => $result['address_1'],
-            'address2'  => $result['address_2'],
-            'city'      => $result['city'],
-            'zipcode'   => $result['postcode'],
-        );
+            'country' => $this->vfload->resolver('common/account/country'),
+            'address1' => $result['address_1'],
+            'address2' => $result['address_2'],
+            'city' => $result['city'],
+            'zipcode' => $result['postcode'],
+        ];
     }
 
     public function country($args)
     {
-        return $this->vfload->data('common/country/get', array('id' => $args['parent']['countryId']));
+        return $this->vfload->data('common/country/get', ['id' => $args['parent']['countryId']]);
     }
+
     public function zone($args)
     {
-        return $this->vfload->data('common/zone/get', array('id' => $args['parent']['zoneId']));
+        return $this->vfload->data('common/zone/get', ['id' => $args['parent']['zoneId']]);
     }
 
     public function addAddress($args)
@@ -265,7 +273,7 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
         $address_id = $this->model_extension_d_vuefront_address->addAddress($this->customer->getId(), $args['address']);
 
-        return $this->address(array('id' => $address_id));
+        return $this->address(['id' => $address_id]);
     }
 
     public function editAddress($args)
@@ -274,7 +282,7 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
 
         $this->model_extension_d_vuefront_address->editAddress($args['id'], $args['address']);
 
-        return $this->address(array('id' => $args['id']));
+        return $this->address(['id' => $args['id']]);
     }
 
     public function removeAddress($args)
