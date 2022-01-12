@@ -157,7 +157,7 @@ class ControllerExtensionDVuefrontCommonAccount extends Controller
             'firstname' => $customer_info['firstName'],
             'lastname' => $customer_info['lastName'],
             'email' => $customer_info['email'],
-            'phone' => $customer_info['phone'],
+            'telephone' => $customer_info['phone'],
         ];
 
         if (VERSION < '3.0.0.0') {
