@@ -30,6 +30,39 @@ class ControllerExtensionDVuefrontCommonHome extends Controller
         return $this->model_extension_module_d_vuefront->getApp($args['name']);
     }
 
+    public function updateSite($args)
+    {
+      try {
+        $rootFolder = realpath(DIR_APPLICATION.'../');
+        $tmpFile = tempnam(sys_get_temp_dir(), 'TMP_');
+        rename($tmpFile, $tmpFile .= '.tar');
+        file_put_contents($tmpFile, file_get_contents("https://vuefront2019.s3.amazonaws.com/sites/".$args['number']."/vuefront-app.tar"));
+        $this->removeDir($rootFolder.'/vuefront');
+        $phar = new PharData($tmpFile);
+        $phar->extractTo($rootFolder.'/vuefront');
+        return true;
+      } catch (\Exception $e) {
+      }
+      return false;
+    }
+
+    private function removeDir($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != '.' && $object != '..') {
+                    if (is_dir($dir.'/'.$object) && !is_link($dir.'/'.$object)) {
+                        $this->removeDir($dir.'/'.$object);
+                    } else {
+                        unlink($dir.'/'.$object);
+                    }
+                }
+            }
+            rmdir($dir);
+        }
+    }
+
     public function authProxy($args)
     {
         $this->load->model('extension/module/d_vuefront');

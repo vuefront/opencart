@@ -23,6 +23,7 @@
     "home": "common/home/get",
 
     "updateApp": "common/home/updateApp",
+    "updateSite": "common/home/updateSite",
 
     "searchUrl": "common/home/searchUrl",
 
