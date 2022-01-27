@@ -85,5 +85,7 @@
     "removeWishlist": "store/wishlist/remove",
 
     "contactSend": "common/contact/send",
-    "contact": "common/contact/get"
+    "contact": "common/contact/get",
+
+    "version": "common/home/version"
 }

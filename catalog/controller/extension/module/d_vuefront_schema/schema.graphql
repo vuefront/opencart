@@ -486,6 +486,7 @@ type RootQueryType {
   manufacturerList(page: Int = 1, size: Int = 10, search: String = "", sort: String = "name", order: String = "ASC"): ManufacturerResult
   manufacturer(id: String): Manufacturer
   authProxy(app: String): String
+  version: String
 }
 
 type RootMutationType {

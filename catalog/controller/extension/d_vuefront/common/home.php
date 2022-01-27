@@ -22,6 +22,10 @@ class ControllerExtensionDVuefrontCommonHome extends Controller
         return $result;
     }
 
+    public function version() {
+      return "1.0.0";
+    }
+
     public function updateApp($args)
     {
         $this->load->model('extension/module/d_vuefront');
