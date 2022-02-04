@@ -22,8 +22,9 @@ class ControllerExtensionDVuefrontCommonHome extends Controller
         return $result;
     }
 
-    public function version() {
-      return "1.0.0";
+    public function version()
+    {
+        return "1.0.0";
     }
 
     public function updateApp($args)
@@ -36,18 +37,18 @@ class ControllerExtensionDVuefrontCommonHome extends Controller
 
     public function updateSite($args)
     {
-      try {
-        $rootFolder = realpath(DIR_APPLICATION.'../');
-        $tmpFile = tempnam(sys_get_temp_dir(), 'TMP_');
-        rename($tmpFile, $tmpFile .= '.tar');
-        file_put_contents($tmpFile, file_get_contents("https://vuefront2019.s3.amazonaws.com/sites/".$args['number']."/vuefront-app.tar"));
-        $this->removeDir($rootFolder.'/vuefront');
-        $phar = new PharData($tmpFile);
-        $phar->extractTo($rootFolder.'/vuefront');
-        return true;
-      } catch (\Exception $e) {
-      }
-      return false;
+        try {
+            $rootFolder = realpath(DIR_APPLICATION.'../');
+            $tmpFile = tempnam(sys_get_temp_dir(), 'TMP_');
+            rename($tmpFile, $tmpFile .= '.tar');
+            file_put_contents($tmpFile, file_get_contents("https://vuefront2019.s3.amazonaws.com/sites/".$args['number']."/vuefront-app.tar"));
+            $this->removeDir($rootFolder.'/vuefront');
+            $phar = new PharData($tmpFile);
+            $phar->extractTo($rootFolder.'/vuefront');
+            return true;
+        } catch (\Exception $e) {
+        }
+        return false;
     }
 
     private function removeDir($dir)
